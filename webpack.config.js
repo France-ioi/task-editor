@@ -8,6 +8,8 @@ module.exports = function(env) {
         'babel-polyfill',
         'body-parser',
         'json-editor',
+        'jquery',
+        path.join(__dirname, 'node_modules/sceditor/src/jquery.sceditor.js'),
         'react',
         'react-bootstrap',
         'react-dom',
@@ -21,6 +23,11 @@ module.exports = function(env) {
         new webpack.optimize.CommonsChunkPlugin({
             name: 'vendor',
             filename: 'vendor.js'
+        }),
+        new webpack.ProvidePlugin({
+            //$: "jquery",
+            //jQuery: "jquery",
+            "window.jQuery": "jquery"
         })
     ];
 
