@@ -16,13 +16,13 @@ class Layout extends React.Component {
         super(props, context);
         this.state = {
             explorer_visible: false,
-            active_section: 'json'
+            active_section: 'svn'
         };
     }
 
     componentDidMount() {
         //used for dev purpose
-        //this.props.dispatch({type: 'TASK_FETCH_LOAD', path: window.__CONFIG__.path })
+        this.props.dispatch({type: 'TASK_FETCH_LOAD', path: window.__CONFIG__.path })
     }
 
 
@@ -60,8 +60,11 @@ class Layout extends React.Component {
     render() {
         const { task } = this.props;
         const { explorer_visible, active_section } = this.state;
+
+        const sectionVisible = (name) => task.ready && active_section == name;
+
         return (
-            <div>
+            <div className="container">
                 { task.loading && <Loader modal/>}
                 <ControlPanel task={task}
                     toggleExplorer={this.toggleExplorer} saveTask={this.saveTask}
@@ -69,12 +72,9 @@ class Layout extends React.Component {
                     />
                 <div className="editor-container">
                     { !task.ready && <Alert bsStyle="info">Click open to load task</Alert>}
-                    { task.ready && active_section == 'json' &&
-                        <TaskJsonEditor task={task} onChange={this.taskDataChange}/> }
-                    { task.ready && active_section == 'files' &&
-                        <TaskFilesManager path={task.path}/> }
-                    { task.ready && active_section == 'svn' &&
-                        <TaskSvn path={task.path}/> }
+                    { sectionVisible('json') && <TaskJsonEditor task={task} onChange={this.taskDataChange}/>}
+                    { sectionVisible('files') && <TaskFilesManager path={task.path}/>}
+                    { sectionVisible('svn') && <TaskSvn path={task.path}/>}
                 </div>
                 <Explorer visible={explorer_visible} toggle={this.toggleExplorer} loadTask={this.loadTask}/>
             </div>

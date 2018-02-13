@@ -61,3 +61,10 @@
         transform: rotate(360deg);
     }
 }
+
+
+.console-output {
+    background: #333333;
+    border: 0;
+    color: #FFFFFF;
+}

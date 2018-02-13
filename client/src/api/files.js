@@ -1,5 +1,7 @@
 import { jsonRequest } from './request'
 
-export function readDir(path) {
-    return jsonRequest('files/read', { path })
+const readDir = (params) => jsonRequest('explorer/dir', params)
+
+export default {
+    readDir
 }
