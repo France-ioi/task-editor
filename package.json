@@ -1,0 +1,49 @@
+{
+  "name": "task-editor",
+  "version": "0.0.0",
+  "description": "task-editor",
+  "main": "server/bin/server.js",
+  "scripts": {
+    "dev": "npm-run-all --parallel dev:build dev:start",
+    "dev:build": "webpack --watch --progress --colors",
+    "dev:start": "cd server && nodemon server.js",
+    "build": "NODE_ENV=production webpack -p --progress --colors",
+    "start": "cd server && node server.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "babel-polyfill": "^6.26.0",
+    "body-parser": "^1.18.2",
+    "bootstrap": "^3.3.7",
+    "cheerio": "^1.0.0-rc.2",
+    "ejs": "^2.5.7",
+    "express": "^4.14.0",
+    "json-editor": "^0.7.28",
+    "react": "^15.2.1",
+    "react-bootstrap": "^0.32.1",
+    "react-dom": "^15.2.1",
+    "react-redux": "^5.0.3",
+    "redux": "^3.5.2",
+    "redux-saga": "^0.16.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.10.4",
+    "babel-loader": "^7.1.1",
+    "babel-preset-es2015": "^6.9.0",
+    "babel-preset-react": "^6.11.1",
+    "babel-preset-stage-1": "^6.5.0",
+    "css-loader": "^0.28.7",
+    "file-loader": "^0.11.2",
+    "node-sass": "^4.5.3",
+    "nodemon": "^1.14.12",
+    "npm-run-all": "^4.1.2",
+    "sass-loader": "^6.0.6",
+    "style-loader": "^0.18.2",
+    "uglifyjs-webpack-plugin": "^0.4.6",
+    "webpack": "^3.5.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/France-ioi/task-editor.git"
+  }
+}

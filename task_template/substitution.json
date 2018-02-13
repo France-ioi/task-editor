@@ -1,0 +1,34 @@
+[
+    {
+        "jsonSubPath": "title",
+        "cssSelector": "title"
+    },
+    {
+        "jsonSubPath": "task",
+        "cssSelector": "#task"
+    },
+    {
+        "jsonSubPath": "hints",
+        "cssSelector": ".hint"
+    },
+    {
+        "jsonSubPath": "solution",
+        "cssSelector": "#solution"
+    },
+    {
+        "jsonSubPath": "PEMTaskMetaData",
+        "cssSelector": "$PEMTaskMetaData"
+    },
+    {
+        "jsonSubPath": "FIOITaskMetaData",
+        "cssSelector": "$FIOITaskMetaData"
+    },
+    {
+        "jsonSubPath": "PEMTaskMetaData",
+        "cssSelector": "[task.js]$PEMTaskMetaData"
+    },
+    {
+        "jsonSubPath": "FIOITaskMetaData",
+        "cssSelector": "[task.js]$FIOITaskMetaData"
+    }
+]

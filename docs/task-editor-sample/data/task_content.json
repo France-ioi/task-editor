@@ -1,0 +1,28 @@
+{
+   title: "Bouclez le ! La suite !",
+   task: "<h3>Votre mission</h3>\n               <p>\n                  Vous voulez afficher plusieurs fois la même chose, mais vous ne \n                  voulez pas l'écrire plusieurs fois dans le code ? Bravo !\n               </p>\n               \n               <p>\n                  Nous vous demandons d'écrire le texte suivant : \n               </p>\n               <pre>\nLe C, c'est la vie !\nLe C, c'est la vie !\nLe C, c'est la vie !\n               </pre>\n\n               <p>\n                  Simple n'est-ce pas ? Alors maintenant rajoutons de la \n                  difficulté ! Vous n'avez le droit qu'à un seul \"printf\", et\n                  aucune répétition dans les \"printf\" !\n               </p>\n\n               <p>\n                  Attention ! Vous devez respecter <b>strictement</b> ce qui est\n                  écrit au dessus !\n               </p>\n               \n               <h3>Notation</h3>\n\n               <p>\n                  Vous pouvez soumettre autant de programmes que vous le \n                  souhaitez. Seule la meilleure note est prise en compte dans \n                  l'évaluation. \n               </p>",
+   hints: [
+      { content: "Utilisez les boucles, et n'oubliez pas le retour à la ligne entre les deux blocs de texte." }
+   ],
+   solution: "			<pre>\n#include &ltstdio.h&gt\n\nint main() {\n    for(int i= 0; i < 3 ; i++) {\n        printf(\"Le C, c'est la vie !\\n\");\n    }\n    return 0;\n}\n			</pre>\n",
+   PEMTaskMetaData: {
+      id : 'Telecom/MOOC1/Week1/taskBouclezLe',
+      license : 'MIT',
+      authors : ["MOOCC"],
+      language : "fr",
+      version: "0.1",
+      baseUrl : "https://github.com/France-ioi/fioi-tasks-template",
+      limits : {
+         "*": {time: 1000, memory: 64000},
+      }
+   },
+   FIOITaskMetaData: {
+      supportedLanguages: ['c'],
+      solutionSources : {
+         "firstSource" : []
+      },
+      hasUserTests: false,
+      taskSamples : [],
+      graderSamples: []
+   }
+}

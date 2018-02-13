@@ -1,0 +1,34 @@
+so when we add bebras types of tasks, the editor should make it easy to edit:
+- the title (in the title element and h1 element)
+- the list of imported modules
+- all the fields in the json variable
+- all the strings in the strings variable
+- the task statement between the h1 element and tabsContainer id (empty in this case)
+- the window.stringsLanguage value
+- the content of gridInfos
+- the content of subTask.data
+
+we would describe the structure of all this data with a json schema, with enumerations for the fields
+such as language, imported module, blocks etc. so that people just need to select from a list
+
+provide the html template with the placeholders, and a json file describing how to insert
+the data provided by the editor, into the html template, and produce exactly the index.html and task.js files
+we have in test-p5
+
+if we write the schema, https://github.com/jdorn/json-editor can already be used to edit everything easily
+
+so we need the script that takes the json output of that editor, the template and the substitution description,
+and generates the output files (index.html and task.js)
+
+1) setup the json-editor, make the wysiwyg feature work so we can edit html fields with the html editor.
+2) write the script that takes the content.json (output of the editor),
+    the html template and the substitution description file, and generates the html output.
+    we'll also need to output a separate json file with some of the data in content.json
+3) integrate it in an interface with several tabs :
+    a) an import/export tab: - to provide the path of the task relative to a root folder
+        - a button to load a task that already has a content.json file, with error messages when appropriate
+        - a button to save the json of the currently edited task, and to apply the generation script
+        - fields to input your svn credentials and buttons to update or commit the task from svn
+    b) the json-editor tab
+    c) (at the end) the files tab, where you can upload images or other files,
+        remove some, and delete some, from the task folder

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Bouclez le ! La suite !</title>
+		<link class="task" type="text/css" rel="stylesheet" href="../../../../_common/modules/pemFioi/progTask.css">
+		<link class="task" type="text/css" rel="stylesheet" href="../../../../_common/modules/ext/bootstrap/css/bootstrap.min.css">
+		<script class="remove" src="../../../../_common/modules/ext/requirejs/require.js"></script>
+		<script type="text/javascript">
+var modulesPath ='../../../../_common/modules';
+var taskPlatformPath ='../../../../_common/task-platform';
+		</script>
+		<script type="text/javascript" src="../../../../_common/modules/pemFioi/progTaskConfig-1.0.js"></script>
+		<script type="text/javascript" class="remove">
+// general metadata conforming the PEM API Documentation for getMetaData
+var PEMTaskMetaData = {
+	id : 'Telecom/MOOC1/Week1/taskBouclezLe',
+	license : 'MIT',
+	authors : ["MOOCC"],
+	language : "fr",
+	version: "0.1",
+	baseUrl : "https://github.com/France-ioi/fioi-tasks-template",
+	limits : {
+		"*": {time: 1000, memory: 64000},
+	}
+}
+// Metadata specific to the FranceIOI tasks
+var FIOITaskMetaData = {
+	// This lists all possible languages
+	supportedLanguages: ['c'],
+	// file extensions must follow the following conventions so that language is recognized automatically.
+	// Additionally, a .txt file is recognized as 'pseudo' language
+	solutionSources : {
+		"firstSource" : []
+	},
+	// can user build tests?
+	hasUserTests: false,
+	/*
+	   source for hint 1 would be
+	   hintsSources: {
+	   1: {
+	   "firstHintSource" : [ "hint.cpp", "hint.py", etc. ]
+	   }
+	   }
+	 */
+	taskSamples : [],
+	graderSamples: []
+}
+		</script>
+	</head>
+	<body ng-controller="taskController">
+
+		<div id="task">
+
+			<h3>Votre mission</h3>
+			<p>
+				Vous voulez afficher plusieurs fois la même chose, mais vous ne
+				voulez pas l'écrire plusieurs fois dans le code ? Bravo !
+			</p>
+
+			<p>
+				Nous vous demandons d'écrire le texte suivant :
+			</p>
+			<pre>
+Le C, c'est la vie !
+Le C, c'est la vie !
+Le C, c'est la vie !
+			</pre>
+
+			<p>
+				Simple n'est-ce pas ? Alors maintenant rajoutons de la
+				difficulté ! Vous n'avez le droit qu'à un seul "printf", et
+				aucune répétition dans les "printf" !
+			</p>
+
+			<p>
+				Attention ! Vous devez respecter <b>strictement</b> ce qui est
+				écrit au dessus !
+			</p>
+
+			<h3>Notation</h3>
+
+			<p>
+				Vous pouvez soumettre autant de programmes que vous le
+				souhaitez. Seule la meilleure note est prise en compte dans
+				l'évaluation.
+			</p>
+		</div>
+
+		<div class="hint">
+			Utilisez les boucles, et n'oubliez pas le retour à la ligne entre
+			les deux blocs de texte.
+		</div>
+
+		<div id="solution">
+			<pre>
+#include &ltstdio.h&gt
+
+int main() {
+    for(int i= 0; i < 3 ; i++) {
+        printf("Le C, c'est la vie !\n");
+    }
+    return 0;
+}
+			</pre>
+		</div>
+	</body>
+</html>
