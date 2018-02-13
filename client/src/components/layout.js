@@ -21,8 +21,8 @@ class Layout extends React.Component {
     }
 
     componentDidMount() {
-        //TODO: remove dev
-        this.props.dispatch({type: 'TASK_FETCH_LOAD', path: window.__CONFIG__.path })
+        //used for dev purpose
+        //this.props.dispatch({type: 'TASK_FETCH_LOAD', path: window.__CONFIG__.path })
     }
 
 
