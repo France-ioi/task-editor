@@ -31,7 +31,7 @@ class TaskSvn extends React.Component {
         const output = this.props.data ?  '>' + this.props.data.cmd + '\n' + this.props.data.out : null;
 
         return (
-            <div>
+            <div className="container">
                 <FormGroup>
                     <Button name="update" onClick={this.exec}>Update</Button>
                     {' '}

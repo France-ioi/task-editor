@@ -16,13 +16,13 @@ class Layout extends React.Component {
         super(props, context);
         this.state = {
             explorer_visible: false,
-            active_section: 'svn'
+            active_section: 'json'
         };
     }
 
     componentDidMount() {
         //used for dev purpose
-        this.props.dispatch({type: 'TASK_FETCH_LOAD', path: window.__CONFIG__.path })
+        //this.props.dispatch({type: 'TASK_FETCH_LOAD', path: window.__CONFIG__.path })
     }
 
 
@@ -64,7 +64,7 @@ class Layout extends React.Component {
         const sectionVisible = (name) => task.ready && active_section == name;
 
         return (
-            <div className="container">
+            <div>
                 { task.loading && <Loader modal/>}
                 <ControlPanel task={task}
                     toggleExplorer={this.toggleExplorer} saveTask={this.saveTask}
