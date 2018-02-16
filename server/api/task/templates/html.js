@@ -7,17 +7,26 @@ module.exports = function(content) {
     var $ = cheerio.load(content)
 
 
-    function injectVariable(variable, value) {
-        var search = 'var ' + variable;
+    function injectVariable(selector, value) {
+        if(!selector.variable) return;
+        var search = 'var ' + selector.variable;
         var replace = search + ' = ' + JSON.stringify(value);
-        $('script').map((i, el) => {
+
+
+        if(selector.html) {
+            var elements = $(selector.html).find('script');
+        } else {
+            var elements = $('script');
+        }
+        elements.map((i, el) => {
             el = $(el)
             el.html(el.html().replace(search, replace))
         })
     }
 
     function injectElement(selector, value) {
-        var el = $(selector);
+        if(!selector.html) return;
+        var el = $(selector.html);
         if(value instanceof Array) {
             value.map(item => {
                 el.before(
@@ -33,9 +42,8 @@ module.exports = function(content) {
     return {
 
         inject: function(selector, value) {
-            if(/\$/.test(selector)) {
-                var name = selector.split('$').pop();
-                injectVariable(name, value)
+            if(selector.variable) {
+                injectVariable(selector, value)
             } else {
                 injectElement(selector, value)
             }

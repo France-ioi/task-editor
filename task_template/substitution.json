@@ -48,11 +48,11 @@
         [
             {
                 "jsonSubPath": "single",
-                "file": "test_files_single/[name][ext]"
+                "file": "test_files/[name][ext]"
             },
             {
                 "jsonSubPath": "multiple",
-                "file": "test_files_multiple/test[index].txt"
+                "file": "test_files/test[index].txt"
             }
         ]
     }

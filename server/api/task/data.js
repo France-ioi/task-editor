@@ -2,11 +2,12 @@ module.exports = function(task_data) {
 
 
     function find(path) {
+        var subpath = path.slice();
         var pointer = task_data;
         var current;
-        while(path.length) {
-            current = path.shift();
-            if(!pointer[current]) {
+        while(subpath.length) {
+            current = subpath.shift();
+            if(!pointer.hasOwnProperty(current)) {
                 throw new Error('JSON path not found: ' + path.join('.'))
             }
             pointer = pointer[current];

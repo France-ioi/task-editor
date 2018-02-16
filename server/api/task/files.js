@@ -10,7 +10,11 @@ module.exports = function(task_path) {
     var new_files = [];
     var old_files = [];
     if(fs.existsSync(index_file)) {
-        old_files = require(index_file);
+        old_files = fs.readFileSync(
+            index_file,
+            { encoding: 'utf-8' }
+        )
+        old_files = JSON.parse(old_files);
     }
 
 
@@ -72,7 +76,9 @@ module.exports = function(task_path) {
             var del_files = old_files.filter(file => new_files.indexOf(file) < 0);
             // TODO: check that files are inside task dir to avoind security problems
             // TODO: remove empty dirs?
-            del_files.length && shell.rm(del_files);
+            for(var i=0, file; file=del_files[i]; i++) {
+                shell.rm(path.join(task_path, file));
+            }
             fs.writeFileSync(index_file, JSON.stringify(new_files, null, 2));
         }
     }

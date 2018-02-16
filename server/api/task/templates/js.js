@@ -1,14 +1,15 @@
 module.exports = function(content) {
 
 
-    function formatVariable(selector) {
-        return 'var ' + selector.split('$').pop();
+    function formatVariable(variable) {
+        return 'var ' + variable;
     }
 
     return {
 
         inject: function(selector, value) {
-            var search = formatVariable(selector);
+            if(!selector.variable) return;
+            var search = formatVariable(selector.variable);
             if(search) {
                 var replace = search + ' = ' + JSON.stringify(value);
                 content = content.replace(search, replace);

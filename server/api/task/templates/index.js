@@ -1,4 +1,5 @@
 var path = require('path')
+var fs = require('fs')
 
 module.exports = function(tpl_path, task_path) {
 
@@ -8,8 +9,8 @@ module.exports = function(tpl_path, task_path) {
     }
 
     var handlers = {
-        'html': require('./html'),
-        'js': require('./js')
+        '.html': require('./html'),
+        '.js': require('./js')
     }
 
     var templates = {};
@@ -22,29 +23,48 @@ module.exports = function(tpl_path, task_path) {
     }
 
 
-    function get(filename) {
-        filename = filename || dafaults.template;
-        var ext = path.extname(filename).substr(1);
-        if(!templates[filename]) {
+    function get(file) {
+        file = file || dafaults.template;
+        var ext = path.extname(file);
+        if(!templates[file]) {
             var content = fs.readFileSync(
-                path.resolve(tpl_path, filename),
+                path.resolve(tpl_path, file),
                 { encoding: 'utf-8' }
             )
-            templates[filename] = template.create(ext, content);
+            templates[file] = create(ext, content);
         }
-        return templates[filename];
+        return templates[file];
     }
 
 
     function parseSelector(full_selector) {
         var file = full_selector.trim().match(/^\[.+\]/);
         if(file) {
-            file = file.toString().replace(/\[|\]/g, '');
+            file = file.toString();
+
+            var selector = full_selector.substr(file.length);
+            file = file.replace(/\[|\]/g, '');
+        } else {
+            var selector = full_selector;
         }
-        var selector = selector.replace(/^\[.+\]/, '');
+
+        var variable = null;
+        var tmp = selector.split('$');
+        if(tmp.length > 2) {
+            throw new Error('Multiple variables in selector: '.full_selector);
+        } if(tmp.length == 2) {
+            html = tmp[0];
+            variable = tmp[1];
+        } else {
+            var html = selector;
+        }
+
         return {
             file,
-            selector
+            selector: {
+                html,
+                variable
+            }
         }
     }
 
@@ -53,7 +73,7 @@ module.exports = function(tpl_path, task_path) {
 
         inject: function(full_selector, value) {
             var p = parseSelector(full_selector);
-            get(p.filename).inject(p.selector, value);
+            get(p.file).inject(p.selector, value);
         },
 
 
