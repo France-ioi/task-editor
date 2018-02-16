@@ -2,6 +2,10 @@
     width: auto;
 }
 
+.form-control[type=file] {
+    padding: 0;
+}
+
 .editor-container {
     margin: 65px 30px 0 30px;
 }

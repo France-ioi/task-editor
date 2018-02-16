@@ -2,6 +2,48 @@ export default {
     "title": "Task",
     "type": "object",
     "properties": {
+
+      "test_files": {
+        "title": "Test files upload",
+        "type": "object",
+        "properties": {
+          "single": {
+            "title": "Single file test",
+            "type": "string",
+            "format": "url",
+            "options": {
+              "upload": true
+            },
+            "links": [
+              {
+                "href": "{{self}}",
+                "class": "json-file-link"
+              }
+            ]
+          },
+          "multiple": {
+            "type": "array",
+            "format": "tabs",
+            "title": "Multiple files test",
+            "items": {
+              "title": "File",
+              "type": "string",
+              "format": "url",
+              "options": {
+                "upload": true
+              },
+              "links": [
+                {
+                  "href": "{{self}}",
+                  "class": "json-file-link"
+                }
+              ]
+            }
+          },
+        }
+      },
+
+
       "files": {
         "type": "array",
         "format": "tabs",
@@ -18,7 +60,7 @@ export default {
                "type": {
                  "type": "string",
                  "title": "Type",
-             "enum": ["image", "testCase", "solution"]
+                 "enum": ["image", "testCase", "solution"]
                },
                "description": {
                  "type": "string",
@@ -26,7 +68,7 @@ export default {
                },
                "usedInStatement": {
                  "type": "boolean",
-             "format": "checkbox",
+              "format": "checkbox",
                  "title": "Used in statement"
                },
                "usedInSolution": {
@@ -85,20 +127,32 @@ export default {
               "format": "tabs",
               "title": "Limits",
               "items": {
-                 "type": "object",
-                 "properties": {
+                  "type": "object",
+                  "options": {
+                    "layout": "grid"
+                  },
+                  "properties": {
                     "language": {
                        "title": "Language",
                        "type": "string",
-                       "enum": ["*", "cpp", "c", "java", "py"]
+                       "enum": ["*", "cpp", "c", "java", "py"],
+                       "options": {
+                        "grid_columns": 6
+                       }
                     },
                     "time": {
                        "title": "Time (ms)",
-                       "type": "string"
+                       "type": "string",
+                       "options": {
+                        "grid_columns": 3
+                       }
                     },
                     "memory": {
                        "title": "Memory (KB)",
-                       "type": "string"
+                       "type": "string",
+                       "options": {
+                        "grid_columns": 3
+                       }
                     }
                  }
               }
@@ -111,7 +165,7 @@ export default {
             "supportedLanguages": {
                "type": "array",
                "items": {
-                  "types": "string",
+                  "type": "string",
                   "title": "supportedLanguage",
                   "enum": ["c", "cpp", "java", "py"]
                }

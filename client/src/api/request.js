@@ -1,7 +1,6 @@
 export function jsonRequest(path, params) {
     return fetch('/api/' + path, {
         method: 'POST',
-        mode: 'same-origin',
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json; charset=utf-8'
@@ -20,19 +19,25 @@ export function jsonRequest(path, params) {
 }
 
 
-export function formRequest(path, form) {
+export function formRequest(path, params) {
+    var body = new FormData();
+    for(var k in params) {
+        if(params.hasOwnProperty(k)) {
+            body.append(k, params[k]);
+        }
+    }
+
     return fetch('/api/' + path, {
         method: 'POST',
-        mode: 'same-origin',
-        headers: {
-            'Accept': 'application/json',
-        },
-        body: form
+        body
     })
     .then(response => {
-        if(response.status >= 400) {
+        if(response.status == 200) {
+            return response.json();
+        } else if(response.status == 400) {
+            throw new Error(response.body || 'Server error');
+        } else {
             throw new Error("Bad response from server");
         }
-        response.json();
     });
 }

@@ -1,7 +1,7 @@
-import { jsonRequest } from './request'
+import { formRequest } from './request'
 
-const readDir = (params) => jsonRequest('explorer/dir', params)
+const upload = (params) => formRequest('files/upload', params)
 
 export default {
-    readDir
+    upload
 }

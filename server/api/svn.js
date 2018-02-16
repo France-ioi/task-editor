@@ -4,12 +4,6 @@ var exec = require('child_process').exec;
 function run(cmd, req, res) {
     cmd = 'cd ' + req.body.path + ' && ' + cmd;
     exec(cmd, function(err, stdout, stderr) {
-/*
-        if(err) {
-            console.log(typeof stdout, typeof stderr)
-            return res.status(400).send(err);
-        }
-        */
         res.send({
             cmd,
             out: [stdout, stderr].join('\n')
