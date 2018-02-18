@@ -7,7 +7,6 @@ import Explorer from './explorer';
 import { Loader } from './ui'
 
 import TaskJsonEditor from './task_json_editor';
-import TaskFilesManager from './task_files_manager';
 import TaskSvn from './task_svn';
 
 class Layout extends React.Component {
@@ -73,7 +72,6 @@ class Layout extends React.Component {
                 <div className="editor-container">
                     { !task.ready && <Alert bsStyle="info">Click open to load task</Alert>}
                     { sectionVisible('json') && <TaskJsonEditor task={task} onChange={this.taskDataChange}/>}
-                    { sectionVisible('files') && <TaskFilesManager path={task.path}/>}
                     { sectionVisible('svn') && <TaskSvn path={task.path}/>}
                 </div>
                 <Explorer visible={explorer_visible} toggle={this.toggleExplorer} loadTask={this.loadTask}/>

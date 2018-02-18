@@ -14,8 +14,6 @@ class ControlPanel extends React.Component {
                     <Nav>
                         <NavItem active={active_section == 'json'} onClick={()=>showSection('json')}
                             eventKey={1} href="#">JSON editor</NavItem>
-                        <NavItem active={active_section == 'files'} onClick={()=>showSection('files')}
-                            eventKey={2} href="#">Files manager</NavItem>
                         <NavItem
                             active={active_section == 'svn'} onClick={()=>showSection('svn')}
                             eventKey={3} href="#">SVN</NavItem>

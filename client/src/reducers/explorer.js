@@ -6,10 +6,13 @@ var default_state = {
 }
 
 export default (state = default_state, action) => {
+
     switch(action.type) {
-        case 'EXPLORER_FETCH_READDIR':
+        case 'EXPLORER_FETCH_READ_DIR':
+        case 'EXPLORER_FETCH_CREATE_DIR':
+        case 'EXPLORER_FETCH_REMOVE_DIR':
             return {
-                path: action.path,
+                ...state,
                 list: null,
                 loading: true,
                 error: null
@@ -18,7 +21,8 @@ export default (state = default_state, action) => {
         case 'EXPLORER_FETCH_SUCCESS':
             return {
                 ...state,
-                list: action.list,
+                path: action.data.path,
+                list: action.data.list,
                 loading: false,
                 error: null
             };
