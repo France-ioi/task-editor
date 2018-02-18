@@ -31,13 +31,21 @@ class TaskJsonEditor extends React.Component {
             }
         });
         this.editor.on('change', () => {
-            // workaround for links :)
-            var links = document.getElementsByClassName('json-file-link');
-            for(var i=0; i<links.length; i++) {
-                links[i].href = 'http://task-editor/' + links[i].innerText;
-            }
+            this.refreshLinks();
             this.props.onChange(this.editor.getValue());
         });
+    }
+
+
+    refreshLinks = () => {
+        // workaround for links :)
+        var links = document.getElementsByClassName('json-file-link');
+        for(var i=0; i<links.length; i++) {
+            links[i].href = window.__CONFIG__.url_prefix +
+                this.props.task.path + '/' +
+                window.__CONFIG__.task.tmp_dir + '/' +
+                links[i].innerText;
+        }
     }
 
 

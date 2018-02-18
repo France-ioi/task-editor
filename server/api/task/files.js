@@ -1,11 +1,15 @@
 var path = require('path');
 var fs = require('fs');
 var shell = require('shelljs');
+var config = require('../../config')
 
 module.exports = function(task_path) {
 
-    var tmp_dir = 'task_content_files'
-    var index_file = path.join(task_path, tmp_dir, '.index.json');
+
+    var index_file = path.join(
+        task_path,
+        config.task.files_index
+    );
 
     var new_files = [];
     var old_files = [];
@@ -42,14 +46,14 @@ module.exports = function(task_path) {
 
     function copyFile(src, dst) {
         new_files.push(
-            path.join(tmp_dir, src),
+            path.join(config.task.tmp_dir, src),
             dst
         );
         var dst_file = path.join(task_path, dst);
         shell.mkdir('-p', path.dirname(dst_file));
         shell.cp(
             '-u',
-            path.join(task_path, tmp_dir, src),
+            path.join(task_path, config.task.tmp_dir, src),
             dst_file
         );
     }

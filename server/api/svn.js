@@ -1,8 +1,12 @@
 var exec = require('child_process').exec;
-
+var config = require('../config')
 
 function run(cmd, req, res) {
-    cmd = 'cd ' + req.body.path + ' && ' + cmd;
+    var dir = path.join(
+        config.path,
+        req.body.path
+    );
+    cmd = 'cd ' + dir + ' && ' + cmd;
     exec(cmd, function(err, stdout, stderr) {
         res.send({
             cmd,

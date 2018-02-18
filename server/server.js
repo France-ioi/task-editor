@@ -1,8 +1,11 @@
+var config = require('./config')
 var express = require('express');
 var app = express();
 
 
 app.use(express.static('public'));
+app.use(config.url_prefix, express.static(config.path));
+
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 var config = JSON.stringify(require('./config'));
@@ -11,11 +14,13 @@ app.get('/', (req, res) => {
 });
 
 
+
 var bodyParser = require('body-parser')
 app.use(bodyParser.json());
 var fileUpload = require('express-fileupload');
 app.use(fileUpload());
-require('./routes/api')(app);
+require('./middleware')(app);
+require('./routes')(app);
 
 
 app.listen(8080, () => {

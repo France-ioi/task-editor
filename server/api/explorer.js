@@ -1,15 +1,16 @@
 var fs = require('fs');
 var path = require('path');
 var shell = require('shelljs');
-
+var config = require('../config')
 
 function readDir(req, res) {
-    fs.readdir(req.body.path, (err, files) => {
+    var dir_path = path.join(config.path, req.body.path);
+    fs.readdir(dir_path, (err, files) => {
         if(err) return res.status(400).send(err);
         var list = [];
         if(files) {
             files.map(file => {
-                var fullfile = path.resolve(req.body.path, file);
+                var fullfile = path.resolve(dir_path, file);
                 try {
                     var stat = fs.statSync(fullfile);
                 } catch(e) {
@@ -29,8 +30,8 @@ function readDir(req, res) {
 
 
 function createDir(req, res) {
-    console.log(req.body)
     var new_dir = path.join(
+        config.path,
         req.body.path,
         req.body.dir
     );
@@ -40,7 +41,8 @@ function createDir(req, res) {
 
 
 function removeDir(req, res) {
-    shell.rm('-rf', req.body.path);
+    var dir = path.join(config.path, req.body.path)
+    shell.rm('-rf', dir);
     var parent_dir = req.body.path.split('/');
     parent_dir.pop();
     req.body.path = parent_dir.join('/');

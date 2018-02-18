@@ -5,7 +5,7 @@ import { Loader } from './ui';
 
 
 const Breadcrumbs = (props) => {
-    const subs = props.path.split('/');
+    const subs = props.path == '/' ? [''] : props.path.split('/')
     const breadcrumbs = [];
     for(var i=0; i<subs.length; i++) {
         var path = [];
@@ -17,6 +17,7 @@ const Breadcrumbs = (props) => {
             path: subs[i] ? path.join('/') : '/'
         });
     }
+    console.log(breadcrumbs)
     return (
         <Breadcrumb>
             { breadcrumbs.map(item=>
@@ -64,7 +65,7 @@ class Explorer extends React.Component {
     }
 
     navHome = () => {
-        this.nav(window.__CONFIG__.path);
+        this.nav('/');
     }
 
 
