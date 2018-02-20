@@ -17,7 +17,6 @@ const Breadcrumbs = (props) => {
             path: subs[i] ? path.join('/') : '/'
         });
     }
-    console.log(breadcrumbs)
     return (
         <Breadcrumb>
             { breadcrumbs.map(item=>

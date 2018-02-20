@@ -1,7 +1,7 @@
 import React from 'react';
 require('json-editor');
 
-import schema from '../common/jsoneditor/schema'
+import schema from '../common/task_schema'
 import files_api from '../api/files';
 
 class TaskJsonEditor extends React.Component {

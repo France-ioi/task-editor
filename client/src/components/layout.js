@@ -8,6 +8,7 @@ import { Loader } from './ui'
 
 import TaskJsonEditor from './task_json_editor';
 import TaskSvn from './task_svn';
+import TaskImporter from './task_importer';
 
 class Layout extends React.Component {
 
@@ -70,9 +71,11 @@ class Layout extends React.Component {
                     active_section={active_section} showSection={this.showSection}
                     />
                 <div className="editor-container">
+                    { task.error && <Alert bsStyle="danger">{task.error}</Alert>}
                     { !task.ready && <Alert bsStyle="info">Click open to load task</Alert>}
                     { sectionVisible('json') && <TaskJsonEditor task={task} onChange={this.taskDataChange}/>}
                     { sectionVisible('svn') && <TaskSvn path={task.path}/>}
+                    { sectionVisible('import') && <TaskImporter path={task.path}/>}
                 </div>
                 <Explorer visible={explorer_visible} toggle={this.toggleExplorer} loadTask={this.loadTask}/>
             </div>

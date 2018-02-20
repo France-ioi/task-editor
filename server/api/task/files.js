@@ -83,6 +83,7 @@ module.exports = function(task_path) {
             for(var i=0, file; file=del_files[i]; i++) {
                 shell.rm(path.join(task_path, file));
             }
+            shell.mkdir('-p', path.dirname(index_file));
             fs.writeFileSync(index_file, JSON.stringify(new_files, null, 2));
         }
     }
