@@ -1,7 +1,8 @@
+
 var path = require('path');
 var fs = require('fs');
 var shell = require('shelljs');
-var config = require('../../config')
+var config = require('../../config');
 
 module.exports = function(task_path) {
 
@@ -22,16 +23,16 @@ module.exports = function(task_path) {
     }
 
 
-    function getRealName(file, json_path, index = null) {
+    function getRealName(file, json_path, index) {
         var prefix = 'root.' + json_path.join('.') + '.';
         if(index !== null) {
-            prefix += index + '.';
+            prefix = prefix + index + '.';
         }
         return file.replace(prefix, '');
     }
 
 
-    function processMask(mask, real_name, index = '') {
+    function processMask(mask, real_name, index) {
         var ext = path.extname(real_name);
         var replace = {
             '[index]': index,
@@ -70,8 +71,8 @@ module.exports = function(task_path) {
                     copyFile(file, real_path);
                 }
             } else if(files !== "") {
-                var real_name = getRealName(files, json_path);
-                var real_path = processMask(mask, real_name);
+                var real_name = getRealName(files, json_path, null);
+                var real_path = processMask(mask, real_name, '');
                 copyFile(files, real_path);
             }
         },
