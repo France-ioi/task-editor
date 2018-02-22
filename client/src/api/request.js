@@ -5,6 +5,7 @@ export function jsonRequest(path, params) {
             'Accept': 'application/json',
             'Content-Type': 'application/json; charset=utf-8'
         },
+        credentials: 'same-origin',
         body: JSON.stringify(params)
     })
     .then(response => {
@@ -29,6 +30,7 @@ export function formRequest(path, params) {
 
     return fetch('/api/' + path, {
         method: 'POST',
+        credentials: 'same-origin',
         body
     })
     .then(response => {
