@@ -14,9 +14,9 @@ module.exports = function(app) {
     if(process.env.HTTP_AUTH) {
         var users = JSON.parse(process.env.HTTP_AUTH);
         app.use((req, res, next) => {
-            var b64auth = (req.headers.authorization || '').split(' ')[1] || ''
-            var [login, password] = new Buffer(b64auth, 'base64').toString().split(':')
-            if (!login || !password || users[login] !== password) {
+            var b64auth = (req.headers.authorization || '').split(' ')[1] || '';
+            var tmp = new Buffer(b64auth, 'base64').toString().split(':');
+            if(tmp.length !== 2 || users[tmp[0]] !== tmp[1]) {
                 res.set('WWW-Authenticate', 'Basic realm="auth"');
                 return res.status(401).send('Authentication required.');
             }
