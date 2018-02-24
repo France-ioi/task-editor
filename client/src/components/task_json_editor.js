@@ -12,7 +12,8 @@ class TaskJsonEditor extends React.Component {
         this.editor = new JSONEditor(this.element, {
             theme: 'bootstrap3',
             schema,
-            disable_properties: true,
+//            disable_properties: true,
+            display_required_only: true,
             upload: true,
             startval: this.props.task.data,
 

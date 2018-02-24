@@ -76,15 +76,16 @@
                },
                "usedInSolution": {
                  "type": "boolean",
-             "format": "checkbox",
+                 "format": "checkbox",
                  "title": "Used in solution"
                },
                "usedInHints": {
                  "type": "boolean",
-             "format": "checkbox",
+                 "format": "checkbox",
                  "title": "Used in hints"
                }
-           }
+           },
+           "required": ["path", "type", "description", "usedInStatement", "usedInSolution", "usedInHints"]
         }
       },
       "PEMTaskMetaData": {
@@ -157,10 +158,12 @@
                         "grid_columns": 3
                        }
                     }
-                 }
+                 },
+                 "required": ["language", "time", "memory"]
               }
             }
-         }
+         },
+         "required": ["id", "authors", "language"]
       },
       "FIOITaskMetaData": {
          "type": "object",
@@ -177,7 +180,8 @@
                "type": "boolean",
                "title": "User can create tests"
             }
-         }
+         },
+         "required": ["supportedLanguages", "hasUserTests"]
       },
       "title": {
         "type": "string",
@@ -330,5 +334,7 @@
                     "required": ["id", "idSolution", "filterTests", "runExecution"]}}}
 
             }
-    }
+    },
+
+    "required": ["files", "PEMTaskMetaData", "FIOITaskMetaData", "title", "task", "solution", "hints", "taskSettings"]
 }
