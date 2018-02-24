@@ -10,7 +10,8 @@ module.exports = function(tpl_path, task_path) {
 
     var handlers = {
         '.html': require('./html'),
-        '.js': require('./js')
+        '.js': require('./js'),
+        '.json': require('./json'),
     }
 
     var templates = {};

@@ -24,36 +24,7 @@
         "selector": "$FIOITaskMetaData"
     },
     {
-        "jsonSubPath": "PEMTaskMetaData",
-        "selector": "[task.js]$PEMTaskMetaData"
-    },
-    {
-        "jsonSubPath": "FIOITaskMetaData",
-        "selector": "[task.js]$FIOITaskMetaData"
-    },
-    {
-        "jsonSubPath": "PEMTaskMetaData",
-        "selector": "[test.html]#script-wrapper",
-        "children":
-        [
-            {
-                "jsonSubPath": "limits",
-                "selector": "$limits"
-            }
-        ]
-    },
-    {
-        "jsonSubPath": "test_files",
-        "children":
-        [
-            {
-                "jsonSubPath": "single",
-                "file": "test_files/[name][ext]"
-            },
-            {
-                "jsonSubPath": "multiple",
-                "file": "test_files/test[index].txt"
-            }
-        ]
+        "jsonSubPath": "taskSettings",
+        "selector": "[taskSettings.json]"
     }
 ]
