@@ -1,5 +1,6 @@
 var exec = require('child_process').exec;
-var config = require('../config')
+var config = require('../config');
+var path = require('path');
 
 function run(cmd, req, res) {
     var dir = path.join(
@@ -19,7 +20,7 @@ function run(cmd, req, res) {
 module.exports = {
 
     update: (req, res) => run('svn update', req, res),
-    add: (req, res) => run('svn add *', req, res),
+    add: (req, res) => run('svn add .', req, res),
     commit: (req, res) => run('svn commit -m "' + req.body.message.replace(/"/g, '\\"') + '"', req, res)
 
 }
