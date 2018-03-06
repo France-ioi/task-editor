@@ -13,8 +13,8 @@ module.exports = function(content) {
         var replace = search + ' = ' + JSON.stringify(value);
 
 
-        if(selector.html) {
-            var elements = $(selector.html).find('script');
+        if(selector.query) {
+            var elements = $(selector.query).find('script');
         } else {
             var elements = $('script');
         }
@@ -25,8 +25,8 @@ module.exports = function(content) {
     }
 
     function injectElement(selector, value) {
-        if(!selector.html) return;
-        var el = $(selector.html);
+        if(!selector.query) return;
+        var el = $(selector.query);
         if(value instanceof Array) {
             value.map(item => {
                 el.before(

@@ -24,7 +24,7 @@
         "selector": "$FIOITaskMetaData"
     },
     {
-        "jsonSubPath": "taskSettings",
-        "selector": "[taskSettings.json]"
+        "jsonSubPath": "taskSettings.generator",
+        "selector": "[taskSettings.json]test.generator"
     }
 ]

@@ -54,16 +54,16 @@ module.exports = function(tpl_path, task_path) {
         if(tmp.length > 2) {
             throw new Error('Multiple variables in selector: '.full_selector);
         } if(tmp.length == 2) {
-            html = tmp[0];
+            var query = tmp[0];
             variable = tmp[1];
         } else {
-            var html = selector;
+            var query = selector;
         }
 
         return {
             file,
             selector: {
-                html,
+                query,
                 variable
             }
         }
