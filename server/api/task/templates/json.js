@@ -8,15 +8,18 @@ module.exports = function(content) {
         inject: function(selector, value) {
             var query = selector.query.split('.');
             var pointer;
-            for(var i=0; i<query.length; i++) {
+            for(var i=0, prop; prop=query[i]; i++) {
                 if(i == query.length - 1) {
                     if(typeof pointer == 'undefined') {
-                        data[query[i]] = value;
+                        data[prop] = value;
                     } else {
-                        pointer[query[i]] = value;
+                        pointer[prop] = value;
                     }
                 } else {
-                    pointer = data[query[i]];
+                    if(!data[prop]) {
+                        data[prop] = {}
+                    }
+                    pointer = data[prop];
                 }
             }
         },
