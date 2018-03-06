@@ -3,45 +3,45 @@
     [
         {
             "jsonSubPath": "title",
-            "cssSelector": "title"
+            "selector": "title"
         },
         {
             "jsonSubPath": "task",
-            "cssSelector": "#task"
+            "selector": "#task"
         },
         {
             "jsonSubPath": "hints",
-            "cssSelector": ".hint"
+            "selector": ".hint"
         },
         {
             "jsonSubPath": "solution",
-            "cssSelector": "#solution"
+            "selector": "#solution"
         },
         {
             "jsonSubPath": "PEMTaskMetaData",
-            "cssSelector": "$PEMTaskMetaData"
+            "selector": "$PEMTaskMetaData"
         },
         {
             "jsonSubPath": "FIOITaskMetaData",
-            "cssSelector": "$FIOITaskMetaData"
+            "selector": "$FIOITaskMetaData"
         },
         {
             "jsonSubPath": "PEMTaskMetaData",
-            "cssSelector": "[task.js]$PEMTaskMetaData"
+            "selector": "[task.js]$PEMTaskMetaData"
         },
         {
             "jsonSubPath": "FIOITaskMetaData",
-            "cssSelector": "[task.js]$FIOITaskMetaData"
+            "selector": "[task.js]$FIOITaskMetaData"
         }
     ],
     "files": [
         {
             "jsonSubPath": "test_files",
-            "target": "test_files/file[index].ext"
+            "file": "test_files/file[index].ext"
         },
         {
             "jsonSubPath": "test_file",
-            "target": "test_files/[name]"
+            "file": "test_files/[name]"
         }
     ]
 }

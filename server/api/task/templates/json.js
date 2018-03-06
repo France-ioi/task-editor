@@ -6,6 +6,10 @@ module.exports = function(content) {
     return {
 
         inject: function(selector, value) {
+            if(selector.query == '') {
+                data = value;
+                return
+            }
             var query = selector.query.split('.');
             var pointer;
             for(var i=0, prop; prop=query[i]; i++) {
