@@ -1,5 +1,6 @@
 var fs = require('fs');
 var path = require('path');
+var formatValue = require('./formatters');
 
 
 module.exports = {
@@ -15,19 +16,23 @@ module.exports = {
         try {
             substitutions.map(rule => {
                 var value = data.get(rule.json_path);
-                if(rule.file) {
-                    files.copy(rule.file, value, rule.json_path)
-                } else if(rule.selector) {
-                    templates.inject(rule.selector, value);
+                var formatted_value = value;
+                var copy_file = false;
+                if('value' in rule) {
+                    formatted_value = formatValue(rule.value, value, rule.json_path)
+                    copy_file = rule.value.type == 'file';
+                }
+                if(rule.selector) {
+                    templates.inject(rule.selector, formatted_value);
+                } else if(copy_file) {
+                    files.copy(value, formatted_value)
                 }
             })
-
             templates.save();
-            var new_files = files.clear();
             callback(null, {
                 type: params.type,
                 data: params.data,
-                files: new_files
+                files: files.clear()
             });
         } catch(err) {
             callback(err);

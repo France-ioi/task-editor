@@ -24,15 +24,41 @@
         "selector": "$FIOITaskMetaData"
     },
     {
-        "jsonSubPath": "PEMTaskMetaData",
-        "selector": "[test.json]"
-    },
-    {
         "jsonSubPath": "test_files.multiple",
-        "file": "test_files/file[index].ext"
+        "value": {
+            "type": "file",
+            "format": "test_files/file[index].ext"
+        }
     },
     {
         "jsonSubPath": "test_files.single",
-        "file": "test_files/[name][ext]"
+        "value": {
+            "type": "file",
+            "format": "test_files/[name][ext]"
+        }
+    },
+    {
+        "jsonSubPath": "test_files.single",
+        "selector": "[test.json]path",
+        "value": {
+            "type": "file",
+            "format": "test_files/[name][ext]"
+        }
+    },
+    {
+        "jsonSubPath": "test_files.single",
+        "selector": "[test.json]name",
+        "value": {
+            "type": "file",
+            "format": "[name][ext]"
+        }
+    },
+    {
+        "jsonSubPath": "test_files.single",
+        "selector": "[test.json]rename",
+        "value": {
+            "type": "file",
+            "format": "renamed.file"
+        }
     }
 ]

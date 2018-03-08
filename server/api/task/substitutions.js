@@ -37,9 +37,9 @@ module.exports = function(src_path) {
                 res_item.selector += (res_item.selector == '' ? '' : ' ') + item.selector;
             }
 
-            if('file' in item) {
+            if('value' in item) {
                 push = true;
-                res_item.file = item.file;
+                res_item.value = item.value;
             }
 
             if('children' in item) {

@@ -1,34 +1,13 @@
-
 var path = require('path');
 var fs = require('fs');
 var shell = require('shelljs');
 var config = require('../../config');
+var formatValue = require('./formatters');
+
 
 module.exports = function(task_path, old_files) {
 
     var new_files = [];
-
-    function getRealName(file, json_path, index) {
-        var prefix = 'root.' + json_path.join('.') + '.';
-        if(index !== null) {
-            prefix = prefix + index + '.';
-        }
-        return file.replace(prefix, '');
-    }
-
-
-    function processMask(mask, real_name, index) {
-        var ext = path.extname(real_name);
-        var replace = {
-            '[index]': index,
-            '[name]': path.basename(real_name, ext),
-            '[ext]': ext
-        }
-        return mask.replace(/\[\w+\]/g, function(placeholder) {
-            return replace[placeholder] || '';
-        });
-    }
-
 
     function copyFile(src, dst) {
         new_files.push(
@@ -46,21 +25,18 @@ module.exports = function(task_path, old_files) {
 
 
     return {
-        copy: function(mask, files, json_path) {
-            if(files instanceof Array) {
-                for(var i=0; i<files.length; i++) {
-                    var file = files[i];
-                    if(!file) continue;
-                    var real_name = getRealName(files[i], json_path, i + 1);
-                    var real_path = processMask(mask, real_name, i + 1);
-                    copyFile(file, real_path);
+
+        copy: function(src, dst) {
+            if(src instanceof Array) {
+                for(var i=0; i<src.length; i++) {
+                    if(!src[i]) continue;
+                    copyFile(src[i], dst[i]);
                 }
-            } else if(typeof(files) == 'string' && files != '') {
-                var real_name = getRealName(files, json_path, null);
-                var real_path = processMask(mask, real_name, '');
-                copyFile(files, real_path);
+            } else if(typeof(src) == 'string' && src != '') {
+                copyFile(src, dst);
             }
         },
+
 
         clear: function() {
             var del_files = old_files.filter(file => new_files.indexOf(file) < 0);
@@ -69,6 +45,11 @@ module.exports = function(task_path, old_files) {
             for(var i=0, file; file=del_files[i]; i++) {
                 shell.rm(path.join(task_path, file));
             }
+
+            // remove dups
+            new_files = new_files.filter(function(file, idx) {
+                return new_files.indexOf(file) == idx;
+            });
             return new_files;
         }
     }
