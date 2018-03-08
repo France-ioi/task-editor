@@ -1,6 +1,7 @@
 var default_state = {
     path: null,
     data: null,
+    schema: {},
     loading: false,
     ready: false,
     error: null
@@ -8,11 +9,13 @@ var default_state = {
 
 export default (state = default_state, action) => {
     switch(action.type) {
+        case 'TASK_FETCH_CREATE':
         case 'TASK_FETCH_LOAD':
             return {
                 ...state,
                 path: action.path,
                 data: null,
+                schema: {},
                 loading: true,
                 ready: false,
                 error: null
@@ -29,6 +32,12 @@ export default (state = default_state, action) => {
             return {
                 ...state,
                 data: action.data
+            };
+
+        case 'TASK_SET_SCHEMA':
+            return {
+                ...state,
+                schema: action.schema
             };
 
         case 'TASK_FETCH_SUCCESS':

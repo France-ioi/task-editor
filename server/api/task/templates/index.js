@@ -1,7 +1,7 @@
 var path = require('path')
 var fs = require('fs')
 
-module.exports = function(tpl_path, task_path) {
+module.exports = function(task_path, tpl_path) {
 
 
     var dafaults = {
@@ -42,7 +42,6 @@ module.exports = function(tpl_path, task_path) {
         var file = full_selector.trim().match(/^\[.+\]/);
         if(file) {
             file = file.toString();
-
             var selector = full_selector.substr(file.length);
             file = file.replace(/\[|\]/g, '');
         } else {

@@ -1,8 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Button, Modal, Alert, Breadcrumb, Glyphicon, FormGroup, InputGroup, FormControl } from 'react-bootstrap';
+import { Button, DropdownButton, MenuItem, ButtonToolbar,
+        Modal, Alert, Breadcrumb, Glyphicon, FormGroup, InputGroup, FormControl } from 'react-bootstrap';
 import { Loader } from './ui';
-
+import tasks_config from '../../../tasks/config.json';
 
 const Breadcrumbs = (props) => {
     if(props.path === null) return null;
@@ -14,7 +15,7 @@ const Breadcrumbs = (props) => {
             path.push(subs[j]);
         }
         breadcrumbs.push({
-            dir: subs[i] || 'ROOT',
+            dir: subs[i] || 'HOME',
             path: subs[i] ? path.join('/') : '/'
         });
     }
@@ -94,7 +95,13 @@ class Explorer extends React.Component {
     }
 
 
+    createTask = (task_type) => {
+        this.props.toggle();
+        this.props.createTask(this.props.path, task_type);
+    }
+
     render() {
+        var is_home = this.props.path == '';
         return (
             <Modal show={this.props.visible} onHide={this.props.toggle}>
                 <Modal.Header closeButton>
@@ -117,10 +124,26 @@ class Explorer extends React.Component {
                     </FormGroup>
                 </Modal.Footer>
                 <Modal.Footer>
-                    <Button className="pull-left" onClick={this.navHome}>Go home</Button>
-                    <Button className="pull-left" bsStyle="danger" onClick={this.removeDir}>Delete dir</Button>
-                    <Button onClick={this.loadTask}>Open</Button>
+                    { !is_home &&
+                        <ButtonToolbar className="pull-left">
+                            <Button onClick={this.navHome}>Go home</Button>
+                            <Button bsStyle="danger" onClick={this.removeDir}>Delete dir</Button>
+                        </ButtonToolbar>
+                    }
+
+                    <ButtonToolbar className="pull-right">
+                    { this.props.is_task &&
+                        <Button onClick={this.loadTask}>Open task</Button>
+                    }
+                    { !this.props.is_task && !is_home &&
+                        <DropdownButton bsStyle="default" title="Create task" noCaret dropup id="btn-create-task">
+                            { tasks_config.map(task =>
+                                <MenuItem key={task.type} onClick={()=>this.createTask(task.type)}>{task.title}</MenuItem>
+                            )}
+                        </DropdownButton>
+                    }
                     <Button onClick={this.props.toggle}>Cancel</Button>
+                    </ButtonToolbar>
                 </Modal.Footer>
             </Modal>
         );

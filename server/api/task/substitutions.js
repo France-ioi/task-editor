@@ -1,10 +1,10 @@
 var path = require('path');
 
-module.exports = function(tpl_path) {
+module.exports = function(src_path) {
 
 
     var filename = 'substitution.json';
-    var tree = require(path.resolve(tpl_path, filename));
+    var tree = require(path.resolve(src_path, filename));
     var res = [];
 
     /*
@@ -32,12 +32,12 @@ module.exports = function(tpl_path) {
                 res_item.json_path = res_item.json_path.concat(item.jsonSubPath.split('.'));
             }
 
-            if(item.selector) {
+            if('selector' in item) {
                 push = true;
                 res_item.selector += (res_item.selector == '' ? '' : ' ') + item.selector;
             }
 
-            if(item.file) {
+            if('file' in item) {
                 push = true;
                 res_item.file = item.file;
             }

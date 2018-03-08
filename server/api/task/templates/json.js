@@ -29,7 +29,7 @@ module.exports = function(content) {
         },
 
         content: function() {
-            return JSON.stringify(data, null, 4);
+            return JSON.stringify(data, null, 2);
         }
 
     }

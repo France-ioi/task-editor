@@ -4,24 +4,9 @@ var fs = require('fs');
 var shell = require('shelljs');
 var config = require('../../config');
 
-module.exports = function(task_path) {
-
-
-    var index_file = path.join(
-        task_path,
-        config.task.files_index
-    );
+module.exports = function(task_path, old_files) {
 
     var new_files = [];
-    var old_files = [];
-    if(fs.existsSync(index_file)) {
-        old_files = fs.readFileSync(
-            index_file,
-            { encoding: 'utf-8' }
-        )
-        old_files = JSON.parse(old_files);
-    }
-
 
     function getRealName(file, json_path, index) {
         var prefix = 'root.' + json_path.join('.') + '.';
@@ -70,7 +55,7 @@ module.exports = function(task_path) {
                     var real_path = processMask(mask, real_name, i + 1);
                     copyFile(file, real_path);
                 }
-            } else if(files !== "") {
+            } else if(typeof(files) == 'string' && files != '') {
                 var real_name = getRealName(files, json_path, null);
                 var real_path = processMask(mask, real_name, '');
                 copyFile(files, real_path);
@@ -84,8 +69,7 @@ module.exports = function(task_path) {
             for(var i=0, file; file=del_files[i]; i++) {
                 shell.rm(path.join(task_path, file));
             }
-            shell.mkdir('-p', path.dirname(index_file));
-            fs.writeFileSync(index_file, JSON.stringify(new_files, null, 2));
+            return new_files;
         }
     }
 

@@ -4,6 +4,7 @@ str = str.replace(/^\[.+\]/, '');
 console.log(str)
 */
 
+// old code, need update
 
 var path = require('path');
 var generator = require('./api/task/generator')

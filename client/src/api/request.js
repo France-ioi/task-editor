@@ -1,22 +1,26 @@
+function handleResponse(response) {
+    if(response.status == 200) {
+        return response.json();
+    } else if(response.status == 400) {
+        return response.text().then(function(text) {
+            throw new Error(text);
+        });
+    } else {
+        throw new Error('Bad response from server');
+    }
+}
+
 export function jsonRequest(path, params) {
     return fetch('/api/' + path, {
         method: 'POST',
         headers: {
-            'Accept': 'application/json',
+            'Accept': 'application/json, text/plain, text/html',
             'Content-Type': 'application/json; charset=utf-8'
         },
         credentials: 'same-origin',
         body: JSON.stringify(params)
     })
-    .then(response => {
-        if(response.status == 200) {
-            return response.json();
-        } else if(response.status == 400) {
-            throw new Error(response.body);
-        } else {
-            throw new Error("Bad response from server");
-        }
-    });
+    .then(handleResponse)
 }
 
 
@@ -27,19 +31,13 @@ export function formRequest(path, params) {
             body.append(k, params[k]);
         }
     }
-
     return fetch('/api/' + path, {
         method: 'POST',
         credentials: 'same-origin',
+        headers: {
+            'Accept': 'application/json, text/plain, text/html'
+        },
         body
     })
-    .then(response => {
-        if(response.status == 200) {
-            return response.json();
-        } else if(response.status == 400) {
-            throw new Error(response.body || 'Server error');
-        } else {
-            throw new Error("Bad response from server");
-        }
-    });
+    .then(handleResponse);
 }

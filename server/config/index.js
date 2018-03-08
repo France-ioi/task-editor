@@ -6,8 +6,7 @@ module.exports = {
 
     task: {
         tmp_dir: 'task_content_files',
-        files_index: 'task_content_files/.index.json',
-        content_data: 'task_content.json',
+        data_file: 'task_editor.json',
     },
 
     // tasks url prefix

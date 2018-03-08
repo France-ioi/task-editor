@@ -76,6 +76,10 @@ module.exports = function(env) {
                     }
                 },
                 {
+                    test: /\.json$/,
+                    loader: 'json-loader'
+                },
+                {
                     test: /\.(css)$/,
                     use: ['style-loader', 'css-loader']
                 },

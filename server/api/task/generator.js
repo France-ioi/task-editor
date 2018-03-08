@@ -4,24 +4,34 @@ var path = require('path');
 
 module.exports = {
 
-    output: (params, err) => {
-        var tpl_path = path.resolve(__dirname, '../../../task_template');
-
-        var substitutions = require('./substitutions')(tpl_path);
+    output: (params, callback) => {
+        var src_path = path.resolve(__dirname, '../../../tasks/' + params.type);
+        var substitutions = require('./substitutions')(src_path);
         var data = require('./data')(params.data);
-        var templates = require('./templates')(tpl_path, params.path);
-        var files = require('./files')(params.path);
+        var tpl_path = path.join(src_path, 'templates');
+        var templates = require('./templates')(params.path, tpl_path);
+        var files = require('./files')(params.path, params.files);
 
-        substitutions.map(rule => {
-            var value = data.get(rule.json_path);
-            if(rule.file) {
-                files.copy(rule.file, value, rule.json_path)
-            } else if(rule.selector) {
-                templates.inject(rule.selector, value);
-            }
-        })
+        try {
+            substitutions.map(rule => {
+                var value = data.get(rule.json_path);
+                if(rule.file) {
+                    files.copy(rule.file, value, rule.json_path)
+                } else if(rule.selector) {
+                    templates.inject(rule.selector, value);
+                }
+            })
 
-        templates.save();
-        files.clear();
+            templates.save();
+            var new_files = files.clear();
+            callback(null, {
+                type: params.type,
+                data: params.data,
+                files: new_files
+            });
+        } catch(err) {
+            callback(err);
+        }
     }
+
 }

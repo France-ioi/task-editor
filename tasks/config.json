@@ -1,0 +1,10 @@
+[
+    {
+        "type": "dev",
+        "title": "Test dev task"
+    },
+    {
+        "type": "ioi",
+        "title": "IOI task"
+    }
+]

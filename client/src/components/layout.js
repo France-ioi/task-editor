@@ -33,6 +33,10 @@ class Layout extends React.Component {
         })
     }
 
+    createTask = (path, task_type) => {
+        this.props.dispatch({type: 'TASK_FETCH_CREATE', path, task_type })
+    }
+
 
     loadTask = (path) => {
         this.props.dispatch({type: 'TASK_FETCH_LOAD', path })
@@ -77,7 +81,8 @@ class Layout extends React.Component {
                     { sectionVisible('svn') && <TaskSvn path={task.path}/>}
                     { sectionVisible('import') && <TaskImporter path={task.path}/>}
                 </div>
-                <Explorer visible={explorer_visible} toggle={this.toggleExplorer} loadTask={this.loadTask}/>
+                <Explorer visible={explorer_visible} toggle={this.toggleExplorer}
+                    loadTask={this.loadTask} createTask={this.createTask}/>
             </div>
         )
     }

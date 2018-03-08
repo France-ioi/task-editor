@@ -1,8 +1,7 @@
 import React from 'react';
 require('json-editor');
-
-import schema from '../common/task_schema.json'
 import files_api from '../api/files';
+
 
 class TaskJsonEditor extends React.Component {
 
@@ -11,7 +10,7 @@ class TaskJsonEditor extends React.Component {
         const self = this;
         this.editor = new JSONEditor(this.element, {
             theme: 'bootstrap3',
-            schema,
+            schema: this.props.task.schema,
 //            disable_properties: true,
             display_required_only: true,
             upload: true,

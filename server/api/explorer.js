@@ -8,6 +8,7 @@ function readDir(req, res) {
     fs.readdir(dir_path, (err, files) => {
         if(err) return res.status(400).send(err);
         var list = [];
+        var is_task = false;
         if(files) {
             files.map(file => {
                 var fullfile = path.resolve(dir_path, file);
@@ -16,14 +17,18 @@ function readDir(req, res) {
                 } catch(e) {
                     if(err) return res.status(400).send(e.message);
                 }
-                if((req.body.folders && stat.isDirectory()) || (req.body.files && stat.isFile())) {
-                    list.push(file)
-                };
+                if(stat.isDirectory()) {
+                    list.push(file);
+                }
+                if(stat.isFile() && file == config.task.data_file) {
+                    is_task = true;
+                }
             })
         }
         res.json({
             path: req.body.path,
-            list
+            list,
+            is_task
         });
     })
 }
