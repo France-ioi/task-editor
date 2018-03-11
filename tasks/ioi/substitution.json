@@ -26,5 +26,19 @@
     {
         "jsonSubPath": "taskSettings",
         "selector": "[taskSettings.json]"
+    },
+    {
+        "jsonSubPath": "testFiles.input",
+        "value": {
+            "type": "file",
+            "format": "tests/files/test[index].in"
+        }
+    },
+    {
+        "jsonSubPath": "testFiles.output",
+        "value": {
+            "type": "file",
+            "format": "tests/files/test[index].out"
+        }
     }
 ]

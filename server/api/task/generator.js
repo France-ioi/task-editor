@@ -16,16 +16,26 @@ module.exports = {
         try {
             substitutions.map(rule => {
                 var value = data.get(rule.json_path);
-                var formatted_value = value;
                 var copy_file = false;
-                if('value' in rule) {
-                    formatted_value = formatValue(rule.value, value, rule.json_path)
-                    copy_file = rule.value.type == 'file';
-                }
-                if(rule.selector) {
-                    templates.inject(rule.selector, formatted_value);
-                } else if(copy_file) {
-                    files.copy(value, formatted_value)
+                function applyValue(val, idx) {
+                    var formatted_value = val;
+                    if('value' in rule) {
+                        formatted_value = formatValue(rule.value, val, rule.json_path, idx)
+                        copy_file = rule.value.type == 'file';
+                    }
+                    if(rule.selector) {
+                        templates.inject(rule.selector, formatted_value);
+                    } else if(copy_file) {
+                        files.copy(val, formatted_value)
+                    }
+                };
+                if(value instanceof Array) {
+                    for(var i=0; i<value.length; i++) {
+                        if(value === null) { continue; }
+                        applyValue(value[i], i);
+                    }
+                } else {
+                    applyValue(value);
                 }
             })
             templates.save();
@@ -36,6 +46,7 @@ module.exports = {
             });
         } catch(err) {
             callback(err);
+            throw err;
         }
     }
 

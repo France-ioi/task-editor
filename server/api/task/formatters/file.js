@@ -22,7 +22,7 @@ function processMask(mask, real_name, index) {
 }
 
 
-module.exports = function(format, value, json_path) {
+module.exports = function(format, value, json_path, idx) {
     if(value instanceof Array) {
         var res = [];
         for(var i=0; i<value.length; i++) {
@@ -31,8 +31,8 @@ module.exports = function(format, value, json_path) {
             res.push(processMask(format, real_name, i + 1))
         }
     } else if(typeof(value) == 'string' && value != '') {
-        var real_name = getRealName(value, json_path, null);
-        var res = processMask(format, real_name, '');
+        var real_name = getRealName(value, json_path, typeof idx != 'undefined' ? idx+1 : null);
+        var res = processMask(format, real_name, typeof idx != 'undefined' ? idx+1 : '');
     }
     return res;
 }

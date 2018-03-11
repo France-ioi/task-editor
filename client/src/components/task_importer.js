@@ -6,7 +6,7 @@ class TaskImporter extends React.Component {
 
     getUrl = () => {
         var params = Object.assign({
-            path: this.props.path,
+            path: this.props.path.substr(5),
         }, window.__CONFIG__.task_importer_params);
         var q = [];
         for(var k in params) {
