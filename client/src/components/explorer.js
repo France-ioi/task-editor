@@ -133,7 +133,7 @@ class Explorer extends React.Component {
 
                     <ButtonToolbar className="pull-right">
                     { this.props.is_task &&
-                        <Button onClick={this.loadTask}>Open task</Button>
+                        <Button onClick={this.loadTask} bsStyle="primary">Open task</Button>
                     }
                     { !this.props.is_task && !is_home &&
                         <DropdownButton bsStyle="default" title="Create task" noCaret dropup id="btn-create-task">

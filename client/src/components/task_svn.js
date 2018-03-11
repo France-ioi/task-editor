@@ -34,15 +34,15 @@ class TaskSvn extends React.Component {
             <div className="container">
                 <FormGroup>
                     <Button name="update" onClick={this.exec}>Update</Button>
-                    {' '}
-                    <Button name="add" onClick={this.exec}>Add</Button>
+                    <i> Fetch files from the SVN into task-editor's copy.</i>
                 </FormGroup>
                 <FormGroup>
-                    <ControlLabel>Message</ControlLabel>
-                    <FormControl type="text" name="message" value={this.state.message} onChange={this.onInputChange}/>
+                    <ControlLabel>Commit message</ControlLabel>
+                    <FormControl type="text" name="message" placeholder="Message for the SVN commit" value={this.state.message} onChange={this.onInputChange}/>
                 </FormGroup>
                 <FormGroup>
-                    <Button name="commit" onClick={this.exec}>Commit</Button>
+                    <Button name="commit" bsStyle="primary" onClick={this.exec}>Commit</Button>
+                    <i> Save changes onto the SVN; automatically adds new files.</i>
                 </FormGroup>
                 { output && <pre className="console-output">{output}</pre>}
                 { this.props.error && <Alert bsStyle="danger">{this.props.error}</Alert> }
