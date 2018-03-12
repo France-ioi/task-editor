@@ -14,7 +14,6 @@ module.exports = function(app) {
     app.post('/api/task/create', task.create);
 
     app.post('/api/svn/update', svn.update);
-    app.post('/api/svn/add', svn.add);
     app.post('/api/svn/commit', svn.commit);
 
     app.post('/api/files/upload', files.upload);

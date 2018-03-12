@@ -19,9 +19,11 @@ class TaskSvn extends React.Component {
     }
 
     exec = (e) => {
+        // Remove trailing '/'
+        var path = this.props.path.indexOf('/') == 0 ? this.props.path.substr(1) : this.props.path;
         this.props.dispatch({
             type: 'SVN_FETCH',
-            path: this.props.path,
+            path: path,
             cmd: e.target.name,
             message: this.state.message
         });
