@@ -62,6 +62,7 @@ JSONEditor.defaults.editors.upload = JSONEditor.AbstractEditor.extend({
             )
         );
         this.editor_content = this.theme.getTextareaInput();
+        this.editor_content.style.height = '200px';
         this.btn_save_editor = this.theme.getButton('Save');
         this.btn_save_editor.addEventListener('click', this.saveEditor.bind(this));
         this.editor.appendChild(

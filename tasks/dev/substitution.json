@@ -1,29 +1,5 @@
 [
     {
-        "jsonSubPath": "title",
-        "selector": "title"
-    },
-    {
-        "jsonSubPath": "task",
-        "selector": "#task"
-    },
-    {
-        "jsonSubPath": "hints",
-        "selector": ".hint"
-    },
-    {
-        "jsonSubPath": "solution",
-        "selector": "#solution"
-    },
-    {
-        "jsonSubPath": "PEMTaskMetaData",
-        "selector": "$PEMTaskMetaData"
-    },
-    {
-        "jsonSubPath": "FIOITaskMetaData",
-        "selector": "$FIOITaskMetaData"
-    },
-    {
         "jsonSubPath": "test_files.multiple",
         "value": {
             "type": "file",

@@ -4,12 +4,13 @@ var shell = require('shelljs');
 var config = require('../config')
 
 function taskFilePath(task_subpath, filename) {
-    return path.join(
+    var filepath = path.join(
         config.path,
         task_subpath,
-        config.task.tmp_dir,
-        filename
+        config.task.tmp_dir
     );
+    shell.mkdir('-p', filepath);
+    return path.join(filepath, filename);
 }
 
 

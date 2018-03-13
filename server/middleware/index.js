@@ -1,6 +1,12 @@
 module.exports = function(app) {
 
     app.use((req, res, next) => {
+        if('old_filename' in req.body && req.body.old_filename.indexOf('./') !== -1) {
+            return res.status(400).send('Wrong filename')
+        }
+        if('new_filename' in req.body && req.body.new_filename.indexOf('./') !== -1) {
+            return res.status(400).send('Wrong filename')
+        }
         if('path' in req.body && req.body.path.indexOf('./') !== -1) {
             return res.status(400).send('Wrong path')
         }
