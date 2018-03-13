@@ -13,7 +13,8 @@
           "type": "string",
           "format": "url",
           "options": {
-            "upload": true
+            "upload": true,
+            "editor": true
           },
           "links": [
             {

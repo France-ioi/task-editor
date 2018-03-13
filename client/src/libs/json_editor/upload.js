@@ -44,37 +44,40 @@ JSONEditor.defaults.editors.upload = JSONEditor.AbstractEditor.extend({
         this.preview = this.theme.getFormInputDescription(description);
         this.container.appendChild(this.preview);
 
-        this.btn_toggle_editor = this.theme.getButton('Toggle editor');
-        this.btn_toggle_editor.addEventListener('click', this.toggleEditor.bind(this));
-        this.container.appendChild(this.btn_toggle_editor);
+        if(this.schema.options.editor) {
+            this.btn_toggle_editor = this.theme.getButton('Toggle editor');
+            this.btn_toggle_editor.addEventListener('click', this.toggleEditor.bind(this));
+            this.container.appendChild(this.btn_toggle_editor);
+        }
 
 
         this.control = this.theme.getFormControl(this.label, this.uploader||this.input, this.preview);
         this.container.appendChild(this.control);
 
-
-        this.editor = document.createElement('div');
-        this.editor_filename = this.theme.getFormInputField('text');
-        this.editor.appendChild(
-            this.theme.getFormControl(
-                this.theme.getFormInputLabel('File name'),
-                this.editor_filename
-            )
-        );
-        this.editor_content = this.theme.getTextareaInput();
-        this.editor_content.style.height = '200px';
-        this.btn_save_editor = this.theme.getButton('Save');
-        this.btn_save_editor.addEventListener('click', this.saveEditor.bind(this));
-        this.editor.appendChild(
-            this.theme.getFormControl(
-                this.theme.getFormInputLabel('File content'),
-                this.editor_content,
-                this.btn_save_editor
-            )
-        );
-        this.editor.style.display = 'none';
-        this.editor_mode = false;
-        this.container.appendChild(this.editor);
+        if(this.schema.options.editor) {
+            this.editor = document.createElement('div');
+            this.editor_filename = this.theme.getFormInputField('text');
+            this.editor.appendChild(
+                this.theme.getFormControl(
+                    this.theme.getFormInputLabel('File name'),
+                    this.editor_filename
+                )
+            );
+            this.editor_content = this.theme.getTextareaInput();
+            this.editor_content.style.height = '200px';
+            this.btn_save_editor = this.theme.getButton('Save');
+            this.btn_save_editor.addEventListener('click', this.saveEditor.bind(this));
+            this.editor.appendChild(
+                this.theme.getFormControl(
+                    this.theme.getFormInputLabel('File content'),
+                    this.editor_content,
+                    this.btn_save_editor
+                )
+            );
+            this.editor.style.display = 'none';
+            this.editor_mode = false;
+            this.container.appendChild(this.editor);
+        }
     },
 
 
