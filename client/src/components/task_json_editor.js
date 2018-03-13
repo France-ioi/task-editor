@@ -5,7 +5,6 @@ import files_api from '../api/files';
 
 class TaskJsonEditor extends React.Component {
 
-
     componentDidMount() {
         const self = this;
         this.editor = new JSONEditor(this.element, {
@@ -13,39 +12,65 @@ class TaskJsonEditor extends React.Component {
             schema: this.props.task.schema,
 //            disable_properties: true,
             display_required_only: true,
-            upload: true,
             startval: this.props.task.data,
-
-            upload: function(type, file, cbs) {
-                cbs.updateProgress();
-                files_api.upload({
-                    path: self.props.task.path,
-                    json_path: type,
-                    file
-                }).then((res) => {
-                    cbs.success(res.filename);
-                }).catch((err) => {
-                    //TODO: why cbs.failure wont work?
-                    cbs.failure(err.message);
-                });
+            upload: this.editorUpload,
+            task: {
+                getFileUrl: (filename) => {
+                    return [
+                        window.__CONFIG__.url_prefix,
+                        this.props.task.path,
+                        window.__CONFIG__.task.tmp_dir,
+                        filename
+                    ].join('/')
+                },
+                getContent: this.editorGetContent,
+                setContent: this.editorSetContent
             }
         });
         this.editor.on('change', () => {
-            this.refreshLinks();
             this.props.onChange(this.editor.getValue());
         });
     }
 
 
-    refreshLinks = () => {
-        // workaround for links :)
-        var links = document.getElementsByClassName('json-file-link');
-        for(var i=0; i<links.length; i++) {
-            links[i].href = window.__CONFIG__.url_prefix +
-                this.props.task.path + '/' +
-                window.__CONFIG__.task.tmp_dir + '/' +
-                links[i].innerText;
-        }
+    editorUpload = (type, file, cbs) => {
+        cbs.updateProgress();
+        files_api.upload({
+            path: this.props.task.path,
+            json_path: type,
+            file
+        }).then((res) => {
+            cbs.success(res.filename);
+        }).catch((err) => {
+            //TODO: why cbs.failure wont work?
+            cbs.failure(err.message);
+        });
+    }
+
+
+    editorGetContent = (filename, cbs) => {
+        files_api.getContent({
+            path: this.props.task.path,
+            filename
+        }).then((res) => {
+            cbs.success(res.content);
+        }).catch((err) => {
+            cbs.failure(err.message);
+        });
+    }
+
+
+    editorSetContent = (old_filename, new_filename, content, cbs) => {
+        files_api.setContent({
+            path: this.props.task.path,
+            old_filename,
+            new_filename,
+            content
+        }).then((res) => {
+            cbs.success();
+        }).catch((err) => {
+            cbs.failure(err.message);
+        });
     }
 
 

@@ -1,4 +1,5 @@
 import 'babel-polyfill';
+import './libs/json_editor/upload';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
@@ -7,6 +8,7 @@ import createSagaMiddleware from 'redux-saga';
 import sagas from './sagas'
 import reducers from './reducers';
 import Layout from './components/layout';
+
 
 const sagaMiddleware = createSagaMiddleware()
 const store = createStore(reducers, applyMiddleware(sagaMiddleware));

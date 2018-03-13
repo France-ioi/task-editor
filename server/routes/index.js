@@ -17,5 +17,7 @@ module.exports = function(app) {
     app.post('/api/svn/commit', svn.commit);
 
     app.post('/api/files/upload', files.upload);
+    app.post('/api/files/get_content', files.getContent);
+    app.post('/api/files/set_content', files.setContent);
 
 }

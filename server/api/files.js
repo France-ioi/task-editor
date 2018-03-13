@@ -3,6 +3,16 @@ var path = require('path');
 var shell = require('shelljs');
 var config = require('../config')
 
+function taskFilePath(task_subpath, filename) {
+    return path.join(
+        config.path,
+        task_subpath,
+        config.task.tmp_dir,
+        filename
+    );
+}
+
+
 module.exports = {
 
     upload: (req, res) => {
@@ -28,5 +38,36 @@ module.exports = {
             }
         );
     },
+
+
+    getContent: (req, res) => {
+        fs.readFile(
+            taskFilePath(req.body.path, req.body.filename),
+            { encoding: 'utf-8' },
+            (err, content) => {
+                if(err) return res.status(400).send(err.message);
+                res.json({
+                    content
+                });
+            }
+        )
+    },
+
+
+    setContent: (req, res) => {
+        if(req.body.old_filename) {
+            shell.rm(
+                taskFilePath(req.body.path, req.body.old_filename)
+            );
+        }
+        fs.writeFile(
+            taskFilePath(req.body.path, req.body.new_filename),
+            req.body.content,
+            (err) => {
+                if(err) return res.status(400).send(err.message);
+                res.json({});
+            }
+        );
+    }
 
 }

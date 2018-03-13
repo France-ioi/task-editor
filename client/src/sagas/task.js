@@ -25,6 +25,7 @@ function* load(action) {
         }
         // may be get path from explorer state?
         const { data, schema } = yield call(api_task.load, params);
+
         yield put({type: 'TASK_SET_SCHEMA', schema});
         yield put({type: 'TASK_SET_DATA', data});
         yield put({type: 'TASK_FETCH_SUCCESS'});
