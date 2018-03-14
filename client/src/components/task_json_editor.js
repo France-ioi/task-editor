@@ -24,7 +24,8 @@ class TaskJsonEditor extends React.Component {
                     ].join('/')
                 },
                 getContent: this.editorGetContent,
-                setContent: this.editorSetContent
+                setContent: this.editorSetContent,
+                path: this.props.task.path
             }
         });
         this.editor.on('change', () => {

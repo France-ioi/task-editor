@@ -1,3 +1,32 @@
+function createImagesUploadHandler(path) {
+
+    return function images_upload_handler(blobInfo, success, failure) {
+        var xhr, formData;
+        xhr = new XMLHttpRequest();
+        xhr.withCredentials = false;
+        xhr.open('POST', '/api/images/upload');
+        xhr.onload = function() {
+            var json;
+            if (xhr.status != 200) {
+                failure('HTTP Error: ' + xhr.status);
+                return;
+            }
+            json = JSON.parse(xhr.responseText);
+            if (!json || typeof json.location != 'string') {
+                failure('Invalid JSON: ' + xhr.responseText);
+                return;
+            }
+            success(json.location);
+        };
+
+        formData = new FormData();
+        formData.append('file', blobInfo.blob(), blobInfo.filename());
+        formData.append('path', path);
+        xhr.send(formData);
+    }
+}
+
+
 JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
     setValue: function(value,initial,from_template) {
         var self = this;
@@ -55,9 +84,8 @@ JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
 
                 self.tinymce_instance = window.tinymce.init({
                     target: self.input,
-                    plugins: 'link fullscreen lists textcolor colorpicker table ' + (self.input_type === 'html' ? '' : 'bbcode'),
-                    //menubar: 'insert view',
-                    toolbar: 'link forecolor backcolor table numlist bullist fullscreen',
+                    plugins: 'image link fullscreen lists textcolor colorpicker table ' + (self.input_type === 'html' ? '' : 'bbcode'),
+                    toolbar: 'image link forecolor backcolor table numlist bullist fullscreen',
                     branding: false,
                     skin: false,
                     setup: function(editor) {
@@ -67,7 +95,20 @@ JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
                             self.is_dirty = true;
                             self.onChange(true);
                         });
-                    }
+                    },
+                    images_upload_url: '/api/images/upload',
+                    automatic_uploads: false,
+                    /*
+                    file_picker_callback: function(callback, value, meta) {
+                        console.log('file_picker_callback', value, meta)
+                        if (meta.filetype == 'image') {
+                          callback('myimage.jpg', {alt: 'My alt text'});
+                        }
+                    },
+                    file_picker_types: 'image'
+                    */
+                    file_picker_types: 'image',
+                    images_upload_handler: createImagesUploadHandler(self.jsoneditor.options.task.path)
                 });
 
             } else if (this.input_type === 'markdown' && window.EpicEditor) {

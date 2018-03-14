@@ -6,6 +6,7 @@ module.exports = {
 
     task: {
         tmp_dir: 'task_content_files',
+        images_dir: 'images',
         data_file: 'task_editor.json',
     },
 

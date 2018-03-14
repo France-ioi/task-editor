@@ -2,6 +2,8 @@ var explorer = require('../api/explorer');
 var task = require('../api/task');
 var svn = require('../api/svn');
 var files = require('../api/files');
+var images = require('../api/images');
+
 
 module.exports = function(app) {
 
@@ -20,4 +22,5 @@ module.exports = function(app) {
     app.post('/api/files/get_content', files.getContent);
     app.post('/api/files/set_content', files.setContent);
 
+    app.post('/api/images/upload', images.upload);
 }
