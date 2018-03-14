@@ -55,7 +55,8 @@ JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
 
                 self.tinymce_instance = window.tinymce.init({
                     target: self.input,
-                    plugins: self.input_type === 'html' ? '' : 'bbcode',
+                    plugins: 'textcolor colorpicker table ' + (self.input_type === 'html' ? '' : 'bbcode'),
+                    toolbar: 'forecolor backcolor table',
                     branding: false,
                     skin: false,
                     setup: function(editor) {
