@@ -1,12 +1,5 @@
 [
     {
-        "jsonSubPath": "test_files.multiple",
-        "value": {
-            "type": "file",
-            "format": "test_files/file[index].ext"
-        }
-    },
-    {
         "jsonSubPath": "test_files.single",
         "value": {
             "type": "file",

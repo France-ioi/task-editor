@@ -9,7 +9,7 @@ module.exports = function(env) {
         'body-parser',
         'json-editor',
         'jquery',
-        path.join(__dirname, 'node_modules/sceditor/src/jquery.sceditor.js'),
+        'tinymce',
         'react',
         'react-bootstrap',
         'react-dom',

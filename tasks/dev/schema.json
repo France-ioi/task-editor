@@ -1,9 +1,16 @@
 {
   "title": "Task",
   "type": "object",
-  "required": ["test_files"],
+  "required": ["text", "test_files"],
   "properties": {
-
+    "text": {
+      "title": "Test text editor",
+      "type": "string",
+      "format": "html",
+      "options": {
+        "wysiwyg": true
+      }
+    },
     "test_files": {
       "title": "Test files upload",
       "type": "object",
@@ -22,25 +29,6 @@
               "class": "json-file-link"
             }
           ]
-        },
-        "multiple": {
-          "type": "array",
-          "format": "tabs",
-          "title": "Multiple files test",
-          "items": {
-            "title": "File",
-            "type": "string",
-            "format": "url",
-            "options": {
-              "upload": true
-            },
-            "links": [
-              {
-                "href": "{{self}}",
-                "class": "json-file-link"
-              }
-            ]
-          }
         }
       }
     }
