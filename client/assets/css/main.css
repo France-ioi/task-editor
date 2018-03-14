@@ -94,3 +94,7 @@ body, html {
     border: 0;
     color: #FFFFFF;
 }
+
+.mce-fullscreen {
+    z-index: 1500 !important;
+}

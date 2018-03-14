@@ -55,8 +55,9 @@ JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
 
                 self.tinymce_instance = window.tinymce.init({
                     target: self.input,
-                    plugins: 'textcolor colorpicker table ' + (self.input_type === 'html' ? '' : 'bbcode'),
-                    toolbar: 'forecolor backcolor table',
+                    plugins: 'link fullscreen lists textcolor colorpicker table ' + (self.input_type === 'html' ? '' : 'bbcode'),
+                    //menubar: 'insert view',
+                    toolbar: 'link forecolor backcolor table numlist bullist fullscreen',
                     branding: false,
                     skin: false,
                     setup: function(editor) {
