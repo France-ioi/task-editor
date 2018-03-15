@@ -28,30 +28,28 @@ function imageFileLocation(task_subpath, filename) {
 function searchImages(task_subpath) {
     var extensions = ['.png', '.gif', '.jpg', '.jpeg'];
     var res = [];
+    var task_path = path.join(config.path, task_subpath);
 
     function scanDir(dir) {
         fs.readdirSync(dir).map(file => {
+            if(file == config.task.tmp_dir) return;
             var filepath = path.join(dir, file);
             var stat = fs.statSync(filepath);
             if(stat.isFile(filepath)) {
                 if(extensions.indexOf(path.extname(file)) !== -1) {
-                    var url = path.join(
+                    var title = path.relative(task_path, filepath);
+                    var value = path.join(
                         config.url_prefix,
                         path.relative(config.path, filepath)
                     );
-                    res.push({
-                        title: file,
-                        value: url
-                    })
+                    res.push({ title, value })
                 }
             } else if(stat.isDirectory(filepath)) {
                 scanDir(filepath);
             }
         })
     }
-    scanDir(
-        path.join(config.path, task_subpath)
-    );
+    scanDir(task_path);
     return res;
 }
 
