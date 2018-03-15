@@ -23,4 +23,5 @@ module.exports = function(app) {
     app.post('/api/files/set_content', files.setContent);
 
     app.post('/api/images/upload', images.upload);
+    app.post('/api/images/search', images.search);
 }

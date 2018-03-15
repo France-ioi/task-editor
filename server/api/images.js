@@ -14,6 +14,7 @@ function imageFilePath(task_subpath, filename) {
     return path.join(filepath, filename);
 }
 
+
 function imageFileLocation(task_subpath, filename) {
     return path.join(
         config.url_prefix,
@@ -21,6 +22,37 @@ function imageFileLocation(task_subpath, filename) {
         config.task.images_dir,
         filename
     )
+}
+
+
+function searchImages(task_subpath) {
+    var extensions = ['.png', '.gif', '.jpg', '.jpeg'];
+    var res = [];
+
+    function scanDir(dir) {
+        fs.readdirSync(dir).map(file => {
+            var filepath = path.join(dir, file);
+            var stat = fs.statSync(filepath);
+            if(stat.isFile(filepath)) {
+                if(extensions.indexOf(path.extname(file)) !== -1) {
+                    var url = path.join(
+                        config.url_prefix,
+                        path.relative(config.path, filepath)
+                    );
+                    res.push({
+                        title: file,
+                        value: url
+                    })
+                }
+            } else if(stat.isDirectory(filepath)) {
+                scanDir(filepath);
+            }
+        })
+    }
+    scanDir(
+        path.join(config.path, task_subpath)
+    );
+    return res;
 }
 
 module.exports = {
@@ -37,6 +69,13 @@ module.exports = {
                     location: imageFileLocation(req.body.path, req.files.file.name)
                 });
             }
+        );
+    },
+
+
+    search: (req, res) => {
+        res.json(
+            searchImages(req.body.path)
         );
     }
 

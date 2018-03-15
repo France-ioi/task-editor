@@ -25,12 +25,17 @@ export function jsonRequest(path, params) {
 
 
 export function formRequest(path, params) {
-    var body = new FormData();
-    for(var k in params) {
-        if(params.hasOwnProperty(k)) {
-            body.append(k, params[k]);
+    if(params instanceof FormData) {
+       var body = params;
+    } else {
+        var body = new FormData();
+        for(var k in params) {
+            if(params.hasOwnProperty(k)) {
+                body.append(k, params[k]);
+            }
         }
     }
+
     return fetch('/api/' + path, {
         method: 'POST',
         credentials: 'same-origin',

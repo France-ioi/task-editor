@@ -1,28 +1,21 @@
+import images_api from '../../api/images';
+
 function createImagesUploadHandler(path) {
+    return function (blobInfo, success, failure) {
+        var data = new FormData();
+        data.append('file', blobInfo.blob(), blobInfo.filename());
+        data.append('path', path);
+        images_api.upload(data)
+            .then(res => success(res.location))
+            .catch(err => failure(err.message))
+    }
+}
 
-    return function images_upload_handler(blobInfo, success, failure) {
-        var xhr, formData;
-        xhr = new XMLHttpRequest();
-        xhr.withCredentials = false;
-        xhr.open('POST', '/api/images/upload');
-        xhr.onload = function() {
-            var json;
-            if (xhr.status != 200) {
-                failure('HTTP Error: ' + xhr.status);
-                return;
-            }
-            json = JSON.parse(xhr.responseText);
-            if (!json || typeof json.location != 'string') {
-                failure('Invalid JSON: ' + xhr.responseText);
-                return;
-            }
-            success(json.location);
-        };
-
-        formData = new FormData();
-        formData.append('file', blobInfo.blob(), blobInfo.filename());
-        formData.append('path', path);
-        xhr.send(formData);
+function createImagesListHandler(path) {
+    return function (success, failure) {
+        images_api.search({ path })
+            .then(res => success(res))
+            .catch(err => failure(err.message))
     }
 }
 
@@ -98,17 +91,10 @@ JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
                     },
                     images_upload_url: '/api/images/upload',
                     automatic_uploads: false,
-                    /*
-                    file_picker_callback: function(callback, value, meta) {
-                        console.log('file_picker_callback', value, meta)
-                        if (meta.filetype == 'image') {
-                          callback('myimage.jpg', {alt: 'My alt text'});
-                        }
-                    },
-                    file_picker_types: 'image'
-                    */
                     file_picker_types: 'image',
-                    images_upload_handler: createImagesUploadHandler(self.jsoneditor.options.task.path)
+                    images_upload_handler: createImagesUploadHandler(self.jsoneditor.options.task.path),
+                    images_reuse_filename: true,
+                    image_list: createImagesListHandler(self.jsoneditor.options.task.path)
                 });
 
             } else if (this.input_type === 'markdown' && window.EpicEditor) {
