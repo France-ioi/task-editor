@@ -22,5 +22,9 @@ module.exports = {
         params: {
             display: 'frame'
         }
+    },
+
+    dev: {
+        task_autoload: process.env.DEV_TASK_AUTOLOAD
     }
 }

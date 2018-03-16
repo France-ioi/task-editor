@@ -8,7 +8,6 @@ module.exports = function(env) {
         'babel-polyfill',
         'body-parser',
         'json-editor',
-        'jquery',
         'tinymce',
         './node_modules/tinymce/plugins/textcolor/plugin.js',
         './node_modules/tinymce/plugins/colorpicker/plugin.js',
@@ -31,12 +30,14 @@ module.exports = function(env) {
         new webpack.optimize.CommonsChunkPlugin({
             name: 'vendor',
             filename: 'vendor.js'
-        }),
+        })
+        /*,
         new webpack.ProvidePlugin({
             //$: "jquery",
             //jQuery: "jquery",
             "window.jQuery": "jquery"
         })
+        */
     ];
 
     var production = process.env.NODE_ENV === 'production';

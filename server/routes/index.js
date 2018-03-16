@@ -9,7 +9,7 @@ module.exports = function(app) {
 
     app.post('/api/explorer/read_dir', explorer.readDir);
     app.post('/api/explorer/create_dir', explorer.createDir);
-    app.post('/api/explorer/remove_dir', explorer.removeDir);
+    app.post('/api/explorer/remove', explorer.remove);
 
     app.post('/api/task/load', task.load);
     app.post('/api/task/save', task.save);

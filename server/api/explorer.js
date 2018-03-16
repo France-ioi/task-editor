@@ -45,18 +45,22 @@ function createDir(req, res) {
 }
 
 
-function removeDir(req, res) {
-    var dir = path.join(config.path, req.body.path)
-    shell.rm('-rf', dir);
-    var parent_dir = req.body.path.split('/');
-    parent_dir.pop();
-    req.body.path = parent_dir.join('/');
-    readDir(req, res);
+function remove(req, res) {
+    var target = path.join(config.path, req.body.path)
+    var stat = fs.statSync(target);
+    shell.rm('-rf', target);
+    if(stat.isDirectory()) {
+        var parent_dir = req.body.path.split('/');
+        parent_dir.pop();
+        req.body.path = parent_dir.join('/');
+        return readDir(req, res);
+    }
+    res.json({});
 }
 
 
 module.exports = {
     readDir,
     createDir,
-    removeDir
+    remove
 }

@@ -22,7 +22,12 @@ class Layout extends React.Component {
 
     componentDidMount() {
         //used for dev purpose
-        //this.props.dispatch({type: 'TASK_FETCH_LOAD', path: 'test-task' })
+        if(window.__CONFIG__.dev.task_autoload) {
+            this.props.dispatch({
+                type: 'TASK_FETCH_LOAD',
+                path: window.__CONFIG__.dev.task_autoload
+            })
+        }
     }
 
 

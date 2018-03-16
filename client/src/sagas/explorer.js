@@ -36,7 +36,7 @@ function* removeDir(action) {
         const params = {
             path
         }
-        const data = yield call(explorer.removeDir, params);
+        const data = yield call(explorer.remove, params);
         yield put({type: 'EXPLORER_FETCH_SUCCESS', data });
     } catch (e) {
         yield put({type: 'EXPLORER_FETCH_FAIL', error: e.message});
