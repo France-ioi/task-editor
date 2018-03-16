@@ -2,41 +2,22 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Button, DropdownButton, MenuItem, ButtonToolbar,
         Modal, Alert, Breadcrumb, Glyphicon, FormGroup, InputGroup, FormControl } from 'react-bootstrap';
-import { Loader } from './ui';
+import Loader from './ui/loader';
+import Breadcrumbs from './ui/breadcrumbs';
 import tasks_config from '../../../tasks/config.json';
 
-const Breadcrumbs = (props) => {
-    if(props.path === null) return null;
-    const subs = props.path == '/' ? [''] : props.path.split('/')
-    const breadcrumbs = [];
-    for(var i=0; i<subs.length; i++) {
-        var path = [];
-        for(var j=0; j<=i; j++) {
-            path.push(subs[j]);
-        }
-        breadcrumbs.push({
-            dir: subs[i] || 'HOME',
-            path: subs[i] ? path.join('/') : '/'
-        });
-    }
-    return (
-        <Breadcrumb>
-            { breadcrumbs.map(item=>
-                <Breadcrumb.Item key={item.path} onClick={()=>props.nav(item.path)}>{item.dir}</Breadcrumb.Item>
-            )}
-        </Breadcrumb>
-    )
-}
+
 
 const List = (props) => {
     if(!props.list) return null;
     return (
         <div>
-            {props.list.map(dir =>
-                <div key={dir}>
+            {props.list.map(item =>
+                item.type == 'dir' &&
+                <div key={item.name}>
                     <a href="#"
-                        onClick={()=>props.nav(props.path + (props.path == '/' ? '' : '/') + dir)}>
-                        <Glyphicon glyph="folder-close" /> {dir}
+                        onClick={()=>props.nav(props.path + item.name)}>
+                        <Glyphicon glyph="folder-close" /> {item.name}
                     </a>
                 </div>
             )}
@@ -101,7 +82,7 @@ class Explorer extends React.Component {
     }
 
     render() {
-        var is_home = this.props.path == '';
+        var is_home = this.props.path == '/' || !this.props.path;
         return (
             <Modal show={this.props.visible} onHide={this.props.toggle}>
                 <Modal.Header closeButton>
@@ -109,7 +90,7 @@ class Explorer extends React.Component {
                 </Modal.Header>
                 <Modal.Body>
                     { this.props.loading ? <Loader/> : <Breadcrumbs nav={this.nav} path={this.props.path}/>}
-                    <List list={this.props.list} nav={this.nav} path={this.props.path}/>
+                    <List list={this.props.list} nav={this.nav} path={this.props.path + (this.props.path == '/' ? '' : '/')}/>
                     { this.props.error && <Alert bsStyle="danger">{this.props.error}</Alert> }
                 </Modal.Body>
                 <Modal.Footer>

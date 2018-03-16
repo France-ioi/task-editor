@@ -17,9 +17,12 @@ function readDir(req, res) {
                 } catch(e) {
                     if(err) return res.status(400).send(e.message);
                 }
-                if(stat.isDirectory()) {
-                    list.push(file);
-                }
+
+                list.push({
+                    type: stat.isDirectory() ? 'dir' : 'file',
+                    name: file
+                });
+
                 if(stat.isFile() && file == config.task.data_file) {
                     is_task = true;
                 }
@@ -53,9 +56,10 @@ function remove(req, res) {
         var parent_dir = req.body.path.split('/');
         parent_dir.pop();
         req.body.path = parent_dir.join('/');
-        return readDir(req, res);
+    } else {
+        req.body.path = path.dirname(req.body.path);
     }
-    res.json({});
+    return readDir(req, res);
 }
 
 

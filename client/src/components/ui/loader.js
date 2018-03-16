@@ -1,7 +1,7 @@
 import React from 'react';
 
 
-const Loader = (props) => {
+export default (props) => {
     if(props.modal) {
         return (
             <div className="loader-modal">
@@ -12,10 +12,4 @@ const Loader = (props) => {
     return (
         <div className="loader"></div>
     )
-}
-
-
-
-export {
-    Loader
 }

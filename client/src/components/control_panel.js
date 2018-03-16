@@ -18,6 +18,8 @@ class ControlPanel extends React.Component {
                             eventKey={2} href="#">SVN</NavItem>
                         <NavItem active={active_section == 'import'} onClick={()=>showSection('import')}
                             eventKey={3} href="#">Task importer</NavItem>
+                        <NavItem active={active_section == 'files_manager'} onClick={()=>showSection('files_manager')}
+                            eventKey={4} href="#">Files manager</NavItem>
                     </Nav>
                 }
                 <Navbar.Form pullLeft>

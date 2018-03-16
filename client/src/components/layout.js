@@ -4,11 +4,13 @@ import { Alert } from 'react-bootstrap';
 
 import ControlPanel from './control_panel';
 import Explorer from './explorer';
-import { Loader } from './ui'
+import Loader from './ui/loader';
 
 import TaskJsonEditor from './task_json_editor';
 import TaskSvn from './task_svn';
 import TaskImporter from './task_importer';
+import FilesManager from './files_manager';
+
 
 class Layout extends React.Component {
 
@@ -85,6 +87,7 @@ class Layout extends React.Component {
                     { sectionVisible('json') && <TaskJsonEditor task={task} onChange={this.taskDataChange}/>}
                     { sectionVisible('svn') && <TaskSvn path={task.path}/>}
                     { sectionVisible('import') && <TaskImporter path={task.path}/>}
+                    { sectionVisible('files_manager') && <FilesManager task_path={task.path}/>}
                 </div>
                 <Explorer visible={explorer_visible} toggle={this.toggleExplorer}
                     loadTask={this.loadTask} createTask={this.createTask}/>
