@@ -75,13 +75,14 @@ JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
                 ['html','bbcode'].indexOf(this.input_type) >= 0 &&
                 window.tinymce) {
 
-                self.tinymce_instance = window.tinymce.init({
+                window.tinymce.init({
                     target: self.input,
-                    plugins: 'image link fullscreen lists textcolor colorpicker table ' + (self.input_type === 'html' ? '' : 'bbcode'),
+                    plugins: 'image link fullscreen lists textcolor colorpicker table ' + (self.input_type === 'bbcode' ? 'bbcode' : ''),
                     toolbar: 'image link forecolor backcolor table numlist bullist fullscreen',
                     branding: false,
                     skin: false,
                     setup: function(editor) {
+                        self.tinymce_instance = editor;
                         editor.on('blur', function(e) {
                             self.input.value = this.getContent();
                             self.value = self.input.value;
@@ -89,7 +90,6 @@ JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
                             self.onChange(true);
                         });
                     },
-                    images_upload_url: '/api/images/upload',
                     automatic_uploads: false,
                     file_picker_types: 'image',
                     images_upload_handler: createImagesUploadHandler(self.jsoneditor.options.task.path),
@@ -158,7 +158,6 @@ JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
 
     destroy: function() {
         if(this.tinymce_instance) {
-            //this.tinymce_instance.destroy();
             this.tinymce_instance.remove();
         } else if(this.epiceditor) {
             this.epiceditor.unload();
