@@ -31,8 +31,8 @@ module.exports = function(format, value, json_path, idx) {
             res.push(processMask(format, real_name, i + 1))
         }
     } else if(typeof(value) == 'string' && value != '') {
-        var real_name = getRealName(value, json_path, typeof idx != 'undefined' ? idx+1 : null);
-        var res = processMask(format, real_name, typeof idx != 'undefined' ? idx+1 : '');
+        var real_name = getRealName(value, json_path, null);
+        var res = processMask(format, real_name, '');
     }
     return res;
 }

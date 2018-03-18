@@ -11,6 +11,19 @@
         "wysiwyg": true
       }
     },
+    "texts": {
+      "type": "array",
+      "format": "tabs",
+      "title": "Multiple texts",
+      "items": {
+        "title": "Text editor",
+        "type": "string",
+        "format": "html",
+        "options": {
+          "wysiwyg": true
+        }
+      }
+    },
     "test_files": {
       "title": "Test files upload",
       "type": "object",
@@ -22,13 +35,20 @@
           "options": {
             "upload": true,
             "editor": true
-          },
-          "links": [
-            {
-              "href": "{{self}}",
-              "class": "json-file-link"
+          }
+        },
+        "multiple": {
+          "type": "array",
+          "format": "tabs",
+          "title": "Multiple files",
+          "items": {
+            "title": "File",
+            "type": "string",
+            "format": "url",
+            "options": {
+              "upload": true
             }
-          ]
+          }
         }
       }
     }

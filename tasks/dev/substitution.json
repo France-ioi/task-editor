@@ -1,9 +1,29 @@
 [
     {
+        "jsonSubPath": "text",
+        "selector": "[test.json]text_images",
+        "value": {
+            "type": "parser",
+            "format": "image.src"
+        }
+    },
+    {
+        "jsonSubPath": "texts",
+        "selector": "[test.json]multiple_texts_images",
+        "value": {
+            "type": "parser",
+            "format": "image.src"
+        }
+    },
+    {
+        "jsonSubPath": "texts",
+        "selector": ".hint"
+    },
+    {
         "jsonSubPath": "test_files.single",
         "value": {
             "type": "file",
-            "format": "test_files/[name][ext]"
+            "format": "test_files/single_[name][ext]"
         }
     },
     {
@@ -28,6 +48,21 @@
         "value": {
             "type": "file",
             "format": "renamed.file"
+        }
+    },
+    {
+        "jsonSubPath": "test_files.multiple",
+        "value": {
+            "type": "file",
+            "format": "test_files/multiple_[index][ext]"
+        }
+    },
+    {
+        "jsonSubPath": "test_files.multiple",
+        "selector": "[test.json]multiple_files",
+        "value": {
+            "type": "file",
+            "format": "test_files/multiple_[index][ext]"
         }
     }
 ]

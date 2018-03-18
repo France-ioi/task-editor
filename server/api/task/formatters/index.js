@@ -1,11 +1,12 @@
 var formatters = {
-    file: require('./file')
+    file: require('./file'),
+    parser: require('./parser')
 }
 
 
-module.exports = function(modifier, value, json_path, idx) {
+module.exports = function(modifier, value, json_path) {
     if(modifier.type in formatters) {
-        return formatters[modifier.type](modifier.format, value, json_path, idx)
+        return formatters[modifier.type](modifier.format, value, json_path)
     }
     throw new Error('Unsupported format: ' + format.type)
 }
