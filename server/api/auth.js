@@ -3,7 +3,6 @@ var config = require('../config')
 var data = {};
 
 function generateToken() {
-    return '123123';
     var token;
     do {
         token = uuidv1();
