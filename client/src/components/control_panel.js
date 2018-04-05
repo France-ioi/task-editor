@@ -6,9 +6,10 @@ import { Button, Navbar, Nav, NavItem } from 'react-bootstrap';
 class ControlPanel extends React.Component {
 
     render() {
-        var { task, toggleExplorer, saveTask, showSection, active_section } = this.props;
+        var { task, toggleExplorer, saveTask, showSection, active_section, username } = this.props;
         return (
             <Navbar inverse fixedTop>
+                <Navbar.Text pullLeft>{username}</Navbar.Text>
                 { task.ready && <Navbar.Text pullLeft>{task.path}</Navbar.Text> }
                 { task.ready &&
                     <Nav>

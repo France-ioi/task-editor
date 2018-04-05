@@ -3,7 +3,7 @@ var task = require('../api/task');
 var svn = require('../api/svn');
 var files = require('../api/files');
 var images = require('../api/images');
-
+var auth = require('../api/auth');
 
 module.exports = function(app) {
 
@@ -24,4 +24,7 @@ module.exports = function(app) {
 
     app.post('/api/images/upload', images.upload);
     app.post('/api/images/search', images.search);
+
+    app.post('/api/auth/login', auth.login);
+    app.post('/api/auth/credentials', auth.credentials);
 }

@@ -69,7 +69,7 @@ class Layout extends React.Component {
 
 
     render() {
-        const { task } = this.props;
+        const { task, auth } = this.props;
         const { explorer_visible, active_section } = this.state;
 
         const sectionVisible = (name) => task.ready && active_section == name;
@@ -80,13 +80,14 @@ class Layout extends React.Component {
                 <ControlPanel task={task}
                     toggleExplorer={this.toggleExplorer} saveTask={this.saveTask}
                     active_section={active_section} showSection={this.showSection}
-                    />
+                    username={auth.username}
+                />
                 <div className="editor-container">
                     { task.error && <Alert bsStyle="danger">{task.error}</Alert>}
                     { !task.ready && <Alert bsStyle="info">Click open to load task</Alert>}
                     { sectionVisible('json') && <TaskJsonEditor task={task} onChange={this.taskDataChange}/>}
                     { sectionVisible('svn') && <TaskSvn path={task.path}/>}
-                    { sectionVisible('import') && <TaskImporter path={task.path}/>}
+                    { sectionVisible('import') && <TaskImporter path={task.path} token={auth.token}/>}
                     { sectionVisible('files_manager') && <FilesManager task_path={task.path}/>}
                 </div>
                 <Explorer visible={explorer_visible} toggle={this.toggleExplorer}

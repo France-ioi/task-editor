@@ -5,6 +5,11 @@ body, html {
     padding: 0
 }
 
+.auth-container {
+    margin: 65px auto 0 auto;
+    max-width: 600px;
+}
+
 .navbar .container {
     width: auto;
 }

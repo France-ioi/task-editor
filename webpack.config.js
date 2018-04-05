@@ -23,6 +23,7 @@ module.exports = function(env) {
         'react-redux',
         'redux',
         'redux-saga',
+        'uuid',
         './client/assets/index.js'
     ]
 

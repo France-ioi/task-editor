@@ -8,8 +8,7 @@ import { createStore, applyMiddleware } from 'redux';
 import createSagaMiddleware from 'redux-saga';
 import sagas from './sagas'
 import reducers from './reducers';
-import Layout from './components/layout';
-
+import App from './components/app';
 
 const sagaMiddleware = createSagaMiddleware()
 const store = createStore(reducers, applyMiddleware(sagaMiddleware));
@@ -24,4 +23,4 @@ const render = (Component) => {
     );
 };
 
-render(Layout);
+render(App);
