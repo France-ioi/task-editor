@@ -1,0 +1,77 @@
+i!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Basic JSON Editor Example</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="blocklyRobot_lib-1.0.0.js"></script>
+    <script src="jsoneditor.js"></script>
+    <script src="grid.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.3.1/ace.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+</head>
+<body>
+<h1>Basic JSON Editor Example</h1>
+
+<img src="icon.png" style="display:none"/>
+<div id='editor_holder'></div>
+<button id='submit'>Submit (console.log)</button>
+
+<script>
+    // Initialize the editor with a JSON schema
+    var editor = new JSONEditor(document.getElementById('editor_holder'), {
+        schema: {
+            type: "object",
+            title: "Car",
+            properties: {
+                context: {
+                    "type": "string",
+                    "enum": ["none", "arrows", "cards", "chticode_abs", "chticode_rel", "cones", "course", "dominoes", "marbles", "objects_in_space", "paint", "rocket", "sokoban"]
+                },
+//                arrayEnumTest: {
+//                    "type": "array",
+//                    "uniqueItems": true,
+//                    "items": {
+//                        "type": "string",
+//                        "enum": ["value1", "value2", "value3", "value4", "value5", "value5", "value6", "value6", "value7", "value8", "value9", "value10", "value11"]
+//                    }
+//                },
+                scene: {
+                    "type": "grid",
+//                    "properties": {
+//                        "context": {
+//                            type: "string",
+//                            template: "{{sceneContext}}",
+//                            "watch": {
+//                                "sceneContext": "context"
+//                            }
+//                        },
+//                    }
+                    "watch": {
+                        "sceneContext": "root.context"
+                    }
+                },
+                testobject: {
+                    type: "object",
+                    properties: {
+                        name: {
+                            type: "string"
+                        }
+                    }
+                }
+
+
+            }
+        }
+    });
+
+    // Hook up the submit button to log to the console
+    document.getElementById('submit').addEventListener('click', function () {
+        // Get the value from the editor
+        console.log(editor.getValue());
+    });
+</script>
+</body>
+</html>

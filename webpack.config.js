@@ -2,7 +2,8 @@ var path = require('path');
 var webpack = require('webpack');
 var UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
-module.exports = function(env) {
+module.exports = function (env) {
+
 
     var vendor = [
         'babel-polyfill',
@@ -17,6 +18,10 @@ module.exports = function(env) {
         './node_modules/tinymce/plugins/fullscreen/plugin.js',
         './node_modules/tinymce/plugins/link/plugin.js',
         './node_modules/tinymce/plugins/image/plugin.js',
+        'jquery',
+        // './node_modules/webpack-jquery-ui/resizable.js',
+        // 'jquery-ui-bundle/jquery-ui',
+        'jquery-ui',
         'react',
         'react-bootstrap',
         'react-dom',
@@ -31,18 +36,23 @@ module.exports = function(env) {
             name: 'vendor',
             filename: 'vendor.js'
         })
-        /*,
+        ,
         new webpack.ProvidePlugin({
             //$: "jquery",
             //jQuery: "jquery",
-            "window.jQuery": "jquery"
+            // "window.jQuery": "jquery"
+            // "window.jQuery.ui.resizable": "jquery-ui/ui/widgets/resizable'"
+            $: 'jquery',
+            jQuery: 'jquery',
+            'window.jQuery': 'jquery',
+            'window.$': 'jquery',
+            'global.jQuery': 'jquery'
         })
-        */
     ];
 
     var production = process.env.NODE_ENV === 'production';
 
-    if(production) {
+    if (production) {
         plugins.push(
             new webpack.DefinePlugin({
                 'process.env': {
@@ -102,7 +112,11 @@ module.exports = function(env) {
                 }
             ],
         },
-        plugins
+        plugins,
+        resolve: {
+            alias: {
+                'jquery-ui': 'jquery-ui-dist/jquery-ui.js'
+            }
+        }
     }
-
 };

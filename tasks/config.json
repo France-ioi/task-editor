@@ -4,6 +4,10 @@
         "title": "Test dev task"
     },
     {
+        "type": "algorea-training",
+        "title": "Algorea training task"
+    },
+    {
         "type": "ioi",
         "title": "IOI task"
     }
