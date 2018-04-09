@@ -6,10 +6,9 @@ A visual editor to create tasks of all kinds
 
 Copy the config file ``.env.example`` :
 
-
-``sh
+```sh
 cp .env.example .env
-``
+```
 
 and edit it. Now proceed to install:
 
