@@ -14,6 +14,14 @@ body, html {
     width: auto;
 }
 
+.navbar-inverse .navbar-text {
+    color: #FFFFFF;
+}
+
+.navbar-inverse .navbar-text .glyphicon {
+    margin-right: 5px;
+}
+
 .form-control[type=file] {
     padding: 0;
 }

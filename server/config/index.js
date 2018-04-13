@@ -20,9 +20,12 @@ module.exports = {
     task_importer: {
         url: process.env.TASK_IMPORTER_URL,
         params: {
-            display: 'frame'
+            display: 'frame',
+            autostart: '1'
         }
     },
+
+    svn_repository:  process.env.SVN_REPOSITORY,
 
     dev: {
         task_autoload: process.env.DEV_TASK_AUTOLOAD,

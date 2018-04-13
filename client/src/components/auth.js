@@ -62,6 +62,7 @@ class Auth extends React.Component {
                             <Button bsStyle="primary" onClick={this.login}
                                 disabled={username == '' || password == ''}>Login</Button>
                         </FormGroup>
+                        <Alert bsStyle="info">First time login may take a time.</Alert>
                     </Panel.Body>
                 </Panel>
                 { loading && <Loader modal/> }

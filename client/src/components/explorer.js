@@ -93,17 +93,18 @@ class Explorer extends React.Component {
                     <List list={this.props.list} nav={this.nav} path={this.props.path + (this.props.path == '/' ? '' : '/')}/>
                     { this.props.error && <Alert bsStyle="danger">{this.props.error}</Alert> }
                 </Modal.Body>
-                <Modal.Footer>
-                    <FormGroup>
-                        <InputGroup>
-                            <FormControl disabled={this.props.loading} type="text" name="dir"
-                                value={this.state.dir} onChange={this.onInputChange}/>
-                            <InputGroup.Button>
-                                <Button disabled={this.props.loading} onClick={this.createDir}>Create dir</Button>
-                            </InputGroup.Button>
-                        </InputGroup>
-                    </FormGroup>
-                </Modal.Footer>
+                { !is_home && <Modal.Footer>
+                        <FormGroup>
+                            <InputGroup>
+                                <FormControl disabled={this.props.loading} type="text" name="dir"
+                                    value={this.state.dir} onChange={this.onInputChange}/>
+                                <InputGroup.Button>
+                                    <Button disabled={this.props.loading} onClick={this.createDir}>Create dir</Button>
+                                </InputGroup.Button>
+                            </InputGroup>
+                        </FormGroup>
+                    </Modal.Footer>
+                }
                 <Modal.Footer>
                     { !is_home &&
                         <ButtonToolbar className="pull-left">

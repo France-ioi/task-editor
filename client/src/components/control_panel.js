@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Button, Navbar, Nav, NavItem } from 'react-bootstrap';
+import { Button, Navbar, Nav, NavItem, Glyphicon } from 'react-bootstrap';
 
 
 class ControlPanel extends React.Component {
@@ -9,8 +9,16 @@ class ControlPanel extends React.Component {
         var { task, toggleExplorer, saveTask, showSection, active_section, username } = this.props;
         return (
             <Navbar inverse fixedTop>
-                <Navbar.Text pullLeft>{username}</Navbar.Text>
-                { task.ready && <Navbar.Text pullLeft>{task.path}</Navbar.Text> }
+                <Navbar.Text pullLeft>
+                <Glyphicon glyph="user"/>
+                    {username}
+                </Navbar.Text>
+                { task.ready &&
+                    <Navbar.Text pullLeft>
+                        <Glyphicon glyph="folder-open"/>
+                        {task.path}
+                    </Navbar.Text>
+                }
                 { task.ready &&
                     <Nav>
                         <NavItem active={active_section == 'json'} onClick={()=>showSection('json')}

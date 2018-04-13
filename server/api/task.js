@@ -1,6 +1,6 @@
 var fs = require('fs');
 var path = require('path');
-var generator = require('./task/generator')
+var generator = require('../libs/task/generator')
 var config = require('../config')
 
 

@@ -4,7 +4,9 @@ import api_task from '../api/task'
 
 function* create(action) {
     try {
+        const { token } = yield select(state => state.auth)
         const params = {
+            token,
             path: action.path,
             task_type: action.task_type
         }
@@ -20,7 +22,9 @@ function* create(action) {
 
 function* load(action) {
     try {
+        const { token } = yield select(state => state.auth)
         const params = {
+            token,
             path: action.path
         }
         // may be get path from explorer state?
@@ -37,8 +41,10 @@ function* load(action) {
 
 function* save(action) {
     try {
+        const { token } = yield select(state => state.auth)
         const task = yield select(state => state.task)
         const params = {
+            token,
             path: task.path,
             data: task.data
         }

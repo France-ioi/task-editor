@@ -1,6 +1,14 @@
+var user = require('../libs/user')
+
 module.exports = function(app) {
 
     app.use((req, res, next) => {
+        if('token' in req.body) {
+            req.user = user.get(req.body.token)
+            if(!req.user) {
+                return res.status(400).send('Auth expired')
+            }
+        }
         if('old_filename' in req.body && req.body.old_filename.indexOf('./') !== -1) {
             return res.status(400).send('Wrong filename')
         }

@@ -1,55 +1,48 @@
-var uuidv1 = require('uuid/v1');
+var path = require('path')
+var fs = require('fs')
+
+
 var config = require('../config')
-var data = {};
 
-function generateToken() {
-    var token;
-    do {
-        token = uuidv1();
-    } while (token in data);
-    return token;
+var user = require('../libs/user')
+var access = require('../libs/access')
+var svn = require('../libs/svn')
+
+
+
+function auth(credentials, callback) {
+    svn.list(credentials, (err, folders) => {
+        if(err) return callback(err)
+
+        var new_folders = folders.filter(folder => {
+            var full_path = path.join(config.path, folder)
+            return !fs.existsSync(full_path)
+        })
+
+        svn.checkout(credentials, new_folders, (err) => {
+            if(err) return callback(err)
+            access.setFolders(credentials.username, folders)
+            callback(null)
+        })
+    })
+
 }
-
-function addUser(credentials) {
-    var token = generateToken();
-    data[token] = {
-        username: credentials.username,
-        password: credentials.password
-    }
-    return token;
-}
-
-function findToken(credentials) {
-    for(var token in data) {
-        if(data[token].username == credentials.username && data[token].password == credentials.password) {
-            return token;
-        }
-    }
-    return false;
-}
-
-
-function auth(credentials) {
-    if(credentials.username == config.dev.username && credentials.password == config.dev.password) {
-        return true;
-    }
-    //TODO: svn
-    return false;
-}
-
 
 
 module.exports = {
 
     login: (req, res) => {
-        var token = findToken(req.body);
-        if(!token) {
-            if(!auth(req.body)) {
-                return res.status(400).send('User not found');
-            }
-            token = addUser(req.body);
+        var token = user.findToken(req.body)
+        if(token) {
+            return res.json({ token })
         }
-        res.json({ token })
+
+        auth(req.body, (err) => {
+            if(err) return res.status(400).send('User not found');
+            res.json({
+                token: user.add(req.body)
+            })
+        })
     },
 
 

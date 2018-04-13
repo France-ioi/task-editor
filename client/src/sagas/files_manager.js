@@ -4,7 +4,9 @@ import explorer from '../api/explorer'
 
 function* readDir(action) {
     try {
+        const { token } = yield select(state => state.auth)
         const params = {
+            token,
             path: action.path
         }
         const data = yield call(explorer.readDir, params);
@@ -17,8 +19,10 @@ function* readDir(action) {
 
 function* remove(action) {
     try {
+        const { token } = yield select(state => state.auth)
         const { path } = yield select(state => state.files_manager)
         const params = {
+            token,
             path: path + '/' + action.name
         }
         const data = yield call(explorer.remove, params);
