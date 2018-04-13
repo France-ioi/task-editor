@@ -47,8 +47,11 @@ module.exports = {
 
 
     credentials: (req, res) => {
-        if('token' in req.body && req.body.token in data) {
-            return res.json(data[req.body.token]);
+        if('token' in req.body) {
+            var credentials = user.get(req.body.token)
+            if(credentials) {
+                return res.json(credentials);
+            }
         }
         res.status(400).send('Token not found');
     }
