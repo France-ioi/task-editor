@@ -42,7 +42,7 @@ module.exports = {
 
 
     commit: (credentials, path, callback) => {
-        var cmd = 'cd ' + config.path + ' && svn add ' + path
+        var cmd = 'cd ' + config.path + ' && svn add ' + path + ' --force'
         exec(cmd, (err, stdout, stderr) => {
             if(stderr) return callback(new Error(stderr))
             var cmd = 'cd ' + config.path + ' && svn commit ' + path + ' ' + authParams(credentials) + ' --message "Task editor"'
