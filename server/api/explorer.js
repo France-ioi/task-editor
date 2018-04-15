@@ -3,6 +3,8 @@ var path = require('path');
 var shell = require('shelljs');
 var config = require('../config')
 var svn = require('../libs/svn')
+var access = require('../libs/access')
+
 
 function readDir(req, res) {
     var dir_path = path.join(config.path, req.body.path);
@@ -13,9 +15,15 @@ function readDir(req, res) {
         if(files) {
             files.map(file => {
                 if(file == '.svn') return;
-                var fullfile = path.resolve(dir_path, file);
+
+                var rel_file = path.join(req.body.path, file);
+                if(!access.granted(req.user.username, rel_file)) {
+                    return;
+                }
+
+                var abs_file = path.resolve(dir_path, file);
                 try {
-                    var stat = fs.statSync(fullfile);
+                    var stat = fs.statSync(abs_file);
                 } catch(e) {
                     if(err) return res.status(400).send(e.message);
                 }

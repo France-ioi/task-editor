@@ -12,6 +12,8 @@ generator.output(params, err => console.error(err.message));
 */
 
 
+/*
+
 var exec = require('child_process').exec;
 var path = require('path');
 
@@ -26,3 +28,4 @@ exec(cmd, (err, stdout, stderr) => {
     }
 //    console.log('stdout', stdout, 'stderr', stderr)
 });
+*/

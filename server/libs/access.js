@@ -12,8 +12,11 @@ module.exports = {
     },
 
 
-    filter: function(username, list) {
-        //TODO
+    granted: function(username, dir) {
+        var first = dir.split('/')[0];
+        return this.getFolders(username).find(user_dir => {
+            return user_dir == first;
+        }) !== undefined;
     }
 
 }
