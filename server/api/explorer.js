@@ -12,6 +12,7 @@ function readDir(req, res) {
         var is_task = false;
         if(files) {
             files.map(file => {
+                if(file == '.svn') return;
                 var fullfile = path.resolve(dir_path, file);
                 try {
                     var stat = fs.statSync(fullfile);
