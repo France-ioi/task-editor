@@ -2,7 +2,7 @@ var fs = require('fs');
 var path = require('path');
 var generator = require('../libs/task/generator')
 var config = require('../config')
-
+var svn = require('../libs/svn')
 
 function taskDataFile(task_subpath) {
     return path.join(config.path, task_subpath, config.task.data_file);
@@ -73,10 +73,17 @@ module.exports = {
                     task_data,
                     err => {
                         if(err) return res.status(400).send(err.message);
-                        res.json({
-                            schema,
-                            data: null
-                        });
+                        svn.commit(req.user, req.body.path, (err) => {
+                            if(!err) {
+                                return res.json({
+                                    schema,
+                                    data: null
+                                });
+                            }
+                            svn.cleanup(req.user, req.body.path, (err) => {
+                                return res.status(400).send('Access denied');
+                            })
+                        })
                     }
                 );
             }
@@ -124,9 +131,16 @@ module.exports = {
                             task_data,
                             err => {
                                 if(err) return res.status(400).send(err.message);
-                                res.json({});
+                                svn.commit(req.user, req.body.path, (err) => {
+                                    if(!err) {
+                                        return res.json({});
+                                    }
+                                    svn.cleanup(req.user, req.body.path, (err) => {
+                                        return res.status(400).send('Access denied');
+                                    })
+                                })
                             }
-                        );
+                        )
                     }
                 )
             }

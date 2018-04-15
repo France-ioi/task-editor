@@ -14,16 +14,24 @@ function auth(credentials, callback) {
     svn.list(credentials, (err, folders) => {
         if(err) return callback(err)
 
+        var old_folders = [];
         var new_folders = folders.filter(folder => {
             var full_path = path.join(config.path, folder)
-            return !fs.existsSync(full_path)
+            if(fs.existsSync(full_path)) {
+                old_folders.push();
+                return false
+            }
+            return true;
         })
 
-        svn.checkout(credentials, new_folders, (err) => {
+        svn.update(credentials, old_folders, (err) => {
             if(err) return callback(err)
-            access.setFolders(credentials.username, folders)
-            callback(null)
-        })
+            svn.checkout(credentials, new_folders, (err) => {
+                if(err) return callback(err)
+                access.setFolders(credentials.username, folders)
+                callback(null)
+            })
+        });
     })
 
 }

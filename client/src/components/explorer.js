@@ -7,6 +7,10 @@ import Breadcrumbs from './ui/breadcrumbs';
 import tasks_config from '../../../tasks/config.json';
 
 
+function pathJoin(path1, path2) {
+    return path1 == '' ? path2 : path1 + '/' + path2;
+}
+
 
 const List = (props) => {
     if(!props.list) return null;
@@ -16,7 +20,7 @@ const List = (props) => {
                 item.type == 'dir' &&
                 <div key={item.name}>
                     <a href="#"
-                        onClick={()=>props.nav(props.path + item.name)}>
+                        onClick={()=>props.nav(pathJoin(props.path, item.name))}>
                         <Glyphicon glyph="folder-close" /> {item.name}
                     </a>
                 </div>
@@ -82,7 +86,7 @@ class Explorer extends React.Component {
     }
 
     render() {
-        var is_home = this.props.path == '/' || !this.props.path;
+        var is_home = !this.props.path;
         return (
             <Modal show={this.props.visible} onHide={this.props.toggle}>
                 <Modal.Header closeButton>
@@ -90,10 +94,10 @@ class Explorer extends React.Component {
                 </Modal.Header>
                 <Modal.Body>
                     { this.props.loading ? <Loader/> : <Breadcrumbs nav={this.nav} path={this.props.path}/>}
-                    <List list={this.props.list} nav={this.nav} path={this.props.path + (this.props.path == '/' ? '' : '/')}/>
+                    <List list={this.props.list} nav={this.nav} path={this.props.path}/>
                     { this.props.error && <Alert bsStyle="danger">{this.props.error}</Alert> }
                 </Modal.Body>
-                { !is_home && <Modal.Footer>
+                    { !is_home && <Modal.Footer>
                         <FormGroup>
                             <InputGroup>
                                 <FormControl disabled={this.props.loading} type="text" name="dir"

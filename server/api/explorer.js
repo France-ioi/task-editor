@@ -2,6 +2,7 @@ var fs = require('fs');
 var path = require('path');
 var shell = require('shelljs');
 var config = require('../config')
+var svn = require('../libs/svn')
 
 function readDir(req, res) {
     var dir_path = path.join(config.path, req.body.path);
@@ -38,28 +39,40 @@ function readDir(req, res) {
 
 
 function createDir(req, res) {
-    var new_dir = path.join(
-        config.path,
-        req.body.path,
-        req.body.dir
-    );
-    shell.mkdir('-p', new_dir);
-    readDir(req, res);
+    var rel_dir = path.join(req.body.path, req.body.dir);
+    var abs_dir = path.join(config.path, rel_dir);
+    shell.mkdir('-p', abs_dir);
+    svn.commit(req.user, rel_dir, (err) => {
+        if(!err) {
+            return readDir(req, res);
+        }
+        svn.delete(req.user, rel_dir, (err) => {
+            return res.status(400).send('Access denied');
+        })
+    })
 }
 
 
+
 function remove(req, res) {
-    var target = path.join(config.path, req.body.path)
-    var stat = fs.statSync(target);
-    shell.rm('-rf', target);
-    if(stat.isDirectory()) {
-        var parent_dir = req.body.path.split('/');
-        parent_dir.pop();
-        req.body.path = parent_dir.join('/');
-    } else {
-        req.body.path = path.dirname(req.body.path);
-    }
-    return readDir(req, res);
+    var abs_dir = path.join(config.path, req.body.path);
+    var stat = fs.statSync(abs_dir);
+    shell.rm('-rf', abs_dir);
+    svn.commit(req.user, req.body.path, (err) => {
+        if(!err) {
+            if(stat.isDirectory()) {
+                var parent_dir = req.body.path.split('/');
+                parent_dir.pop();
+                req.body.path = parent_dir.join('/');
+            } else {
+                req.body.path = path.dirname(req.body.path);
+            }
+            return readDir(req, res);
+        }
+        svn.revert(req.user, req.body.path, (err) => {
+            return res.status(400).send('Access denied');
+        })
+    })
 }
 
 
