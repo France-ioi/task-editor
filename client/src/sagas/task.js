@@ -1,6 +1,6 @@
 import { call, put, takeEvery, select } from 'redux-saga/effects'
 import api_task from '../api/task'
-
+import api_importer from '../api/task_importer'
 
 function* create(action) {
     try {
@@ -56,8 +56,38 @@ function* save(action) {
 }
 
 
+function* saveView(action) {
+    try {
+        const { token } = yield select(state => state.auth)
+        const task = yield select(state => state.task)
+        var params = {
+            token,
+            path: task.path,
+            data: task.data
+        }
+        yield call(api_task.save, params);
+
+        var params = {
+            token,
+            path: task.path
+        }
+        const res = yield call(api_importer.checkoutSvn, params);
+        console.log(res)
+        if(!res || !res.success) {
+            throw new Error('Task importer return: ' + (res.error || 'unknown error'));
+        }
+        yield put({type: 'TASK_FETCH_SUCCESS', url: res.tasks[0].normalUrl});
+    } catch (e) {
+        yield put({type: 'TASK_FETCH_FAIL', error: e.message});
+    }
+}
+
+
+
+
 export default function* () {
     yield takeEvery('TASK_FETCH_LOAD', load);
     yield takeEvery('TASK_FETCH_SAVE', save);
+    yield takeEvery('TASK_FETCH_SAVE_VIEW', saveView);
     yield takeEvery('TASK_FETCH_CREATE', create);
 }

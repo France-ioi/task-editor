@@ -13,6 +13,9 @@ class ControlPanel extends React.Component {
                 <Glyphicon glyph="user"/>
                     {username}
                 </Navbar.Text>
+                <Navbar.Form pullLeft>
+                    <Button onClick={toggleExplorer}>Open</Button>
+                </Navbar.Form>
                 { task.ready &&
                     <Navbar.Text pullLeft>
                         <Glyphicon glyph="folder-open"/>
@@ -34,9 +37,11 @@ class ControlPanel extends React.Component {
                     </Nav>
                 }
                 <Navbar.Form pullLeft>
-                    { task.ready && <Button onClick={saveTask}>Save</Button> }
+                    { task.ready && <Button onClick={()=>saveTask()} title="Save and commit">Save</Button> }
                     {' '}
-                    <Button onClick={toggleExplorer}>Open</Button>
+                    { task.ready && <Button onClick={()=>saveTask('view')} title="Save, commit, import and view">Save &amp; import</Button> }
+                    {' '}
+                    { task.ready && task.url && <a target="_blank" href={task.url} className="btn btn-primary">View</a> }
                 </Navbar.Form>
             </Navbar>
         );

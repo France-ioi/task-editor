@@ -50,8 +50,12 @@ class Layout extends React.Component {
     }
 
 
-    saveTask = () => {
-        this.props.dispatch({type: 'TASK_FETCH_SAVE'})
+    saveTask = (mode) => {
+        if(mode == 'view') {
+            this.props.dispatch({type: 'TASK_FETCH_SAVE_VIEW'})
+        } else {
+            this.props.dispatch({type: 'TASK_FETCH_SAVE'})
+        }
     }
 
 

@@ -4,7 +4,8 @@ var default_state = {
     schema: {},
     loading: false,
     ready: false,
-    error: null
+    error: null,
+    url: null
 }
 
 export default (state = default_state, action) => {
@@ -18,14 +19,17 @@ export default (state = default_state, action) => {
                 schema: {},
                 loading: true,
                 ready: false,
-                error: null
+                error: null,
+                url: null
             };
 
         case 'TASK_FETCH_SAVE':
+        case 'TASK_FETCH_SAVE_VIEW':
             return {
                 ...state,
                 loading: true,
-                error: null
+                error: null,
+                url: null
             };
 
         case 'TASK_SET_DATA':
@@ -44,7 +48,8 @@ export default (state = default_state, action) => {
             return {
                 ...state,
                 ready: true,
-                loading: false
+                loading: false,
+                url: action.url || null
             };
 
         case 'TASK_FETCH_FAIL':
