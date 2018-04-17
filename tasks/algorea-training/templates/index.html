@@ -3,22 +3,23 @@
 	<head>
 		<meta charset="utf-8">
 		<title></title>
-		<link class="task" type="text/css" rel="stylesheet" href="../../../../_common/modules/pemFioi/progTask.css">
-		<link class="task" type="text/css" rel="stylesheet" href="../../../../_common/modules/ext/bootstrap/css/bootstrap.min.css">
-		<script class="remove" src="../../../../_common/modules/ext/requirejs/require.js"></script>
+		<link class="task" type="text/css" rel="stylesheet" href="../../modules/pemFioi/progTask.css">
+		<link class="task" type="text/css" rel="stylesheet" href="../../modules/ext/bootstrap/css/bootstrap.min.css">
+		<script class="remove" src="../../modules/ext/requirejs/require.js"></script>
 		<script type="text/javascript">
-var modulesPath ='../../../../_common/modules';
-var taskPlatformPath ='../../../../_common/task-platform';
+            var modulesPath ='../../modules';
+            var taskPlatformPath ='../../task-platform';
 		</script>
-		<script type="text/javascript" src="../../../../_common/modules/pemFioi/progTaskConfig-1.0.js"></script>
+		<script type="text/javascript" src="../../modules/pemFioi/progTaskConfig-1.0.js"></script>
 		<script type="text/javascript" class="remove">
 // general metadata conforming the PEM API Documentation for getMetaData
 var PEMTaskMetaData;
-// Metadata specific to the FranceIOI tasks
-var FIOITaskMetaData;
+// Metadata specific to the AlgoreaTraining tasks
+var json;
 		</script>
+		<script type="text/javascript" src="task.js"></script>
 	</head>
-	<body ng-controller="taskController">
+	<body ng-controller="taskController" onresize="task.displayedSubTask.updateScale()">
 
 		<div id="task">
 		</div>
