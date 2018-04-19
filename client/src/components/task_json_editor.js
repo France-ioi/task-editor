@@ -1,6 +1,5 @@
 import React from 'react';
 require('json-editor');
-require('./grid');
 import files_api from '../api/files';
 
 

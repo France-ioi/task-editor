@@ -1,1 +1,1 @@
-../../client/src/components/grid.js
+../../client/src/libs/json_editor/grid.js
