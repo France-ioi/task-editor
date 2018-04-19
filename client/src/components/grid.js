@@ -16,7 +16,6 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
             $("#resizable").resizable({
                 grid: 40,
                 resize: function (event, ui) {
-                    // self.resizeGrid(ui.size);
                     self.input_row.value = ui.size.height / self.field_size;
                     self.input_column.value = ui.size.width / self.field_size;
                     self.input_column.dispatchEvent(new Event('change'));
@@ -32,9 +31,8 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
     },
     onWatchedFieldChange: function () {
         this._super();
-        window.console.log(this.watched_values.sceneContext);
 
-        // window.console.log(getContextParams()[this.watched_values.sceneContext].itemTypes)
+        // load itemtypes according to context, getContextParams is available from BLOCKLY_API_URL
         if (typeof getContextParams === "function") {
             if (getContextParams()[this.watched_values.sceneContext] != undefined) {
                 window.console.log(getContextParams()[this.watched_values.sceneContext].itemTypes);
@@ -161,6 +159,7 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
     },
 
     refreshValue: function () {
+        this._super();
 
         this.value = [[0]];
         var rowNumber = this.value.length;
@@ -192,7 +191,7 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
         window.jQuery('#resizable').height(this.value.length * this.field_size + 'px');
         window.jQuery('#resizable').width(this.value[0].length * this.field_size + 'px');
         this.resizeGrid({width: window.jQuery('#resizable').width(), height: window.jQuery('#resizable').height()});
-
+        this.onChange(true);
     },
 
     resizeGrid: function (size) {
@@ -240,13 +239,13 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
             if (e.buttons == 1 && self.current_item != undefined) {
                 var rowIndex = $(this).attr('data-row');
                 var columnIndex = $(this).parent().attr('data-column');
-                // var $this = $(this);
 
                 $(this).css({
                     background: 'url(' + self.current_item.src + ")",
                     borderRadius: '0px'
                 });
                 self.value[rowIndex][columnIndex] = parseInt(self.current_item.num);
+                self.onChange(true);
             }
         });
     }
