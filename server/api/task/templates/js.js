@@ -1,18 +1,14 @@
 module.exports = function(content) {
 
 
-    function formatVariable(variable) {
-        return 'var ' + variable;
-    }
-
     return {
 
+        // replace {{ variable }} by value
         inject: function(selector, value) {
             if(!selector.variable) return;
-            var search = formatVariable(selector.variable);
+            var search = "{{" + selector.variable + "}}";
             if(search) {
-                var replace = search + ' = ' + JSON.stringify(value);
-                content = content.replace(search, replace);
+                content = content.replace(search, JSON.stringify(value));
             }
         },
 

@@ -47,6 +47,11 @@ module.exports = function(src_path) {
                 res_item.template = item.template;
             }
 
+            if('keepArray' in item) {
+                push = true;
+                res_item.keepArray = item.keepArray;
+            }
+
             if('children' in item) {
                 walk(item.children, res_item.json_path, res_item.selector);
                 push = false;

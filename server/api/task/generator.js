@@ -29,7 +29,7 @@ module.exports = {
                         files.copy(val, formatted_value)
                     }
                 };
-                if(value instanceof Array) {
+                if(value instanceof Array && !('keepArray' in rule)) {
                     for(var i=0; i<value.length; i++) {
                         if(value === null) { continue; }
                         applyValue(value[i], i);

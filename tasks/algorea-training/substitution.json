@@ -20,12 +20,21 @@
         "selector": "$PEMTaskMetaData"
     },
     {
-        "jsonSubPath": "FIOITaskMetaData",
-        "selector": "$FIOITaskMetaData"
+        "jsonSubPath": "AlgoreaTrainingTaskMetaData",
+        "selector": "$json"
     },
     {
         "jsonSubPath": "taskSettings",
         "selector": "[taskSettings.json]"
+    },
+    {
+        "jsonSubPath": "context",
+        "selector": "[task.js$contextTypePlaceholder]"
+    },
+    {
+        "jsonSubPath": "scene",
+        "selector": "[task.js$tilesPlaceholder]",
+        "keepArray": "keepArray"
     },
     {
         "jsonSubPath": "testFiles.input",
