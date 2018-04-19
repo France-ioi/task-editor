@@ -19,8 +19,6 @@ module.exports = function (env) {
         './node_modules/tinymce/plugins/link/plugin.js',
         './node_modules/tinymce/plugins/image/plugin.js',
         'jquery',
-        // './node_modules/webpack-jquery-ui/resizable.js',
-        // 'jquery-ui-bundle/jquery-ui',
         'jquery-ui',
         'react',
         'react-bootstrap',
