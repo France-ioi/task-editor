@@ -179,38 +179,29 @@
         ]
       }
     },
-    "taskjs": {
-      "required": ["context", "scene"],
-      "type": "object",
-      "properties": {
-        "context": {
-          "type": "string",
-          "enum": [
-            "none",
-            "arrows",
-            "cards",
-            "chticode_abs",
-            "chticode_rel",
-            "cones",
-            "course",
-            "dominoes",
-            "marbles",
-            "objects_in_space",
-            "paint",
-            "rocket",
-            "sokoban",
-            "new"
-          ]
-        },
-        "scene": {
-          "type": "grid",
-          "properties": {
-            "context": "{{sceneContext}}",
-            "watch": {
-              "sceneContext": "context"
-            }
-          }
-        }
+    "context": {
+      "type": "string",
+      "enum": [
+        "none",
+        "arrows",
+        "cards",
+        "chticode_abs",
+        "chticode_rel",
+        "cones",
+        "course",
+        "dominoes",
+        "marbles",
+        "objects_in_space",
+        "paint",
+        "rocket",
+        "sokoban",
+        "new"
+      ]
+    },
+    "scene": {
+      "type": "grid",
+      "watch": {
+        "sceneContext": "root.context"
       }
     },
     "PEMTaskMetaData": {
@@ -678,6 +669,7 @@
     "hints",
     "testFiles",
     "taskSettings",
-    "taskjs"
+    "context",
+    "scene"
   ]
 }

@@ -26,5 +26,11 @@ module.exports = {
 
     dev: {
         task_autoload: process.env.DEV_TASK_AUTOLOAD
+    },
+
+    // Algorea-training related configs
+    blockly: {
+        images_url: process.env.BLOCKLY_IMAGES_URL
     }
+
 }

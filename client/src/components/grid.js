@@ -58,7 +58,7 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
             }
             var $newItemType = $("<img>", {
                 id: "itemType" + itemTypeId,
-                src: "resources/image/" + itemTypes[itemType].img,
+                src: window.__CONFIG__.blockly.images_url + itemTypes[itemType].img,
                 alt: itemTypes[itemType].img,
                 "item-type-id": itemTypeId,
                 class: "item-type"

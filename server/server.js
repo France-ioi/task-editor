@@ -19,8 +19,9 @@ require('./middleware')(app);
 require('./routes')(app);
 
 var config = JSON.stringify(require('./config'));
+var blocklyAPI = process.env.BLOCKLY_API_URL;
 app.get('/', (req, res) => {
-    res.status(200).render('index.html', { config });
+    res.status(200).render('index.html', { config: config, blocklyAPI: blocklyAPI });
 });
 
 app.listen(process.env.PORT, () => {
