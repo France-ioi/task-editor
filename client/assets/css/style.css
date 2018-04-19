@@ -15,7 +15,7 @@
 
 ul {
     list-style: none;
-    display: inline-block;
+    /*display: inline-block;*/
 }
 
 .space-vertical {
@@ -28,7 +28,7 @@ ul {
     width: 5px;
 }
 
-.dot, ul li {
+ul.dot, li.dot {
     width: 30px;
     height: 30px;
 }
