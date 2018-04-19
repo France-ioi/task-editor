@@ -179,23 +179,38 @@
         ]
       }
     },
-    "context": {
-      "type": "string",
-      "enum": ["none", "arrows", "cards", "chticode_abs", "chticode_rel", "cones", "course", "dominoes", "marbles", "objects_in_space", "paint", "rocket", "sokoban", "new"]
-    },
-    "scene": {
-      "type": "grid",
+    "taskjs": {
+      "required": ["context", "scene"],
+      "type": "object",
       "properties": {
-        "context": "{{sceneContext}}",
-        "watch": {
-          "sceneContext": "context"
+        "context": {
+          "type": "string",
+          "enum": [
+            "none",
+            "arrows",
+            "cards",
+            "chticode_abs",
+            "chticode_rel",
+            "cones",
+            "course",
+            "dominoes",
+            "marbles",
+            "objects_in_space",
+            "paint",
+            "rocket",
+            "sokoban",
+            "new"
+          ]
+        },
+        "scene": {
+          "type": "grid",
+          "properties": {
+            "context": "{{sceneContext}}",
+            "watch": {
+              "sceneContext": "context"
+            }
+          }
         }
-      }
-    },
-    "test": {
-      "type": "grid",
-      "watch": {
-        "sceneContext": "context"
       }
     },
     "PEMTaskMetaData": {
@@ -291,7 +306,7 @@
         "language"
       ]
     },
-    "FIOITaskMetaData": {
+    "AlgoreaTrainingTaskMetaData": {
       "type": "object",
       "description": "Meta-data specific to taskgrader/taskplatform tasks.",
       "properties": {
@@ -656,14 +671,13 @@
   },
   "required": [
     "PEMTaskMetaData",
-    "FIOITaskMetaData",
+    "AlgoreaTrainingTaskMetaData",
     "title",
     "task",
     "solution",
     "hints",
     "testFiles",
     "taskSettings",
-    "context",
-    "scene"
+    "taskjs"
   ]
 }
