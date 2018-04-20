@@ -39,13 +39,15 @@ class Explorer extends React.Component {
         };
     }
 
-    componentDidMount() {
-        this.navHome();
+
+    componentWillReceiveProps(props) {
+        if(!this.props.visible && props.visible) {
+            this.navHome();
+        }
     }
 
-
     nav = (path) => {
-        if(path != this.props.path) {
+        if(path !== this.props.path) {
             this.props.dispatch({type: 'EXPLORER_FETCH_READ_DIR', path })
         }
     }
@@ -86,7 +88,8 @@ class Explorer extends React.Component {
     }
 
     render() {
-        var is_home = !this.props.path;
+        const is_home = !this.props.path;
+        const { flags } = this.props;
         return (
             <Modal show={this.props.visible} onHide={this.props.toggle}>
                 <Modal.Header closeButton>
@@ -118,10 +121,10 @@ class Explorer extends React.Component {
                     }
 
                     <ButtonToolbar className="pull-right">
-                    { this.props.is_task &&
+                    { flags.is_task &&
                         <Button onClick={this.loadTask} bsStyle="primary">Open task</Button>
                     }
-                    { !this.props.is_task && !is_home &&
+                    { !flags.is_task && !flags.has_subfolders && !is_home &&
                         <DropdownButton bsStyle="default" title="Create task" noCaret dropup id="btn-create-task">
                             { tasks_config.map(task =>
                                 <MenuItem key={task.type} onClick={()=>this.createTask(task.type)}>{task.title}</MenuItem>

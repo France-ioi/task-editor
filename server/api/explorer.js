@@ -11,7 +11,10 @@ function readDir(req, res) {
     fs.readdir(dir_path, (err, files) => {
         if(err) return res.status(400).send(err);
         var list = [];
-        var is_task = false;
+        var flags = {
+            is_task: false,
+            has_subfolders: false
+        }
         if(files) {
             files.map(file => {
                 if(file == '.svn') return;
@@ -33,15 +36,19 @@ function readDir(req, res) {
                     name: file
                 });
 
+                if(stat.isDirectory()) {
+                    flags.has_subfolders = true;
+                }
+
                 if(stat.isFile() && file == config.task.data_file) {
-                    is_task = true;
+                    flags.is_task = true;
                 }
             })
         }
         res.json({
             path: req.body.path,
             list,
-            is_task
+            flags
         });
     })
 }

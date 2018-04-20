@@ -32,7 +32,6 @@ module.exports = {
 
     update: (credentials, folders, callback) => {
         if(!folders.length) return callback()
-        folders = folders.map(folder => url.resolve(config.svn_repository, folder))
         var cmd = 'cd ' + config.path + ' && svn update ' + folders.join(' ') + ' ' + authParams(credentials)
         exec(cmd, (err, stdout, stderr) => {
             if(stderr) return callback(new Error(stderr))

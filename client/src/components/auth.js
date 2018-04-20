@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Panel, Alert, FormGroup, FormControl, ControlLabel, Button } from 'react-bootstrap';
+import { Panel, Alert, FormGroup, FormControl, ControlLabel, Button, Checkbox } from 'react-bootstrap';
 import Loader from './ui/loader';
 
 var dev = window.__CONFIG__.dev;
@@ -12,7 +12,8 @@ class Auth extends React.Component {
         super(props, context);
         this.state = {
             username: dev.username || '',
-            password: dev.password || ''
+            password: dev.password || '',
+            svn_update: false
         };
     }
 
@@ -26,16 +27,18 @@ class Auth extends React.Component {
 
     onInputChange = (e) => {
         this.setState({
-            [e.target.name]: e.target.value
+            [e.target.name]: e.target.type == 'checkbox' ? e.target.checked : e.target.value
         })
     }
 
 
     login = (e) => {
+        e && e.preventDefault();
         this.props.dispatch({
             type: 'AUTH_LOGIN_REQUEST',
             username: this.state.username,
-            password: this.state.password
+            password: this.state.password,
+            svn_update: this.state.svn_update
         });
     }
 
@@ -48,21 +51,26 @@ class Auth extends React.Component {
                     <Panel.Heading>Auth</Panel.Heading>
                     <Panel.Body>
                         { error && <Alert bsStyle="danger">{error}</Alert> }
-                        <FormGroup>
-                            <ControlLabel>Username</ControlLabel>
-                            <FormControl type="text" name="username"
-                                value={username} onChange={this.onInputChange}/>
-                        </FormGroup>
-                        <FormGroup>
-                            <ControlLabel>Password</ControlLabel>
-                            <FormControl type="password" name="password"
-                                value={password} onChange={this.onInputChange}/>
-                        </FormGroup>
-                        <FormGroup>
-                            <Button bsStyle="primary" onClick={this.login}
-                                disabled={username == '' || password == ''}>Login</Button>
-                        </FormGroup>
-                        <Alert bsStyle="info">First time login may take a time.</Alert>
+                        <form onSubmit={this.login}>
+                            <FormGroup>
+                                <ControlLabel>Username</ControlLabel>
+                                <FormControl type="text" name="username"
+                                    value={username} onChange={this.onInputChange}/>
+                            </FormGroup>
+                            <FormGroup>
+                                <ControlLabel>Password</ControlLabel>
+                                <FormControl type="password" name="password"
+                                    value={password} onChange={this.onInputChange}/>
+                            </FormGroup>
+                            <Checkbox name="svn_update" onChange={this.onInputChange}>
+                                Run svn update for existing folders
+                            </Checkbox>
+                            <FormGroup>
+                                <Button bsStyle="primary" type="submit"
+                                    disabled={username == '' || password == ''}>Login</Button>
+                            </FormGroup>
+                        </form>
+                        <Alert bsStyle="info">Login may take a time to complete svn checkout/update.</Alert>
                     </Panel.Body>
                 </Panel>
                 { loading && <Loader modal/> }

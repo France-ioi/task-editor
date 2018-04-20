@@ -1,7 +1,7 @@
 var default_state = {
     path: null,
     list: null,
-    is_task: false,
+    flags: {},
     loading: false,
     error: null
 }
@@ -24,7 +24,7 @@ export default (state = default_state, action) => {
                 ...state,
                 path: action.data.path,
                 list: action.data.list,
-                is_task: action.data.is_task,
+                flags: action.data.flags,
                 loading: false,
                 error: null
             };
