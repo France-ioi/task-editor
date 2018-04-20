@@ -12,6 +12,7 @@ export default (state = default_state, action) => {
     switch(action.type) {
         case 'TASK_FETCH_CREATE':
         case 'TASK_FETCH_LOAD':
+        case 'TASK_FETCH_CLONE':
             return {
                 ...state,
                 path: action.path,

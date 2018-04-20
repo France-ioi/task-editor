@@ -60,7 +60,7 @@ function saveTaskData(task_subpath, task_data, callback) {
 
 
 
-module.exports = {
+var api = {
 
     create: (req, res) => {
         loadSchema(
@@ -163,15 +163,27 @@ module.exports = {
 
 
     clone: (req, res) => {
+        var src = path.join(config.path, req.body.path_src);
         var dst = path.join(config.path, req.body.path);
-        shell.cp('-rf', path.join(config.path, req.body.path_src), dst);
-        svn.commit(req.user, req.body.path, (err) => {
+        shell.cp('-rf', src + '/*', dst + '/');
+        svn.add(req.user, req.body.path, (err) => {
             if(err) {
-                shell.rm('-rf', dst);
-                return res.status(400).send('Access denied');
+                return svn.cleanup(req.user, req.body.path, (err) => {
+                    return res.status(400).send('Access denied');
+                })
             }
-            this.load(req, res);
+            svn.commit(req.user, req.body.path, (err) => {
+                if(err) {
+                    shell.rm('-rf', dst);
+                    return res.status(400).send('Access denied');
+                }
+                svn.update(req.user, req.body.path, (err) => {
+                    api.load(req, res);
+                })
+            })
         })
     }
 
 }
+
+module.exports = api;

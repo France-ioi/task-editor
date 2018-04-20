@@ -54,13 +54,6 @@ function* removeDir(action) {
 }
 
 
-export default function* () {
-    yield takeEvery('EXPLORER_FETCH_READ_DIR', readDir);
-    yield takeEvery('EXPLORER_FETCH_CREATE_DIR', createDir);
-    yield takeEvery('EXPLORER_REMOVE_DIR', removeDir);
-}
-
-
 export function* explorer(params) {
     yield put({type: 'EXPLORER_SHOW', ...params });
     yield readDir(params);
@@ -68,4 +61,11 @@ export function* explorer(params) {
     const { path } = yield select(state => state.explorer)
     yield put({type: 'EXPLORER_HIDE' });
     return { path, ...res };
+}
+
+
+export default function* () {
+    yield takeEvery('EXPLORER_FETCH_READ_DIR', readDir);
+    yield takeEvery('EXPLORER_FETCH_CREATE_DIR', createDir);
+    yield takeEvery('EXPLORER_REMOVE_DIR', removeDir);
 }

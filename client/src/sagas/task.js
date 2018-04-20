@@ -4,18 +4,10 @@ import api_importer from '../api/task_importer'
 import { explorer } from './explorer'
 
 function* open(action) {
-    const { path } = yield select(state => state.task)
-    const params = {
-        path: path || '',
-        controls: {
-            load_task: true,
-            create_task: true,
-            //clone_task: true,
-            create_dir: true,
-            remove_dir: true
-        }
-    }
-    const res = yield call(explorer, params);
+    var { path, controls, path_dst } = action
+    const res = yield call(explorer, { path, controls });
+
+
     switch(res.action) {
         case 'loadTask':
             yield put({
@@ -30,8 +22,18 @@ function* open(action) {
                 path: res.path
             });
             break;
-        case 'copyPath':
-            //yield clone(res.data);
+
+        case 'cloneTask':
+            if(!path_dst) {
+                path_dst = yield select(state => state.explorer.path)
+            }
+            if(path_dst != res.path_src) {
+                yield put({
+                    type: 'TASK_FETCH_CLONE',
+                    path: path_dst,
+                    path_src: res.path_src
+                });
+            }
             break;
     }
 }
@@ -139,9 +141,9 @@ function* saveView(action) {
 
 export default function* () {
     yield takeEvery('TASK_OPEN', open);
-    yield takeEvery('TASK_CLONE', clone);
     yield takeEvery('TASK_FETCH_LOAD', load);
     yield takeEvery('TASK_FETCH_SAVE', save);
+    yield takeEvery('TASK_FETCH_CLONE', clone);
     yield takeEvery('TASK_FETCH_SAVE_VIEW', saveView);
     yield takeEvery('TASK_FETCH_CREATE', create);
 }

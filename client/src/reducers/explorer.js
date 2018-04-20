@@ -5,8 +5,22 @@ var default_state = {
     list: null,
     flags: {},
     loading: false,
-    error: null
+    error: null,
+    path_src_history: []
 }
+
+
+function refreshPathSrcHistory(history, path) {
+    let new_history = history.filter((item) => {
+        return item != path;
+    });
+    new_history.push(path);
+    if(new_history.length > 10) {
+        new_history = new_history.slice(1)
+    }
+    return new_history;
+}
+
 
 export default (state = default_state, action) => {
 
@@ -25,6 +39,16 @@ export default (state = default_state, action) => {
                 ...state,
                 visible: false
             }
+            break;
+
+        case 'EXPLORER_ACTION_RETURN':
+            if(action.path_src) {
+                return {
+                    ...state,
+                    path_src_history: refreshPathSrcHistory(state.path_src_history, action.path_src)
+                }
+            }
+            return state;
             break;
 
         case 'EXPLORER_FETCH_READ_DIR':

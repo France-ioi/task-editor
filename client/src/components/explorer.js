@@ -98,19 +98,42 @@ class Explorer extends React.Component {
     }
 
 
-    cloneTask = () => {
+    cloneTask = (path_src) => {
         this.props.dispatch({
             type: 'EXPLORER_ACTION_RETURN',
-            action: 'copyTask'
+            action: 'cloneTask',
+            path_src
+        });
+    }
+
+
+    selectPathSrc = () => {
+        this.props.dispatch({
+            type: 'TASK_OPEN',
+            path: this.props.path,
+            path_dst: this.props.path,
+            controls: {
+                select_path: true
+            }
+        })
+    }
+
+
+    cancel = () => {
+        this.props.dispatch({
+            type: 'EXPLORER_ACTION_RETURN',
+            action: 'close'
         });
     }
 
 
     render() {
+        const is_current_task = this.props.task_path && this.props.task_path === this.props.path;
         const is_home = !this.props.path;
         const { flags, controls } = this.props;
+        const task_create_available = !flags.is_task && !flags.has_subfolders && !is_home;
         return (
-            <Modal show={this.props.visible} onHide={this.props.toggle}>
+            <Modal show={this.props.visible} onHide={this.cancel}>
                 <Modal.Header closeButton>
                     <Modal.Title>Select task folder</Modal.Title>
                 </Modal.Header>
@@ -119,7 +142,7 @@ class Explorer extends React.Component {
                     <List list={this.props.list} nav={this.nav} path={this.props.path}/>
                     { this.props.error && <Alert bsStyle="danger">{this.props.error}</Alert> }
                 </Modal.Body>
-                { !is_home && controls.create_dir &&
+                { !is_home && controls.create_dir && !this.props.loading &&
                     <Modal.Footer>
                         <FormGroup>
                             <InputGroup>
@@ -132,33 +155,46 @@ class Explorer extends React.Component {
                         </FormGroup>
                     </Modal.Footer>
                 }
-                <Modal.Footer>
-                    { !is_home &&
-                        <ButtonToolbar className="pull-left">
-                            <Button onClick={this.navHome}>Go home</Button>
-                            { controls.remove_dir &&
-                                <Button bsStyle="danger" onClick={this.removeDir}>Delete dir</Button>
-                            }
-                        </ButtonToolbar>
-                    }
+                { !this.props.loading &&
+                    <Modal.Footer>
+                        { !is_home &&
+                            <ButtonToolbar className="pull-left">
+                                <Button onClick={this.navHome}>Go home</Button>
+                                { controls.remove_dir && !is_current_task &&
+                                    <Button bsStyle="danger" onClick={this.removeDir}>Delete dir</Button>
+                                }
+                            </ButtonToolbar>
+                        }
 
-                    <ButtonToolbar className="pull-right">
-                        { flags.is_task && controls.load_task &&
-                            <Button onClick={this.loadTask} bsStyle="primary">Open task</Button>
-                        }
-                        { flags.is_task && controls.clone_task &&
-                            <Button onClick={this.cloneTask} bsStyle="primary">Copy this task</Button>
-                        }
-                        { !flags.is_task && !flags.has_subfolders && !is_home &&
-                            <DropdownButton bsStyle="default" title="Create task" noCaret dropup id="btn-create-task">
-                                { tasks_config.map(task =>
-                                    <MenuItem key={task.type} onClick={()=>this.createTask(task.type)}>{task.title}</MenuItem>
-                                )}
-                            </DropdownButton>
-                        }
-                        <Button onClick={this.props.toggle}>Cancel</Button>
-                    </ButtonToolbar>
-                </Modal.Footer>
+                        <ButtonToolbar className="pull-right">
+                            { flags.is_task && controls.load_task && !is_current_task &&
+                                <Button onClick={this.loadTask} bsStyle="primary">Open task</Button>
+                            }
+                            { flags.is_task && controls.select_path &&
+                                <Button onClick={()=>this.cloneTask(this.props.path)} bsStyle="primary">Clone this task</Button>
+                            }
+                            { task_create_available && controls.create_task &&
+                                <DropdownButton bsStyle="default" title="Create task" noCaret dropup id="btn-create-task">
+                                    { tasks_config.map(task =>
+                                        <MenuItem key={task.type} onClick={()=>this.createTask(task.type)}>{task.title}</MenuItem>
+                                    )}
+                                </DropdownButton>
+                            }
+                            { task_create_available && controls.create_task &&
+                                <DropdownButton bsStyle="default" title="Clone an existing task" noCaret dropup id="btn-clone-task">
+                                    { this.props.path_src_history.map(path =>
+                                        <MenuItem key={path} onClick={()=>this.cloneTask(path)}>{path}</MenuItem>
+                                    )}
+                                    { this.props.path_src_history.length > 0 &&
+                                        <MenuItem divider />
+                                    }
+                                    <MenuItem onClick={this.selectPathSrc}>Choose source task ...</MenuItem>
+                                </DropdownButton>
+                            }
+                            <Button onClick={this.cancel}>Cancel</Button>
+                        </ButtonToolbar>
+                    </Modal.Footer>
+                }
             </Modal>
         );
     }

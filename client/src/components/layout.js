@@ -33,7 +33,16 @@ class Layout extends React.Component {
 
 
     openTask = () => {
-        this.props.dispatch({type: 'TASK_OPEN'})
+        this.props.dispatch({
+            type: 'TASK_OPEN',
+            path: this.props.task.ready ? this.props.task.path : '',
+            controls: {
+                load_task: true,
+                create_task: true,
+                create_dir: true,
+                remove_dir: true
+            }
+        })
     }
 
 
@@ -81,7 +90,7 @@ class Layout extends React.Component {
                     { sectionVisible('import') && <TaskImporter path={task.path} token={auth.token}/>}
                     { sectionVisible('files_manager') && <FilesManager task_path={task.path}/>}
                 </div>
-                <Explorer/>
+                <Explorer task_path={this.props.task.path}/>
                 <Confirmation/>
             </div>
         )
