@@ -9,6 +9,10 @@ var default_state = {
 export default (state = default_state, action) => {
 
     switch(action.type) {
+        case 'EXPLORER_REMOVE_DIR':
+            return state;
+            break;
+
         case 'EXPLORER_FETCH_READ_DIR':
         case 'EXPLORER_FETCH_CREATE_DIR':
         case 'EXPLORER_FETCH_REMOVE_DIR':

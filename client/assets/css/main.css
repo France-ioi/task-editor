@@ -111,3 +111,12 @@ body, html {
 .mce-fullscreen {
     z-index: 1500 !important;
 }
+
+
+.modal-backdrop {
+    visibility: hidden !important;
+}
+
+.modal.in {
+    background-color: rgba(0,0,0,0.5);
+}

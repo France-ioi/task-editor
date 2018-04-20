@@ -10,7 +10,7 @@ import TaskJsonEditor from './task_json_editor';
 import TaskSvn from './task_svn';
 import TaskImporter from './task_importer';
 import FilesManager from './files_manager';
-
+import Confirmation from './confirmation';
 
 class Layout extends React.Component {
 
@@ -96,6 +96,7 @@ class Layout extends React.Component {
                 </div>
                 <Explorer visible={explorer_visible} toggle={this.toggleExplorer}
                     loadTask={this.loadTask} createTask={this.createTask}/>
+                <Confirmation/>
             </div>
         )
     }
