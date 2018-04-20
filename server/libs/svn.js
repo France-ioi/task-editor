@@ -7,6 +7,7 @@ function authParams(credentials) {
         '--password "' + credentials.password.replace(/"/g, '"') + '"'
 }
 
+
 module.exports = {
 
     list: (credentials, callback) => {
@@ -24,8 +25,7 @@ module.exports = {
         folders = folders.map(folder => url.resolve(config.svn_repository, folder))
         var cmd = 'cd ' + config.path + ' && svn co ' + folders.join(' ') + ' ' + authParams(credentials)
         exec(cmd, (err, stdout, stderr) => {
-            if(stderr) return callback(new Error(stderr))
-            return callback()
+            callback(stderr ? new Error(stderr) : null)
         })
     },
 
@@ -34,8 +34,7 @@ module.exports = {
         if(!folders.length) return callback()
         var cmd = 'cd ' + config.path + ' && svn update ' + folders.join(' ') + ' ' + authParams(credentials)
         exec(cmd, (err, stdout, stderr) => {
-            if(stderr) return callback(new Error(stderr))
-            return callback()
+            callback(stderr ? new Error(stderr) : null)
         })
     },
 
@@ -43,8 +42,7 @@ module.exports = {
     add: (credentials, path, callback) => {
         var cmd = 'cd ' + config.path + ' && svn add ' + path + ' --force'
         exec(cmd, (err, stdout, stderr) => {
-            if(stderr) return callback(new Error(stderr))
-            return callback()
+            callback(stderr ? new Error(stderr) : null)
         })
     },
 
