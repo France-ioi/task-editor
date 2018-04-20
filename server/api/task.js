@@ -3,6 +3,9 @@ var path = require('path');
 var generator = require('../libs/task/generator')
 var config = require('../config')
 var svn = require('../libs/svn')
+var shell = require('shelljs')
+
+
 
 function taskDataFile(task_subpath) {
     return path.join(config.path, task_subpath, config.task.data_file);
@@ -54,6 +57,7 @@ function saveTaskData(task_subpath, task_data, callback) {
         callback
     );
 }
+
 
 
 module.exports = {
@@ -145,6 +149,19 @@ module.exports = {
                 )
             }
         )
+    },
+
+
+    clone: (req, res) => {
+        var dst = path.join(config.path, req.body.path);
+        shell.cp('-rf', path.join(config.path, req.body.path_src), dst);
+        svn.commit(req.user, req.body.path, (err) => {
+            if(err) {
+                shell.rm('-rf', dst);
+                return res.status(400).send('Access denied');
+            }
+            this.load(req, res);
+        })
     }
 
 }

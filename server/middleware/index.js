@@ -1,5 +1,24 @@
 var user = require('../libs/user')
 
+
+function validatePathParams(body) {
+    var params = [
+        'old_filename',
+        'new_filename',
+        'path',
+        'path_src',
+        'dir'
+    ];
+    var res = true;
+    params.map(param => {
+        if(param in body && body[param].indexOf('./') !== -1) {
+            res = false;
+        }
+    })
+    return res;
+}
+
+
 module.exports = function(app) {
 
     app.use((req, res, next) => {
@@ -9,17 +28,8 @@ module.exports = function(app) {
                 return res.status(400).send('Auth expired')
             }
         }
-        if('old_filename' in req.body && req.body.old_filename.indexOf('./') !== -1) {
+        if(!validatePathParams(req.body)) {
             return res.status(400).send('Wrong filename')
-        }
-        if('new_filename' in req.body && req.body.new_filename.indexOf('./') !== -1) {
-            return res.status(400).send('Wrong filename')
-        }
-        if('path' in req.body && req.body.path.indexOf('./') !== -1) {
-            return res.status(400).send('Wrong path')
-        }
-        if('dir' in req.body && req.body.dir.indexOf('./') !== -1) {
-            return res.status(400).send('Wrong dir')
         }
         next();
     })
