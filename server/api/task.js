@@ -77,15 +77,18 @@ module.exports = {
                     task_data,
                     err => {
                         if(err) return res.status(400).send(err.message);
-                        svn.commit(req.user, req.body.path, (err) => {
-                            if(!err) {
-                                return res.json({
-                                    schema,
-                                    data: null
-                                });
-                            }
-                            svn.cleanup(req.user, req.body.path, (err) => {
-                                return res.status(400).send('Access denied');
+                        svn.add(req.user, rel_dir, (err) => {
+                            if(err) return res.status(400).send('Access denied');
+                            svn.commit(req.user, req.body.path, (err) => {
+                                if(!err) {
+                                    return res.json({
+                                        schema,
+                                        data: null
+                                    });
+                                }
+                                svn.cleanup(req.user, req.body.path, (err) => {
+                                    return res.status(400).send('Access denied');
+                                })
                             })
                         })
                     }
@@ -133,14 +136,17 @@ module.exports = {
                         saveTaskData(
                             req.body.path,
                             task_data,
-                            err => {
+                            err =>  {
                                 if(err) return res.status(400).send(err.message);
-                                svn.commit(req.user, req.body.path, (err) => {
-                                    if(!err) {
-                                        return res.json({});
-                                    }
-                                    svn.cleanup(req.user, req.body.path, (err) => {
-                                        return res.status(400).send('Access denied');
+                                svn.add(req.user, rel_dir, (err) => {
+                                    if(err) return res.status(400).send('Access denied');
+                                    svn.commit(req.user, req.body.path, (err) => {
+                                        if(!err) {
+                                            return res.json({});
+                                        }
+                                        svn.cleanup(req.user, req.body.path, (err) => {
+                                            return res.status(400).send('Access denied');
+                                        })
                                     })
                                 })
                             }

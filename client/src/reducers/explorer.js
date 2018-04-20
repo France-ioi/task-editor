@@ -1,5 +1,7 @@
 var default_state = {
-    path: null,
+    visible: false,
+    path: '',
+    controls: {},
     list: null,
     flags: {},
     loading: false,
@@ -9,8 +11,20 @@ var default_state = {
 export default (state = default_state, action) => {
 
     switch(action.type) {
-        case 'EXPLORER_REMOVE_DIR':
-            return state;
+        case 'EXPLORER_SHOW':
+            return {
+                ...state,
+                path: action.path,
+                controls: action.controls,
+                visible: true
+            }
+            break;
+
+        case 'EXPLORER_HIDE':
+            return {
+                ...state,
+                visible: false
+            }
             break;
 
         case 'EXPLORER_FETCH_READ_DIR':

@@ -17,7 +17,6 @@ class Layout extends React.Component {
     constructor(props, context) {
         super(props, context);
         this.state = {
-            explorer_visible: false,
             active_section: 'json'
         };
     }
@@ -33,20 +32,8 @@ class Layout extends React.Component {
     }
 
 
-    toggleExplorer = () => {
-        this.setState({
-            ...this.state,
-            explorer_visible: !this.state.explorer_visible
-        })
-    }
-
-    createTask = (path, task_type) => {
-        this.props.dispatch({type: 'TASK_FETCH_CREATE', path, task_type })
-    }
-
-
-    loadTask = (path) => {
-        this.props.dispatch({type: 'TASK_FETCH_LOAD', path })
+    openTask = () => {
+        this.props.dispatch({type: 'TASK_OPEN'})
     }
 
 
@@ -74,7 +61,7 @@ class Layout extends React.Component {
 
     render() {
         const { task, auth } = this.props;
-        const { explorer_visible, active_section } = this.state;
+        const { active_section } = this.state;
 
         const sectionVisible = (name) => task.ready && active_section == name;
 
@@ -82,7 +69,7 @@ class Layout extends React.Component {
             <div>
                 { task.loading && <Loader modal/>}
                 <ControlPanel task={task}
-                    toggleExplorer={this.toggleExplorer} saveTask={this.saveTask}
+                    openTask={this.openTask} saveTask={this.saveTask}
                     active_section={active_section} showSection={this.showSection}
                     username={auth.username}
                 />
@@ -94,8 +81,7 @@ class Layout extends React.Component {
                     { sectionVisible('import') && <TaskImporter path={task.path} token={auth.token}/>}
                     { sectionVisible('files_manager') && <FilesManager task_path={task.path}/>}
                 </div>
-                <Explorer visible={explorer_visible} toggle={this.toggleExplorer}
-                    loadTask={this.loadTask} createTask={this.createTask}/>
+                <Explorer/>
                 <Confirmation/>
             </div>
         )

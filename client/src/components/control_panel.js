@@ -6,7 +6,7 @@ import { Button, Navbar, Nav, NavItem, Glyphicon } from 'react-bootstrap';
 class ControlPanel extends React.Component {
 
     render() {
-        var { task, toggleExplorer, saveTask, showSection, active_section, username } = this.props;
+        var { task, saveTask, openTask, showSection, active_section, username } = this.props;
         return (
             <Navbar inverse fixedTop>
                 <Navbar.Text pullLeft>
@@ -14,7 +14,7 @@ class ControlPanel extends React.Component {
                     {username}
                 </Navbar.Text>
                 <Navbar.Form pullLeft>
-                    <Button onClick={toggleExplorer}>Open</Button>
+                    <Button onClick={openTask}>Open</Button>
                 </Navbar.Form>
                 { task.ready &&
                     <Navbar.Text pullLeft>

@@ -40,14 +40,19 @@ module.exports = {
     },
 
 
-    commit: (credentials, path, callback) => {
+    add: (credentials, path, callback) => {
         var cmd = 'cd ' + config.path + ' && svn add ' + path + ' --force'
         exec(cmd, (err, stdout, stderr) => {
             if(stderr) return callback(new Error(stderr))
-            var cmd = 'cd ' + config.path + ' && svn commit ' + path + ' ' + authParams(credentials) + ' --message "Task editor"'
-            exec(cmd, (err, stdout, stderr) => {
-                callback(stderr ? new Error(stderr) : null)
-            });
+            return callback()
+        })
+    },
+
+
+    commit: (credentials, path, callback) => {
+        var cmd = 'cd ' + config.path + ' && svn commit ' + path + ' ' + authParams(credentials) + ' --message "Task editor"'
+        exec(cmd, (err, stdout, stderr) => {
+            callback(stderr ? new Error(stderr) : null)
         })
     },
 
@@ -74,7 +79,6 @@ module.exports = {
             ' --no-ignore | grep \'^[I?]\' | cut -c 9- | while IFS= read -r f; do rm -rf "$f"; done';
 
         exec(cmd, (err, stdout, stderr) => {
-            console.log(stdout, stderr)
             callback(stderr ? new Error(stderr) : null)
         })
     }

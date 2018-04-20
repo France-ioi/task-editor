@@ -18,7 +18,7 @@ export default (props) => {
             }
             breadcrumbs.push({
                 dir: subs[i],
-                path: subs[i]
+                path: path.join('/')
             });
         }
     }
