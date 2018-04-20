@@ -37,6 +37,14 @@
         "keepArray": "keepArray"
     },
     {
+        "jsonSubPath": "sceneArray",
+        "selector": "[task.js$tilesPlaceholder]",
+        "matching": {
+            "scene": ["tilesEasy", "tilesMedium", "tilesHard"],
+
+        }
+    },
+    {
         "jsonSubPath": "testFiles.input",
         "value": {
             "type": "file",

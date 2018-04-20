@@ -13,7 +13,7 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
         this._super();
         var self = this;
         $(document).ready(function () {
-            $("#resizable").resizable({
+            $("#" + self.id + "-resizable").resizable({
                 grid: 40,
                 resize: function (event, ui) {
                     self.input_row.value = ui.size.height / self.field_size;
@@ -45,7 +45,7 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
     updateItemTypes: function (itemTypes) {
         window.console.log("updateItemTypes called");
         window.console.log(itemTypes);
-        $("#itemTypesContainer").empty();
+        $(".itemTypesContainer").empty();
         for (var itemType in itemTypes) {
             window.console.log(itemTypes[itemType]);
             window.console.log("num:");
@@ -65,12 +65,13 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
                 $newItemType.css.color = itemTypes[itemType].color;
                 window.console.log($newItemType.css);
             }
-            $("#itemTypesContainer").append($newItemType);
+            $(".itemTypesContainer").append($newItemType);
         }
     },
 
     build: function () {
 
+        this.id = this.path.replace(/\./g,"-");
         var self = this;
         this.header = document.createElement('span');
         this.header.textContent = this.getTitle();
@@ -106,8 +107,6 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
 
             self.is_dirty = true;
 
-            window.console.log("column number changed")
-
             self.refreshValue();
         });
         this.input_row.addEventListener('change', function (e) {
@@ -138,23 +137,28 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
 
         // item types html
         var itemTypesContainer = document.createElement('div');
+        // itemTypesContainer.id = this.path + '-itemTypesContainer';
         itemTypesContainer.id = 'itemTypesContainer';
+        itemTypesContainer.classList.add('itemTypesContainer');
         this.container.appendChild(itemTypesContainer);
 
         // scene editor html
         var wrapper = document.createElement('div');
-        wrapper.id = 'resizable';
+        wrapper.id = this.id + '-resizable';
         wrapper.classList.add('wrapper', 'ui-widget-content');
         var dotsContainer = document.createElement('div');
-        dotsContainer.id = 'dots-container';
+        dotsContainer.id = this.id + '-dots-container';
+        dotsContainer.classList.add('dots-container');
         var list = document.createElement('ul');
-        list.classList.add('row1');
+        list.classList.add(this.id + '-row1');
         var listItem = document.createElement('li');
         listItem.classList.add('dot');
         list.appendChild(listItem);
         dotsContainer.appendChild(list);
         wrapper.appendChild(dotsContainer);
         this.container.appendChild(wrapper);
+
+        console.log(this);
 
     },
 
@@ -164,8 +168,6 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
         this.value = [[0]];
         var rowNumber = this.value.length;
         var columnNumber = this.value[0].length;
-        window.console.log(rowNumber)
-        window.console.log(this.input_row.value)
         if (rowNumber != this.input_row.value) {
             // add rows until we have as many as needed
             while (this.value.push(new Array(columnNumber).fill(0)) < this.input_row.value) {
@@ -188,9 +190,10 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
             }
         }
 
-        window.jQuery('#resizable').height(this.value.length * this.field_size + 'px');
-        window.jQuery('#resizable').width(this.value[0].length * this.field_size + 'px');
-        this.resizeGrid({width: window.jQuery('#resizable').width(), height: window.jQuery('#resizable').height()});
+        var resizableId = '#' + this.id + '-resizable';
+        window.jQuery(resizableId).height(this.value.length * this.field_size + 'px');
+        window.jQuery(resizableId).width(this.value[0].length * this.field_size + 'px');
+        this.resizeGrid({width: window.jQuery(resizableId).width(), height: window.jQuery(resizableId).height()});
         this.onChange(true);
     },
 
@@ -203,12 +206,12 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
         for (var i = 0; i < size.height / this.field_size; i++) {
             dots += '<li class="dot empty" data-row="' + i + '"></li>';
         }
-        $(this).find('.row1').html(dots);
-        var grid = '<ul class="row1" data-column="0">' + dots + "</ul>";
+        $(this).find('.' + this.id + '-row1').html(dots);
+        var grid = '<ul class="' + this.id + '-row1" data-column="0">' + dots + "</ul>";
         for (var i = 1; i < size.width / this.field_size; i++) {
             grid += '<ul data-column="' + i + '">' + dots + "</ul>";
         }
-        $('#dots-container').html(grid);
+        $('#' + this.id + '-dots-container').html(grid);
         this.addClickListeners();
     },
 

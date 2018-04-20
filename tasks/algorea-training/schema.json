@@ -198,6 +198,25 @@
         "new"
       ]
     },
+    "sceneArray": {
+      "type": "array",
+      "format": "tabs",
+      "title": "difficulties",
+      "items": {
+        "type": "object",
+        "title": "level",
+        "headerTemplate": "level {{ i1 }}",
+        "properties": {
+          "scene": {
+            "type": "grid",
+            "watch": {
+              "sceneContext": "root.context"
+            }
+          }
+        },
+        "required": ["scene"]
+      }
+    },
     "scene": {
       "type": "grid",
       "watch": {
@@ -661,6 +680,7 @@
     }
   },
   "required": [
+    "sceneArray",
     "PEMTaskMetaData",
     "AlgoreaTrainingTaskMetaData",
     "title",
