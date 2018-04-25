@@ -32,17 +32,17 @@
         "selector": "[task.js$contextTypePlaceholder]"
     },
     {
-        "jsonSubPath": "scene",
-        "selector": "[task.js$tilesPlaceholder]",
-        "keepArray": "keepArray"
-    },
-    {
-        "jsonSubPath": "sceneArray",
-        "selector": "[task.js$tilesPlaceholder]",
-        "matching": {
-            "scene": ["tilesEasy", "tilesMedium", "tilesHard"],
-
-        }
+        "jsonSubPath": "difficulties",
+        "matchingRule": [
+            {
+                "jsonSubPath": "scene",
+                "selector": ["[task.js$tilesEasy]", "[task.js$tilesMedium]", "[task.js$tilesHard]"]
+            },
+            {
+                "jsonSubPath": "name",
+                "selector": ["[task.js$titleEasy]", "[task.js$titleMedium]", "[task.js$titleHard]"]
+            }
+        ]
     },
     {
         "jsonSubPath": "testFiles.input",
