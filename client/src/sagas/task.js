@@ -5,7 +5,10 @@ import { explorer } from './explorer'
 
 function* open(action) {
     var { path, controls, path_dst } = action
-    const res = yield call(explorer, { path, controls });
+    const res = yield call(explorer, {
+        path,
+        controls: controls || {}
+    });
 
 
     switch(res.action) {

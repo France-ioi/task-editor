@@ -12,8 +12,7 @@ class Auth extends React.Component {
         super(props, context);
         this.state = {
             username: dev.username || '',
-            password: dev.password || '',
-            svn_update: false
+            password: dev.password || ''
         };
     }
 
@@ -37,8 +36,7 @@ class Auth extends React.Component {
         this.props.dispatch({
             type: 'AUTH_LOGIN_REQUEST',
             username: this.state.username,
-            password: this.state.password,
-            svn_update: this.state.svn_update
+            password: this.state.password
         });
     }
 
@@ -62,15 +60,11 @@ class Auth extends React.Component {
                                 <FormControl type="password" name="password"
                                     value={password} onChange={this.onInputChange}/>
                             </FormGroup>
-                            <Checkbox name="svn_update" onChange={this.onInputChange}>
-                                Run svn update for existing folders
-                            </Checkbox>
                             <FormGroup>
                                 <Button bsStyle="primary" type="submit"
                                     disabled={username == '' || password == ''}>Login</Button>
                             </FormGroup>
                         </form>
-                        <Alert bsStyle="info">Login may take a time to complete svn checkout/update.</Alert>
                     </Panel.Body>
                 </Panel>
                 { loading && <Loader modal/> }

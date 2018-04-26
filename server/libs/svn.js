@@ -7,6 +7,9 @@ function auth(credentials) {
         '--password "' + credentials.password.replace(/"/g, '"') + '"'
 }
 
+function message() {
+    return ' --message "Task editor"'
+}
 
 function cd() {
     return 'cd "' + config.path + '" &&  ';
@@ -15,9 +18,11 @@ function cd() {
 
 function exec(cmd, callback) {
     child_process_exec(cmd, (err, stdout, stderr) => {
-        console.log(cmd)
-        stderr && console.error(stderr)
-        stdout && console.error(stdout)
+        if(config.dev.log) {
+            console.log(cmd)
+            stderr && console.error(stderr)
+            stdout && console.error(stdout)
+        }
         if(stderr) {
             return callback(new Error(stderr))
         }
@@ -26,22 +31,20 @@ function exec(cmd, callback) {
 }
 
 
-module.exports = {
+var svn = {
 
-    list: (credentials, callback) => {
-        var cmd = 'svn list ' + config.svn_repository + auth(credentials)
+    list: (credentials, path, callback) => {
+        var cmd = 'svn list ' + url.resolve(config.svn_repository, path) + auth(credentials)
         exec(cmd, (err, stdout) => {
             if(err) return callback(err)
-            var folders = stdout.replace(/\//g, '').split(/\r?\n/).filter(item => item != '')
-            callback(null, folders)
+            var res = stdout.split(/\r?\n/).filter(item => item != '')
+            callback(null, res)
         })
     },
 
 
-    checkout: (credentials, folders, callback) => {
-        if(!folders.length) return callback()
-        folders = folders.map(folder => url.resolve(config.svn_repository, folder))
-        var cmd = cd() + 'svn co ' + folders.join(' ') + ' ' + auth(credentials)
+    checkout: (credentials, path, callback) => {
+        var cmd = cd() + 'svn co ' + url.resolve(config.svn_repository, path) + ' ' + path + ' ' + auth(credentials)
         exec(cmd, callback)
     },
 
@@ -51,7 +54,7 @@ module.exports = {
         if(!Array.isArray(folders)) {
             folders = [folders]
         }
-        var cmd = cd() + 'svn update ' + folders.join(' ') + ' ' + auth(credentials)
+        var cmd = cd() + 'svn update ' + folders.join(' ') + auth(credentials)
         exec(cmd, callback)
     },
 
@@ -63,14 +66,23 @@ module.exports = {
 
 
     commit: (credentials, path, callback) => {
-        var cmd = cd() + 'svn commit ' + path + ' ' + auth(credentials) + ' --message "Task editor"'
+        var cmd = cd() + 'svn commit ' + path + auth(credentials) + message()
         exec(cmd, callback)
     },
 
 
-    delete: (credentials, path, callback) => {
-        var cmd = cd() + 'svn rm ' + path
-        exec(cmd, callback)
+    addCommit: (credentials, path, callback) => {
+        svn.add(credentials, path, (err) => {
+            if(err) {
+                return svn.revert(credentials, path, (err2) => {
+                    callback(err || err2)
+                })
+            }
+            svn.commit(credentials, path, (err) => {
+                if(err) return callback(err)
+                svn.update(credentials, path, callback)
+            })
+        })
     },
 
 
@@ -85,6 +97,19 @@ module.exports = {
             'svn status ' + path +
             ' --no-ignore | grep \'^[I?]\' | cut -c 9- | while IFS= read -r f; do rm -rf "$f"; done';
         exec(cmd, callback)
+    },
+
+
+    removeDir: (credentials, path, callback) => {
+        var cmd = 'svn rm ' + config.svn_repository + path + auth(credentials) + message()
+        exec(cmd, callback)
+    },
+
+    createDir: (credentials, path, callback) => {
+        var cmd = 'svn mkdir ' + config.svn_repository + path + auth(credentials) + message()
+        exec(cmd, callback)
     }
 
 }
+
+module.exports = svn

@@ -1,0 +1,29 @@
++1. directory tree cache:
++ - put root folders on login
++` - put subfolders when user using explorer popup
++- update cache on create/delete dir
+
++2. create dir:
++ mkdir > svn add > svn commit > delete dir in filesystem
+
++3. delete dir:
++ svn co > svn up > svn rm > svn commit
+
+4. open task:
+ svn co
+
+5. create task/save task:
+ svn add > svn commit
+
+6. copy task:
+ - checkout source task
+ - copy files into new dir
+ - svn add > svn commit
+ - delete src dir in filesystem
+ - open task
+
+(2-6). delete all new dirs/files on any error
+
+7. make cleanup script:
+ - delete dirs/files where (modification_time <= now - interval)
+ - add interval to config

@@ -6,13 +6,9 @@ import { Button, Navbar, Nav, NavItem, Glyphicon } from 'react-bootstrap';
 class ControlPanel extends React.Component {
 
     render() {
-        var { task, saveTask, openTask, showSection, active_section, username } = this.props;
+        var { task, saveTask, openTask, showSection, logout, active_section, username } = this.props;
         return (
             <Navbar inverse fixedTop>
-                <Navbar.Text pullLeft>
-                <Glyphicon glyph="user"/>
-                    {username}
-                </Navbar.Text>
                 <Navbar.Form pullLeft>
                     <Button onClick={openTask}>Open</Button>
                 </Navbar.Form>
@@ -43,6 +39,15 @@ class ControlPanel extends React.Component {
                     {' '}
                     { task.ready && task.url && <a target="_blank" href={task.url} className="btn btn-primary">View</a> }
                 </Navbar.Form>
+
+                <Navbar.Form pullRight>
+                    <Button onClick={logout}>Sign out</Button>
+                </Navbar.Form>
+
+                <Navbar.Text pullRight>
+                    <Glyphicon glyph="user"/>
+                    {username}
+                </Navbar.Text>
             </Navbar>
         );
     }

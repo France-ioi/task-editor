@@ -37,6 +37,11 @@ module.exports = {
 
     get: function(token) {
         return data[token]
+    },
+
+
+    remove: function(token) {
+        delete data[token];
     }
 
 }

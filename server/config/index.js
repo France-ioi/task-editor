@@ -30,6 +30,7 @@ module.exports = {
     dev: {
         task_autoload: process.env.DEV_TASK_AUTOLOAD,
         username: process.env.DEV_USERNAME,
-        password: process.env.DEV_PASSWORD
+        password: process.env.DEV_PASSWORD,
+        log: !!process.env.DEV_LOG
     }
 }

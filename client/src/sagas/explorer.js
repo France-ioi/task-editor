@@ -7,7 +7,8 @@ function* readDir(action) {
         const { token } = yield select(state => state.auth)
         const params = {
             token,
-            path: action.path
+            path: action.path,
+            refresh: action.refresh
         }
         const data = yield call(api.readDir, params);
         yield put({type: 'EXPLORER_FETCH_SUCCESS', data });

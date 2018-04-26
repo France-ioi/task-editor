@@ -27,5 +27,6 @@ module.exports = function(app) {
     app.post('/api/images/search', images.search);
 
     app.post('/api/auth/login', auth.login);
+    app.post('/api/auth/logout', auth.logout);
     app.post('/api/auth/credentials', auth.credentials);
 }

@@ -16,12 +16,11 @@ const List = (props) => {
     if(!props.list) return null;
     return (
         <div>
-            {props.list.map(item =>
-                item.type == 'dir' &&
-                <div key={item.name}>
+            {props.list.map(dir =>
+                <div key={dir}>
                     <a href="#"
-                        onClick={()=>props.nav(pathJoin(props.path, item.name))}>
-                        <Glyphicon glyph="folder-close" /> {item.name}
+                        onClick={()=>props.nav(pathJoin(props.path, dir))}>
+                        <Glyphicon glyph="folder-close" /> {dir}
                     </a>
                 </div>
             )}
@@ -40,15 +39,6 @@ class Explorer extends React.Component {
     }
 
 
-    componentWillReceiveProps(props) {
-        /*
-        if(!this.props.visible && props.visible) {
-            this.navHome();
-        }
-        */
-    }
-
-
     nav = (path) => {
         if(path !== this.props.path) {
             this.props.dispatch({type: 'EXPLORER_FETCH_READ_DIR', path })
@@ -58,6 +48,15 @@ class Explorer extends React.Component {
 
     navHome = () => {
         this.nav('');
+    }
+
+
+    navRefresh = () => {
+        this.props.dispatch({
+            type: 'EXPLORER_FETCH_READ_DIR',
+            path: this.props.path,
+            refresh: true
+        })
     }
 
 
@@ -157,14 +156,12 @@ class Explorer extends React.Component {
                 }
                 { !this.props.loading &&
                     <Modal.Footer>
-                        { !is_home &&
-                            <ButtonToolbar className="pull-left">
-                                <Button onClick={this.navHome}>Go home</Button>
-                                { controls.remove_dir && !is_current_task &&
-                                    <Button bsStyle="danger" onClick={this.removeDir}>Delete dir</Button>
-                                }
-                            </ButtonToolbar>
-                        }
+                        <ButtonToolbar className="pull-left">
+                            <Button onClick={this.navRefresh}>Refresh</Button>
+                            { !is_home && controls.remove_dir && !is_current_task &&
+                                <Button bsStyle="danger" onClick={this.removeDir}>Delete dir</Button>
+                            }
+                        </ButtonToolbar>
 
                         <ButtonToolbar className="pull-right">
                             { flags.is_task && controls.load_task && !is_current_task &&

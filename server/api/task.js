@@ -50,6 +50,9 @@ function loadTaskData(task_subpath, callback) {
 }
 
 
+
+
+
 function saveTaskData(task_subpath, task_data, callback) {
     fs.writeFile(
         taskDataFile(task_subpath),
@@ -59,126 +62,96 @@ function saveTaskData(task_subpath, task_data, callback) {
 }
 
 
+function loadTask(req, res) {
+    loadTaskData(req.body.path, (err, task_data) => {
+        if(err) return res.status(400).send(err.message);
+        loadSchema(task_data.type, (err, schema) => {
+            if(err) return res.status(400).send(err.message);
+            res.json({
+                schema,
+                data: task_data.data
+            })
+        })
+    })
+}
+
 
 var api = {
 
     create: (req, res) => {
-        loadSchema(
-            req.body.task_type,
-            (err, schema) => {
-                if(err) return res.status(400).send(err.message);
-                var task_data = {
-                    type: req.body.task_type,
-                    data: null,
-                    files: []
-                }
-                saveTaskData(
-                    req.body.path,
-                    task_data,
-                    err => {
-                        if(err) return res.status(400).send(err.message);
-                        svn.add(req.user, req.body.path, (err) => {
-                            if(err) return res.status(400).send('Access denied');
-                            svn.commit(req.user, req.body.path, (err) => {
-                                if(!err) {
-                                    return svn.update(req.user, req.body.path, (err) => {
-                                        res.json({
-                                            schema,
-                                            data: null
-                                        });
-                                    })
-                                }
-                                svn.cleanup(req.user, req.body.path, (err) => {
-                                    return res.status(400).send('Access denied');
-                                })
-                            })
-                        })
-                    }
-                );
+        loadSchema(req.body.task_type, (err, schema) => {
+            if(err) return res.status(400).send(err.message);
+            var task_data = {
+                type: req.body.task_type,
+                data: null,
+                files: []
             }
-        )
+            svn.checkout(req.user, req.body.path, (err) => {
+                if(err) return res.status(400).send('Access denied');
+                saveTaskData(req.body.path, task_data, (err) => {
+                    if(err) return res.status(400).send(err.message);
+                    svn.addCommit(req.user, req.body.path, (err) => {
+                        if(err) {
+                            shell.rm('-rf', path.join(config.path, req.body.path));
+                            return res.status(400).send('Access denied');
+                        }
+                        res.json({
+                            schema,
+                            data: null
+                        });
+                    })
+                })
+            })
+        })
     },
 
 
     load: (req, res) => {
-        loadTaskData(
-            req.body.path,
-            (err, task_data) => {
-                if(err) return res.status(400).send(err.message);
-                loadSchema(
-                    task_data.type,
-                    (err, schema) => {
-                        if(err) return res.status(400).send(err.message);
-                        res.json({
-                            schema,
-                            data: task_data.data
-                        })
-                    }
-                )
-            }
-        )
+        svn.checkout(req.user, req.body.path, (err) => {
+            if(err) return res.status(400).send(err.message);
+            loadTask(req, res)
+        })
     },
 
 
     save: (req, res) => {
-        loadTaskData(
-            req.body.path,
-            (err, task_data) => {
-                if(err) return res.status(400).send(err.message);
-                var params = {
-                    path: path.join(config.path, req.body.path),
-                    data: req.body.data,
-                    type: task_data.type,
-                    files: task_data.files
-                }
-                generator.output(
-                    params,
-                    (err, task_data) => {
-                        if(err) return res.status(400).send(err.message);
-                        saveTaskData(
-                            req.body.path,
-                            task_data,
-                            err =>  {
-                                if(err) return res.status(400).send(err.message);
-                                svn.add(req.user, req.body.path, (err) => {
-                                    if(err) return res.status(400).send('Access denied');
-                                    svn.commit(req.user, req.body.path, (err) => {
-                                        if(!err) {
-                                            return svn.update(req.user, req.body.path, (err) => {
-                                                res.json({});
-                                            });
-                                        }
-                                        svn.cleanup(req.user, req.body.path, (err) => {
-                                            return res.status(400).send('Access denied');
-                                        })
-                                    })
-                                })
-                            }
-                        )
-                    }
-                )
+        loadTaskData(req.body.path, (err, task_data) => {
+            if(err) return res.status(400).send(err.message);
+            var params = {
+                path: path.join(config.path, req.body.path),
+                data: req.body.data,
+                type: task_data.type,
+                files: task_data.files
             }
-        )
+            generator.output(params, (err, task_data) => {
+                if(err) return res.status(400).send(err.message);
+                saveTaskData(req.body.path, task_data, (err) =>  {
+                    if(err) return res.status(400).send(err.message);
+                    svn.addCommit(req.user, req.body.path, (err) => {
+                        if(err) return res.status(400).send('Access denied');
+                        res.json({});
+                    })
+                })
+            })
+        })
     },
 
 
     clone: (req, res) => {
-        var src = path.join(config.path, req.body.path_src);
-        var dst = path.join(config.path, req.body.path);
-        shell.cp('-rf', src + '/*', dst + '/');
-        svn.add(req.user, req.body.path, (err) => {
-            if(err) {
-                return svn.cleanup(req.user, req.body.path, (err) => {
-                    return res.status(400).send('Access denied');
-                })
-            }
-            svn.commit(req.user, req.body.path, (err) => {
-                if(err) {
-                    shell.rm('-rf', dst);
-                    return res.status(400).send('Access denied');
-                }
-                svn.update(req.user, req.body.path, (err) => {
-                    api.load(req, res);
+        svn.checkout(req.user, req.body.path_src, (err) => {
+            if(err) return res.status(400).send('Access denied');
+            svn.checkout(req.user, req.body.path, (err) => {
+                if(err) return res.status(400).send('Access denied');
+                var src = path.join(config.path, req.body.path_src);
+                var dst = path.join(config.path, req.body.path);
+                shell.cp('-rf', src + '/*', dst + '/');
+                shell.rm('-rf', dst);
+                svn.addCommit(req.user, req.body.path, (err) => {
+                    if(err) {
+                        shell.rm('-rf', dst);
+                        return res.status(400).send('Access denied');
+                    }
+                    loadTask(req, res);
                 })
             })
         })

@@ -32,6 +32,11 @@ class Layout extends React.Component {
     }
 
 
+    logout = () => {
+        this.props.dispatch({ type: 'AUTH_LOGOUT_REQUEST'});
+    }
+
+
     openTask = () => {
         this.props.dispatch({
             type: 'TASK_OPEN',
@@ -79,6 +84,7 @@ class Layout extends React.Component {
                 { task.loading && <Loader modal/>}
                 <ControlPanel task={task}
                     openTask={this.openTask} saveTask={this.saveTask}
+                    logout={this.logout}
                     active_section={active_section} showSection={this.showSection}
                     username={auth.username}
                 />

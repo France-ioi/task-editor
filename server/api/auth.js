@@ -1,15 +1,14 @@
-var path = require('path')
-var fs = require('fs')
+//var path = require('path')
+//var fs = require('fs')
 
-
-var config = require('../config')
+//var config = require('../config')
 
 var user = require('../libs/user')
-var access = require('../libs/access')
+//var access = require('../libs/access')
 var svn = require('../libs/svn')
+var tree = require('../libs/tree')
 
-
-
+/*
 function auth(body, callback) {
     svn.list(body, (err, folders) => {
         if(err) return callback(err)
@@ -35,8 +34,8 @@ function auth(body, callback) {
             })
         })
     })
-
 }
+*/
 
 
 module.exports = {
@@ -47,12 +46,19 @@ module.exports = {
             return res.json({ token })
         }
 
-        auth(req.body, (err) => {
+        tree.readDir(req.body, '', (err, data) => {
             if(err) return res.status(400).send('User not found');
             res.json({
                 token: user.add(req.body)
             })
         })
+    },
+
+
+    logout: (req, res) => {
+        tree.clear(req.user, '')
+        user.remove(req.body.token)
+        res.json({});
     },
 
 
