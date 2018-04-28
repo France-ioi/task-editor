@@ -19,7 +19,7 @@ function initTask(subTask) {
    subTask.data = {
       easy: [
          {
-            tiles: {{tilesPlaceholder}}
+            tiles: {{tilesEasy}}
                ,
             initItems: [
                   { row: 5, col: 1, dir: 3, type: "green_robot" }
@@ -28,6 +28,7 @@ function initTask(subTask) {
       ],
       medium: [
          {
+            tiles: {{tilesMedium}},
             tiles: [
                    [3, 1, 1, 1, 1],
                    [1, 1, 1, 1, 3],

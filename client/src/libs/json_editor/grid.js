@@ -6,6 +6,10 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
     },
 
     preBuild: function () {
+        this._super();
+
+        // window.console.log("inside prebuild:");
+        // window.console.log(this.value);
         this.field_size = 40;
     },
 
@@ -13,8 +17,8 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
         this._super();
         var self = this;
         $(document).ready(function () {
-            $("#resizable").resizable({
-                grid: 40,
+            $("#" + self.id + "-resizable").resizable({
+                grid: self.field_size,
                 resize: function (event, ui) {
                     self.input_row.value = ui.size.height / self.field_size;
                     self.input_column.value = ui.size.width / self.field_size;
@@ -23,7 +27,10 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
                 }
             });
         });
-
+        // this.refreshValue();
+        // window.console.log("inside postbuild:");
+        // window.console.log(this.value);
+        this.setValue([[0]], true);
     },
 
     setupWatchListeners: function () {
@@ -35,7 +42,7 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
         // load itemtypes according to context, getContextParams is available from BLOCKLY_API_URL
         if (typeof getContextParams === "function") {
             if (getContextParams()[this.watched_values.sceneContext] != undefined) {
-                window.console.log(getContextParams()[this.watched_values.sceneContext].itemTypes);
+                // window.console.log(getContextParams()[this.watched_values.sceneContext].itemTypes);
                 this.updateItemTypes(getContextParams()[this.watched_values.sceneContext].itemTypes);
                 this.configureItemTypesListeners();
             }
@@ -43,13 +50,13 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
     },
 
     updateItemTypes: function (itemTypes) {
-        window.console.log("updateItemTypes called");
-        window.console.log(itemTypes);
-        $("#itemTypesContainer").empty();
+        // window.console.log("updateItemTypes called");
+        // window.console.log(itemTypes);
+        $(".itemTypesContainer").empty();
         for (var itemType in itemTypes) {
-            window.console.log(itemTypes[itemType]);
-            window.console.log("num:");
-            window.console.log(itemTypes[itemType].num);
+            // window.console.log(itemTypes[itemType]);
+            // window.console.log("num:");
+            // window.console.log(itemTypes[itemType].num);
             var itemTypeId = itemTypes[itemType].num;
             if (itemTypeId == undefined) {
                 itemTypeId = 0;
@@ -63,14 +70,15 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
             });
             if (itemTypes[itemType].color != undefined) {
                 $newItemType.css.color = itemTypes[itemType].color;
-                window.console.log($newItemType.css);
+                // window.console.log($newItemType.css);
             }
-            $("#itemTypesContainer").append($newItemType);
+            $(".itemTypesContainer").append($newItemType);
         }
     },
 
     build: function () {
 
+        this.id = this.path.replace(/\./g, "-");
         var self = this;
         this.header = document.createElement('span');
         this.header.textContent = this.getTitle();
@@ -83,21 +91,14 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
         this.input_row.value = '1';
         this.input_column = this.theme.getFormInputField(this.input_type);
         this.input_column.value = '1';
-        this.value = [[0]];
 
-        window.console.log(self);
+        // window.console.log("inside build:");
+        // window.console.log(self.value);
         this.input_column.addEventListener('change', function (e) {
             e.preventDefault();
             e.stopPropagation();
 
-            // don't allow changing if this field is a template
-            // if (self.schema.template) {
-            //     this.value = self.value[0].length;
-            //     return;
-            // }
-
             var val = this.value;
-
             // sanitize value
             var sanitized = self.sanitize(val);
             if (val !== sanitized) {
@@ -105,26 +106,18 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
             }
 
             self.is_dirty = true;
-
-            window.console.log("column number changed")
-
             self.refreshValue();
         });
         this.input_row.addEventListener('change', function (e) {
             e.preventDefault();
             e.stopPropagation();
 
-            // don't allow changing if this field is a template
-            // if (self.schema.template) {
-            //     this.value = self.value[0].length;
-            //     return;
-            // }
-
+            var val = this.value;
             // // sanitize value
-            // var sanitized = self.sanitize(val);
-            // if (val !== sanitized) {
-            //     this.value = sanitized;
-            // }
+            var sanitized = self.sanitize(this.value);
+            if (val !== sanitized) {
+                this.value = sanitized;
+            }
 
 
             self.is_dirty = true;
@@ -138,17 +131,20 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
 
         // item types html
         var itemTypesContainer = document.createElement('div');
+        // itemTypesContainer.id = this.path + '-itemTypesContainer';
         itemTypesContainer.id = 'itemTypesContainer';
+        itemTypesContainer.classList.add('itemTypesContainer');
         this.container.appendChild(itemTypesContainer);
 
         // scene editor html
         var wrapper = document.createElement('div');
-        wrapper.id = 'resizable';
+        wrapper.id = this.id + '-resizable';
         wrapper.classList.add('wrapper', 'ui-widget-content');
         var dotsContainer = document.createElement('div');
-        dotsContainer.id = 'dots-container';
+        dotsContainer.id = this.id + '-dots-container';
+        dotsContainer.classList.add('dots-container');
         var list = document.createElement('ul');
-        list.classList.add('row1');
+        list.classList.add(this.id + '-row1');
         var listItem = document.createElement('li');
         listItem.classList.add('dot');
         list.appendChild(listItem);
@@ -158,14 +154,53 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
 
     },
 
+    setValue: function (value) {
+        // window.console.log("setValue called value:");
+        // window.console.log(value);
+        // window.console.log("setValue called this.value:");
+        // window.console.log(this.value);
+        if (value != null) {
+            this.value = value;
+            this.input_row.value = this.value.length;
+            this.input_column.value = this.value[0].length;
+        }
+        this.refreshValue();
+        if (this.value != null) {
+            for (var row = 0; row < this.value.length; row++) {
+                for (var column = 0; column < this.value[0].length; column++) {
+                    if (this.value[row][column] == 0) {
+                        continue
+                    }
+                    var itemTypeSelector = '#itemType' + this.value[row][column];
+                    console.log("selector:");
+                    console.log($(itemTypeSelector).attr('src'));
+                    var src = $(itemTypeSelector).attr('src');
+                    console.log("dot:");
+                    var dotsContainerId = this.id + '-dots-container';
+                    var itemSelector = '#' + dotsContainerId + ' > ul[data-column=' + column + '] > li[data-row=' + row + ']'
+                    console.log(itemSelector);
+                    console.log($(itemSelector));
+                    $(itemSelector).css({
+                        background: 'url(' + src + ")",
+                        borderRadius: '0px'
+                    });
+                }
+            }
+
+        }
+    },
+
     refreshValue: function () {
         this._super();
+        window.console.log("refreshvalue called this.value:");
+        window.console.log(this.value);
 
-        this.value = [[0]];
+        if (this.value == null) {
+            return;
+            this.value = [[0]];
+        }
         var rowNumber = this.value.length;
         var columnNumber = this.value[0].length;
-        window.console.log(rowNumber)
-        window.console.log(this.input_row.value)
         if (rowNumber != this.input_row.value) {
             // add rows until we have as many as needed
             while (this.value.push(new Array(columnNumber).fill(0)) < this.input_row.value) {
@@ -187,11 +222,12 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
                 }
             }
         }
-
-        window.jQuery('#resizable').height(this.value.length * this.field_size + 'px');
-        window.jQuery('#resizable').width(this.value[0].length * this.field_size + 'px');
-        this.resizeGrid({width: window.jQuery('#resizable').width(), height: window.jQuery('#resizable').height()});
-        this.onChange(true);
+        var self = this;
+        var resizableId = '#' + this.id + '-resizable';
+        window.jQuery(resizableId).height(self.value.length * self.field_size + 'px');
+        window.jQuery(resizableId).width(self.value[0].length * self.field_size + 'px');
+        self.resizeGrid({width: window.jQuery(resizableId).width(), height: window.jQuery(resizableId).height()});
+        self.onChange(true);
     },
 
     resizeGrid: function (size) {
@@ -203,12 +239,12 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
         for (var i = 0; i < size.height / this.field_size; i++) {
             dots += '<li class="dot empty" data-row="' + i + '"></li>';
         }
-        $(this).find('.row1').html(dots);
-        var grid = '<ul class="row1" data-column="0">' + dots + "</ul>";
+        $(this).find('.' + this.id + '-row1').html(dots);
+        var grid = '<ul class="' + this.id + '-row1" data-column="0">' + dots + "</ul>";
         for (var i = 1; i < size.width / this.field_size; i++) {
             grid += '<ul data-column="' + i + '">' + dots + "</ul>";
         }
-        $('#dots-container').html(grid);
+        $('#' + this.id + '-dots-container').html(grid);
         this.addClickListeners();
     },
 
@@ -219,12 +255,12 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
             if (self.current_item == undefined) {
                 self.current_item = {src: "", num: ""};
             }
-            window.console.log("item type")
-            window.console.log(this.className);
-            window.console.log(this);
-            window.console.log(this.src);
-            window.console.log($(this).attr("src"));
-            window.console.log($(this).attr("item-type-id"));
+            // window.console.log("item type")
+            // window.console.log(this.className);
+            // window.console.log(this);
+            // window.console.log(this.src);
+            // window.console.log($(this).attr("src"));
+            // window.console.log($(this).attr("item-type-id"));
             self.current_item.src = $(this).attr("src");
             self.current_item.num = $(this).attr("item-type-id");
             $('img.item-type.active').toggleClass("active");
@@ -244,6 +280,7 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
                     background: 'url(' + self.current_item.src + ")",
                     borderRadius: '0px'
                 });
+                console.log(self.value);
                 self.value[rowIndex][columnIndex] = parseInt(self.current_item.num);
                 self.onChange(true);
             }

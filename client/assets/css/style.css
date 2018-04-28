@@ -28,7 +28,7 @@ ul {
     width: 5px;
 }
 
-.dot, ul li {
+ul.dot, li.dot {
     width: 30px;
     height: 30px;
 }
@@ -47,7 +47,7 @@ ul {
     box-sizing: content-box;
 }
 
-#dots-container > ul {
+.dots-container > ul {
     padding: 0px;
     margin: 0px;
 }

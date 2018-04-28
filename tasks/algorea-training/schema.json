@@ -198,10 +198,27 @@
         "new"
       ]
     },
-    "scene": {
-      "type": "grid",
-      "watch": {
-        "sceneContext": "root.context"
+    "difficulties": {
+      "type": "array",
+      "format": "tabs",
+      "title": "difficulties",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "title": "level",
+        "headerTemplate": "level {{ i1 }}",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "scene": {
+            "type": "grid",
+            "watch": {
+              "sceneContext": "root.context"
+            }
+          }
+        },
+        "required": ["scene"]
       }
     },
     "PEMTaskMetaData": {
@@ -661,6 +678,7 @@
     }
   },
   "required": [
+    "difficulties",
     "PEMTaskMetaData",
     "AlgoreaTrainingTaskMetaData",
     "title",
@@ -669,7 +687,6 @@
     "hints",
     "testFiles",
     "taskSettings",
-    "context",
-    "scene"
+    "context"
   ]
 }

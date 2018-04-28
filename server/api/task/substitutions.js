@@ -51,6 +51,10 @@ module.exports = function(src_path) {
                 push = true;
                 res_item.keepArray = item.keepArray;
             }
+            if('matchingRule' in item) {
+                push = true;
+                res_item.matchingRule = item.matchingRule;
+            }
 
             if('children' in item) {
                 walk(item.children, res_item.json_path, res_item.selector);
