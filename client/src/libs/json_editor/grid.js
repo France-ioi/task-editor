@@ -30,7 +30,7 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
         // this.refreshValue();
         // window.console.log("inside postbuild:");
         // window.console.log(this.value);
-        // this.setValue([[0]], true);
+        this.setValue([[0]], true);
     },
 
     setupWatchListeners: function () {
@@ -168,6 +168,9 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
         if (this.value != null) {
             for (var row = 0; row < this.value.length; row++) {
                 for (var column = 0; column < this.value[0].length; column++) {
+                    if (this.value[row][column] == 0) {
+                        continue
+                    }
                     var itemTypeSelector = '#itemType' + this.value[row][column];
                     console.log("selector:");
                     console.log($(itemTypeSelector).attr('src'));
@@ -178,7 +181,6 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
                     console.log(itemSelector);
                     console.log($(itemSelector));
                     $(itemSelector).css({
-                        color: "red",
                         background: 'url(' + src + ")",
                         borderRadius: '0px'
                     });
