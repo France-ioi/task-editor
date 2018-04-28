@@ -44,6 +44,10 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
             if (getContextParams()[this.watched_values.sceneContext] != undefined) {
                 // window.console.log(getContextParams()[this.watched_values.sceneContext].itemTypes);
                 this.updateItemTypes(getContextParams()[this.watched_values.sceneContext].itemTypes);
+                var contextBackground = getContextParams()[this.watched_values.sceneContext].backgroundColor;
+                $('.ui-resizable').css({
+                    background: contextBackground
+                });
                 this.configureItemTypesListeners();
             }
         }
