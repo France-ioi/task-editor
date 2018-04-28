@@ -8,8 +8,8 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
     preBuild: function () {
         this._super();
 
-        window.console.log("inside prebuild:");
-        window.console.log(this.value);
+        // window.console.log("inside prebuild:");
+        // window.console.log(this.value);
         this.field_size = 40;
     },
 
@@ -28,9 +28,9 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
             });
         });
         // this.refreshValue();
-        window.console.log("inside postbuild:");
-        window.console.log(this.value);
-        this.setValue([[0]], true);
+        // window.console.log("inside postbuild:");
+        // window.console.log(this.value);
+        // this.setValue([[0]], true);
     },
 
     setupWatchListeners: function () {
@@ -92,8 +92,8 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
         this.input_column = this.theme.getFormInputField(this.input_type);
         this.input_column.value = '1';
 
-        window.console.log("inside build:");
-        window.console.log(self.value);
+        // window.console.log("inside build:");
+        // window.console.log(self.value);
         this.input_column.addEventListener('change', function (e) {
             e.preventDefault();
             e.stopPropagation();
@@ -155,18 +155,37 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
     },
 
     setValue: function (value) {
-        window.console.log("setValue called value:");
-        window.console.log(value);
-        window.console.log("setValue called this.value:");
-        window.console.log(this.value);
+        // window.console.log("setValue called value:");
+        // window.console.log(value);
+        // window.console.log("setValue called this.value:");
+        // window.console.log(this.value);
         if (value != null) {
             this.value = value;
-        }
-        if (this.value != null) {
             this.input_row.value = this.value.length;
             this.input_column.value = this.value[0].length;
         }
         this.refreshValue();
+        if (this.value != null) {
+            for (var row = 0; row < this.value.length; row++) {
+                for (var column = 0; column < this.value[0].length; column++) {
+                    var itemTypeSelector = '#itemType' + this.value[row][column];
+                    console.log("selector:");
+                    console.log($(itemTypeSelector).attr('src'));
+                    var src = $(itemTypeSelector).attr('src');
+                    console.log("dot:");
+                    var dotsContainerId = this.id + '-dots-container';
+                    var itemSelector = '#' + dotsContainerId + ' > ul[data-column=' + column + '] > li[data-row=' + row + ']'
+                    console.log(itemSelector);
+                    console.log($(itemSelector));
+                    $(itemSelector).css({
+                        color: "red",
+                        background: 'url(' + src + ")",
+                        borderRadius: '0px'
+                    });
+                }
+            }
+
+        }
     },
 
     refreshValue: function () {
@@ -203,13 +222,10 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
         }
         var self = this;
         var resizableId = '#' + this.id + '-resizable';
-        // $(function () {
         window.jQuery(resizableId).height(self.value.length * self.field_size + 'px');
         window.jQuery(resizableId).width(self.value[0].length * self.field_size + 'px');
         self.resizeGrid({width: window.jQuery(resizableId).width(), height: window.jQuery(resizableId).height()});
         self.onChange(true);
-        // });
-
     },
 
     resizeGrid: function (size) {
@@ -262,6 +278,7 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
                     background: 'url(' + self.current_item.src + ")",
                     borderRadius: '0px'
                 });
+                console.log(self.value);
                 self.value[rowIndex][columnIndex] = parseInt(self.current_item.num);
                 self.onChange(true);
             }
