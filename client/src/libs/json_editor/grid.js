@@ -11,6 +11,7 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
         // window.console.log("inside prebuild:");
         // window.console.log(this.value);
         this.field_size = 40;
+        this.defaule_value = 1;
     },
 
     postBuild: function () {
@@ -30,7 +31,7 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
         // this.refreshValue();
         // window.console.log("inside postbuild:");
         // window.console.log(this.value);
-        this.setValue([[0]], true);
+        this.setValue({'tiles': [[this.defaule_value]], 'initItems': []}, true);
     },
 
     setupWatchListeners: function () {
@@ -43,7 +44,8 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
         if (typeof getContextParams === "function") {
             if (getContextParams()[this.watched_values.sceneContext] != undefined) {
                 // window.console.log(getContextParams()[this.watched_values.sceneContext].itemTypes);
-                this.updateItemTypes(getContextParams()[this.watched_values.sceneContext].itemTypes);
+                this.itemTypes = getContextParams()[this.watched_values.sceneContext].itemTypes;
+                this.updateItemTypes(this.itemTypes);
                 var contextBackground = getContextParams()[this.watched_values.sceneContext].backgroundColor;
                 $('.ui-resizable').css({
                     background: contextBackground
@@ -57,26 +59,55 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
         // window.console.log("updateItemTypes called");
         // window.console.log(itemTypes);
         $(".itemTypesContainer").empty();
+        var $newItemType = $("<li>", {
+            id: "itemType1",
+            "item-type-id": 1,
+            class: "item-type dot"
+        });
+        $(".itemTypesContainer").append($newItemType);
         for (var itemType in itemTypes) {
             // window.console.log(itemTypes[itemType]);
             // window.console.log("num:");
             // window.console.log(itemTypes[itemType].num);
             var itemTypeId = itemTypes[itemType].num;
             if (itemTypeId == undefined) {
-                itemTypeId = 0;
+                for (var state = 1; state <= itemTypes[itemType].nbStates / 2; state++) {
+                    var $characterWrapper = $('<div>', {
+                        class: "init-item-wrapper"
+                    });
+                    var $newItemType = $("<img>", {
+                        id: "itemtype-character",
+                        src: window.__CONFIG__.blockly.images_url + itemTypes[itemType].img,
+                        alt: itemTypes[itemType].img,
+                        type: itemType,
+                        class: "init-item item-type",
+                        dir: state
+                    });
+                    var offset = -1 * this.field_size * 2 * (state - 1);
+                    $newItemType.css({
+                        'margin-left': offset
+                    });
+                    $characterWrapper.append($newItemType);
+                    $(".itemTypesContainer").append($characterWrapper);
+                }
+            } else {
+                if (itemTypes[itemType].color != undefined) {
+                    $newItemType.css.color = itemTypes[itemType].color;
+                    // window.console.log($newItemType.css);
+                }
+                var $newItemType = $("<img>", {
+                    id: "itemType" + itemTypeId,
+                    src: window.__CONFIG__.blockly.images_url + itemTypes[itemType].img,
+                    alt: itemTypes[itemType].img,
+                    "item-type-id": itemTypeId,
+                    class: "item-type"
+                });
+                if (itemTypes[itemType].color != undefined) {
+                    $newItemType.css.color = itemTypes[itemType].color;
+                    // window.console.log($newItemType.css);
+                }
+                $(".itemTypesContainer").append($newItemType);
             }
-            var $newItemType = $("<img>", {
-                id: "itemType" + itemTypeId,
-                src: window.__CONFIG__.blockly.images_url + itemTypes[itemType].img,
-                alt: itemTypes[itemType].img,
-                "item-type-id": itemTypeId,
-                class: "item-type"
-            });
-            if (itemTypes[itemType].color != undefined) {
-                $newItemType.css.color = itemTypes[itemType].color;
-                // window.console.log($newItemType.css);
-            }
-            $(".itemTypesContainer").append($newItemType);
         }
     },
 
@@ -165,25 +196,25 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
         // window.console.log(this.value);
         if (value != null) {
             this.value = value;
-            this.input_row.value = this.value.length;
-            this.input_column.value = this.value[0].length;
+            this.input_row.value = this.value.tiles.length;
+            this.input_column.value = this.value.tiles[0].length;
         }
         this.refreshValue();
         if (this.value != null) {
-            for (var row = 0; row < this.value.length; row++) {
-                for (var column = 0; column < this.value[0].length; column++) {
-                    if (this.value[row][column] == 0) {
+            for (var row = 0; row < this.value.tiles.length; row++) {
+                for (var column = 0; column < this.value.tiles[0].length; column++) {
+                    if (this.value.tiles[row][column] == this.defaule_value) {
                         continue
                     }
-                    var itemTypeSelector = '#itemType' + this.value[row][column];
-                    console.log("selector:");
-                    console.log($(itemTypeSelector).attr('src'));
+                    var itemTypeSelector = '#itemType' + this.value.tiles[row][column];
+                    // console.log("selector:");
+                    // console.log($(itemTypeSelector).attr('src'));
                     var src = $(itemTypeSelector).attr('src');
-                    console.log("dot:");
+                    // console.log("dot:");
                     var dotsContainerId = this.id + '-dots-container';
                     var itemSelector = '#' + dotsContainerId + ' > ul[data-column=' + column + '] > li[data-row=' + row + ']'
-                    console.log(itemSelector);
-                    console.log($(itemSelector));
+                    // console.log(itemSelector);
+                    // console.log($(itemSelector));
                     $(itemSelector).css({
                         background: 'url(' + src + ")",
                         borderRadius: '0px'
@@ -196,40 +227,39 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
 
     refreshValue: function () {
         this._super();
-        window.console.log("refreshvalue called this.value:");
-        window.console.log(this.value);
+        // window.console.log("refreshvalue called this.value:");
+        // window.console.log(this.value);
 
         if (this.value == null) {
             return;
-            this.value = [[0]];
         }
-        var rowNumber = this.value.length;
-        var columnNumber = this.value[0].length;
+        var rowNumber = this.value.tiles.length;
+        var columnNumber = this.value.tiles[0].length;
         if (rowNumber != this.input_row.value) {
             // add rows until we have as many as needed
-            while (this.value.push(new Array(columnNumber).fill(0)) < this.input_row.value) {
+            while (this.value.tiles.push(new Array(columnNumber).fill(this.defaule_value)) < this.input_row.value) {
             }
             // remove rows until we have as many as needed
-            while (this.value.length > this.input_row.value) {
-                this.value.pop();
+            while (this.value.tiles.length > this.input_row.value) {
+                this.value.tiles.pop();
             }
         }
         if (columnNumber != this.input_column.value) {
-            while (this.value[0].length < this.input_column.value) {
-                for (var row = 0; row < this.value.length; row++) {
-                    this.value[row].push(0);
+            while (this.value.tiles[0].length < this.input_column.value) {
+                for (var row = 0; row < this.value.tiles.length; row++) {
+                    this.value.tiles[row].push(this.defaule_value);
                 }
             }
-            while (this.value[0].length > this.input_column.value) {
-                for (var row = 0; row < this.value.length; row++) {
-                    this.value[row].pop();
+            while (this.value.tiles[0].length > this.input_column.value) {
+                for (var row = 0; row < this.value.tiles.length; row++) {
+                    this.value.tiles[row].pop();
                 }
             }
         }
         var self = this;
         var resizableId = '#' + this.id + '-resizable';
-        window.jQuery(resizableId).height(self.value.length * self.field_size + 'px');
-        window.jQuery(resizableId).width(self.value[0].length * self.field_size + 'px');
+        window.jQuery(resizableId).height(self.value.tiles.length * self.field_size + 'px');
+        window.jQuery(resizableId).width(self.value.tiles[0].length * self.field_size + 'px');
         self.resizeGrid({width: window.jQuery(resizableId).width(), height: window.jQuery(resizableId).height()});
         self.onChange(true);
     },
@@ -257,7 +287,7 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
 
         $('img.item-type').click(function () {
             if (self.current_item == undefined) {
-                self.current_item = {src: "", num: ""};
+                self.current_item = {src: "", num: "", type: null, dir: null};
             }
             // window.console.log("item type")
             // window.console.log(this.className);
@@ -267,6 +297,13 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
             // window.console.log($(this).attr("item-type-id"));
             self.current_item.src = $(this).attr("src");
             self.current_item.num = $(this).attr("item-type-id");
+            if ($(this).hasClass('init-item')) {
+                self.current_item.type = $(this).attr('type');
+                self.current_item.dir = parseInt($(this).attr('dir'));
+            } else {
+                self.current_item.type = null;
+                self.current_item.dir = null;
+            }
             $('img.item-type.active').toggleClass("active");
             $(this).toggleClass("active");
         });
@@ -280,12 +317,44 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
                 var rowIndex = $(this).attr('data-row');
                 var columnIndex = $(this).parent().attr('data-column');
 
-                $(this).css({
-                    background: 'url(' + self.current_item.src + ")",
-                    borderRadius: '0px'
-                });
+                if (self.current_item.type != null) {
+                    var offset = (self.current_item.dir - 1) * 2 * (self.field_size - 10) * -1 + 'px';
+                    var $characterImage = $('<div>', {
+                        class: "dot-image",
+                        type: self.current_item.type
+                    });
+                    $characterImage.css({
+                        background: 'url(' + self.current_item.src + ")",
+                        'background-position-x': offset
+                    })
+                    $(this).css({
+                        background: 'inherit'
+                    })
+                    $(this).empty();
+                    $('.dot-image[type=' + self.current_item.type + ']').each(function () {
+                        $(this).parent().css("background", '');
+                        $(this).remove();
+                    });
+                    $(this).append($characterImage);
+                    for (var i = self.value.initItems.length - 1; i >= 0; --i) {
+                        if (self.value.initItems[i].type == self.current_item.type) {
+                            self.value.initItems.splice(i,1);
+                        }
+                    }
+                    self.value.initItems.push({
+                        row: rowIndex,
+                        col: columnIndex,
+                        dir: self.current_item.dir,
+                        type: self.current_item.type
+                    });
+                } else {
+                    $(this).css({
+                        background: 'url(' + self.current_item.src + ")",
+                        borderRadius: '0px'
+                    });
+                    self.value.tiles[rowIndex][columnIndex] = parseInt(self.current_item.num);
+                }
                 console.log(self.value);
-                self.value[rowIndex][columnIndex] = parseInt(self.current_item.num);
                 self.onChange(true);
             }
         });

@@ -35,7 +35,7 @@
         "jsonSubPath": "difficulties",
         "matchingRule": [
             {
-                "jsonSubPath": "scene",
+                "jsonSubPath": "scene.tiles",
                 "selector": ["[task.js$tilesEasy]", "[task.js$tilesMedium]", "[task.js$tilesHard]"]
             },
             {

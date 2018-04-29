@@ -47,6 +47,19 @@ ul.dot, li.dot {
     box-sizing: content-box;
 }
 
+.item-type.dot {
+    float: left;
+    list-style: none;
+}
+
+.dot-image {
+    borderRadius: '0px' !important;
+    width: 100% !important;
+    height: 100% !important;
+    background-clip: padding-box !important;
+    background-size: cover !important;
+}
+
 .dots-container > ul {
     padding: 0px;
     margin: 0px;
@@ -56,10 +69,13 @@ ul.dot, li.dot {
     min-height: 60px;
 }
 
+.item-type {
+    margin: 6px;
+}
+
 #itemTypesContainer > img {
     width: 40px;
     height: 40px;
-    margin: 6px;
     background: black;
 }
 
@@ -77,6 +93,20 @@ body {
     background: #fff;
     animation: bgfade 5s;
     -webkit-animation: bgfade 5s; /* Safari and Chrome */
+}
+
+div.init-item-wrapper {
+    height: 40px;
+    background: black;
+    margin: 6px;
+    width: 40px;
+    overflow: hidden;
+    float: left;
+}
+
+img.init-item {
+    height: 100%;
+    margin: 0;
 }
 
 /*@keyframes bgfade*/
