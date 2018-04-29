@@ -17,13 +17,11 @@ function initTask(subTask) {
    };
 
    subTask.data = {
-      easy: [
+      {{titleEasy}}: [
          {
             tiles: {{tilesEasy}}
                ,
-            initItems: [
-                  { row: 5, col: 1, dir: 3, type: "green_robot" }
-               ]
+            initItems: {{initItemsEasy}}
          }
       ],
       medium: [

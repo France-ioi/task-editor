@@ -39,6 +39,10 @@
                 "selector": ["[task.js$tilesEasy]", "[task.js$tilesMedium]", "[task.js$tilesHard]"]
             },
             {
+                "jsonSubPath": "scene.initItems",
+                "selector": ["[task.js$initItemsEasy]", "[task.js$initItemsMedium]", "[task.js$initItemsHard]"]
+            },
+            {
                 "jsonSubPath": "name",
                 "selector": ["[task.js$titleEasy]", "[task.js$titleMedium]", "[task.js$titleHard]"]
             }
