@@ -222,7 +222,17 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
                     });
                 }
             }
-
+            for (var i = 0; i < this.value.initItems.length; i++) {
+                var currentItem = {'dir': '', 'src': '', 'type': ''}
+                currentItem.type = this.value.initItems[i].type;
+                currentItem.src = window.__CONFIG__.blockly.images_url + this.itemTypes[currentItem.type].img;
+                currentItem.dir = this.value.initItems[i].dir;
+                var dotsContainerId = this.id + '-dots-container';
+                var column = this.value.initItems[i].col;
+                var row = this.value.initItems[i].row;
+                var itemSelector = '#' + dotsContainerId + ' > ul[data-column=' + column + '] > li[data-row=' + row + ']';
+                this.setUpInitItemImage(currentItem, $(itemSelector));
+            }
         }
     },
 
@@ -310,6 +320,28 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
         });
     },
 
+    setUpInitItemImage: function (currentItem, $dot) {
+        var self = this;
+        var offset = (currentItem.dir - 1) * 2 * (self.field_size - 10) * -1 + 'px';
+        var $characterImage = $('<div>', {
+            class: self.id + "-dot-image dot-image",
+            type: currentItem.type
+        });
+        $characterImage.css({
+            background: 'url(' + currentItem.src + ")",
+            'background-position-x': offset
+        })
+        $dot.css({
+            background: 'inherit'
+        })
+        $dot.empty();
+        $('.' + self.id + '-dot-image[type=' + currentItem.type + ']').each(function () {
+            $(this).parent().css("background", '');
+            $(this).remove();
+        });
+        $dot.append($characterImage);
+    },
+
     addClickListeners: function () {
         var self = this;
 
@@ -319,24 +351,7 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
                 var columnIndex = $(this).parent().attr('data-column');
 
                 if (self.current_item.type != null) {
-                    var offset = (self.current_item.dir - 1) * 2 * (self.field_size - 10) * -1 + 'px';
-                    var $characterImage = $('<div>', {
-                        class: "dot-image",
-                        type: self.current_item.type
-                    });
-                    $characterImage.css({
-                        background: 'url(' + self.current_item.src + ")",
-                        'background-position-x': offset
-                    })
-                    $(this).css({
-                        background: 'inherit'
-                    })
-                    $(this).empty();
-                    $('.dot-image[type=' + self.current_item.type + ']').each(function () {
-                        $(this).parent().css("background", '');
-                        $(this).remove();
-                    });
-                    $(this).append($characterImage);
+                    self.setUpInitItemImage(self.current_item, $(this));
                     for (var i = self.value.initItems.length - 1; i >= 0; --i) {
                         if (self.value.initItems[i].type == self.current_item.type) {
                             self.value.initItems.splice(i, 1);
