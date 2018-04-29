@@ -31,8 +31,6 @@ module.exports = {
         try {
             substitutions.map(rule => {
                 var value = data.get(rule.json_path);
-                console.log("value:");
-                console.log(value);
                 var copy_file = false;
 
                 function applyValue(val, idx) {
