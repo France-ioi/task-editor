@@ -56,12 +56,13 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
     },
 
     updateItemTypes: function (itemTypes) {
+        var self = this;
         // window.console.log("updateItemTypes called");
         // window.console.log(itemTypes);
         $(".itemTypesContainer").empty();
         var $newItemType = $("<li>", {
             id: "itemType1",
-            "item-type-id": 1,
+            "item-type-id": self.defaule_value,
             class: "item-type dot"
         });
         $(".itemTypesContainer").append($newItemType);
@@ -285,7 +286,7 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
     configureItemTypesListeners: function () {
         var self = this;
 
-        $('img.item-type').click(function () {
+        $('.item-type').click(function () {
             if (self.current_item == undefined) {
                 self.current_item = {src: "", num: "", type: null, dir: null};
             }
@@ -338,7 +339,7 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
                     $(this).append($characterImage);
                     for (var i = self.value.initItems.length - 1; i >= 0; --i) {
                         if (self.value.initItems[i].type == self.current_item.type) {
-                            self.value.initItems.splice(i,1);
+                            self.value.initItems.splice(i, 1);
                         }
                     }
                     self.value.initItems.push({
@@ -347,6 +348,18 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
                         dir: self.current_item.dir,
                         type: self.current_item.type
                     });
+                } else if (self.current_item.num == self.defaule_value) {
+                    $(this).css({
+                        background: '',
+                        borderRadius: ''
+                    });
+                    $(this).empty();
+                    for (var i = self.value.initItems.length - 1; i >= 0; --i) {
+                        if (self.value.initItems[i].row == rowIndex && self.value.initItems[i].col == columnIndex) {
+                            self.value.initItems.splice(i, 1);
+                        }
+                    }
+                    self.value.tiles[rowIndex][columnIndex] = self.defaule_value;
                 } else {
                     $(this).css({
                         background: 'url(' + self.current_item.src + ")",
