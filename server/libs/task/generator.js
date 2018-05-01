@@ -9,8 +9,11 @@ module.exports = {
         var src_path = path.resolve(__dirname, '../../../tasks/' + params.type);
         var substitutions = require('./substitutions')(src_path);
         var data = require('./data')(params.data);
+
+        var post_processor = require('./post_processor')(params);
         var tpl_path = path.join(src_path, 'templates');
-        var templates = require('./templates')(params.path, tpl_path);
+        var templates = require('./templates')(params.path, tpl_path, post_processor);
+
         var files = require('./files')(params.path, params.files);
 
         try {

@@ -1,7 +1,7 @@
 var path = require('path')
 var fs = require('fs')
 
-module.exports = function(task_path, tpl_path) {
+module.exports = function (task_path, tpl_path, post_processor) {
 
 
     var dafaults = {
@@ -68,7 +68,6 @@ module.exports = function(task_path, tpl_path) {
         }
     }
 
-
     return {
 
         inject: function(full_selector, value) {
@@ -79,9 +78,12 @@ module.exports = function(task_path, tpl_path) {
 
         save: function() {
             Object.keys(templates).map(filename => {
+                var content = post_processor.apply(
+                    templates[filename].content()
+                );
                 fs.writeFileSync(
                     path.resolve(task_path, filename),
-                    templates[filename].content()
+                    content
                 );
             })
         }
