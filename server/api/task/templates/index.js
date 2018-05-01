@@ -80,6 +80,11 @@ module.exports = function (task_path, tpl_path) {
 
     return {
 
+        injectByTemplate: function (full_selector, value) {
+            var p = parseSelector(full_selector);
+            get(p.file).injectByTemplate(p.selector, value);
+        },
+
         inject: function (full_selector, value) {
             var p = parseSelector(full_selector);
             get(p.file).inject(p.selector, value);

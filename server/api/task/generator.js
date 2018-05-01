@@ -29,12 +29,16 @@ module.exports = {
         var files = require('./files')(params.path, params.files);
 
         try {
+            var templateVariables = {}
             substitutions.map(rule => {
                 var value = data.get(rule.json_path);
                 var copy_file = false;
 
                 function applyValue(val, idx) {
                     var formatted_value = val;
+                    if ('template' in rule) {
+                        
+                    }
                     if ('value' in rule) {
                         formatted_value = formatValue(rule.value, val, rule.json_path, idx)
                         copy_file = rule.value.type == 'file';
@@ -50,6 +54,7 @@ module.exports = {
                         for (var i = 0; i < value.length; i++) {
                             for (var j = 0; j < rule.matchingRule.length; j++) {
                                 templates.inject(rule.matchingRule[j].selector[i], Object.byString(value[i], rule.matchingRule[j]['jsonSubPath']));
+                                templates.injectByTemplate(rule.matchingRule[j].selector[i], Object.byString(value[i], rule.matchingRule[j]['jsonSubPath']));
                             }
                         }
                     }

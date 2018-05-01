@@ -23,8 +23,9 @@ function initTask(subTask) {
                ,
             initItems: {{initItemsEasy}}
          }
-      ],
-      medium: [
+      ]
+      {{#mediumTiles}}
+      ,medium: [
          {
             tiles: {{tilesMedium}},
             tiles: [
@@ -40,6 +41,7 @@ function initTask(subTask) {
                ]
          }
       ],
+      {{/mediumTiles}}
       hard: [
          {
             tiles: [

@@ -31,7 +31,8 @@
     "redux": "^3.5.2",
     "redux-saga": "^0.16.0",
     "shelljs": "^0.8.1",
-    "tinymce": "^4.7.9"
+    "tinymce": "^4.7.9",
+    "mustache": "^2.3.0"
   },
   "devDependencies": {
     "babel-core": "^6.10.4",

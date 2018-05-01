@@ -28,6 +28,17 @@
         "selector": "[taskSettings.json]"
     },
     {
+        "jsonSubPath": "task.language",
+        "selector": "#language"
+    },
+    {
+        "jsonSubPath": "task.windowlanguage",
+        "template": {
+            "file": "index.html",
+            "placeHolder": "language"
+        }
+    },
+    {
         "jsonSubPath": "context",
         "selector": "[task.js$contextTypePlaceholder]"
     },
