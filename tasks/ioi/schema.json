@@ -158,7 +158,14 @@
               }
             }
          },
-         "required": ["id", "authors", "language"]
+         "required": ["id", "authors", "language"],
+         "generator": [{
+            "output": {
+                "inject": {
+                    "template": "index.html",
+                    "selector": "$FIOITaskMetaData"
+                }}
+            }]
       },
       "FIOITaskMetaData": {
          "type": "object",
@@ -180,12 +187,26 @@
                "title": "User can user their own tests"
             }
          },
-         "required": ["supportedLanguages", "hasUserTests"]
+         "required": ["supportedLanguages", "hasUserTests"],
+         "generator": [{
+            "output": {
+                "inject": {
+                    "template": "index.html",
+                    "selector": "$PEMTaskMetaData"
+                }}
+            }]
       },
       "title": {
         "type": "string",
         "description": "Title of the task.",
-        "title": "Title"
+        "title": "Title",
+        "generator": [{
+            "output": {
+                "inject": {
+                    "template": "index.html",
+                    "selector": "title"
+                }}
+            }]
       },
       "task": {
          "title": "Task statement",
@@ -194,7 +215,14 @@
          "format": "html",
          "options": {
            "wysiwyg": true
-         }
+         },
+         "generator": [{
+            "output": {
+                "inject": {
+                    "template": "index.html",
+                    "selector": "#task"
+                }}
+            }]
       },
       "solution": {
          "title": "Solution",
@@ -203,7 +231,14 @@
          "format": "html",
          "options": {
            "wysiwyg": true
-         }
+         },
+         "generator": [{
+            "output": {
+                "inject": {
+                    "template": "index.html",
+                    "selector": "#solution"
+                }}
+            }]
       },
       "hints": {
         "type": "array",
@@ -217,7 +252,14 @@
           "options": {
             "wysiwyg": true
           }
-        }
+        },
+        "generator": [{
+            "output": {
+                "inject": {
+                    "template": "index.html",
+                    "selector": ".hint"
+                }}
+            }]
       },
       "testFiles": {
         "title": "Test files",
