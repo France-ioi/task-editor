@@ -64,7 +64,7 @@ module.exports = {
                                 var subRule = rule.matchingRule[j];
                                 if ('template' in rule.matchingRule[j]) {
                                     templateVariables = registerPlaceholder(templateVariables, subRule.template.file, subRule.template.placeholder[i], Object.byString(value[i], subRule['jsonSubPath']));
-                                } else {
+                                } else if (Object.byString(value[i], rule.matchingRule[j]['jsonSubPath']) != null){
                                     templates.inject(rule.matchingRule[j].selector[i], Object.byString(value[i], rule.matchingRule[j]['jsonSubPath']));
                                 }
                             }
