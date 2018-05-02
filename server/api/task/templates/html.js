@@ -1,4 +1,5 @@
 var cheerio = require('cheerio')
+var templateEngine = require('mustache');
 
 
 module.exports = function(content) {
@@ -41,6 +42,9 @@ module.exports = function(content) {
 
     return {
 
+        injectByTemplate: function (templatesVariables) {
+            $ = cheerio.load(templateEngine.to_html($.html(), templatesVariables));
+        },
         inject: function(selector, value) {
             if(selector.variable) {
                 injectVariable(selector, value)

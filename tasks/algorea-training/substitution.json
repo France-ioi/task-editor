@@ -1,76 +1,78 @@
 [
-    {
-        "jsonSubPath": "title",
-        "selector": "title"
-    },
-    {
-        "jsonSubPath": "task",
-        "selector": "#task"
-    },
-    {
-        "jsonSubPath": "hints",
-        "selector": ".hint"
-    },
-    {
-        "jsonSubPath": "solution",
-        "selector": "#solution"
-    },
-    {
-        "jsonSubPath": "PEMTaskMetaData",
-        "selector": "$PEMTaskMetaData"
-    },
-    {
-        "jsonSubPath": "AlgoreaTrainingTaskMetaData",
-        "selector": "$json"
-    },
-    {
-        "jsonSubPath": "taskSettings",
-        "selector": "[taskSettings.json]"
-    },
-    {
-        "jsonSubPath": "task.language",
-        "selector": "#language"
-    },
-    {
-        "jsonSubPath": "task.windowlanguage",
+  {
+    "jsonSubPath": "title",
+    "selector": "title"
+  },
+  {
+    "jsonSubPath": "task",
+    "selector": "#task"
+  },
+  {
+    "jsonSubPath": "hints",
+    "selector": ".hint"
+  },
+  {
+    "jsonSubPath": "solution",
+    "selector": "#solution"
+  },
+  {
+    "jsonSubPath": "PEMTaskMetaData",
+    "selector": "$PEMTaskMetaData"
+  },
+  {
+    "jsonSubPath": "AlgoreaTrainingTaskMetaData",
+    "selector": "$json"
+  },
+  {
+    "jsonSubPath": "taskSettings",
+    "selector": "[taskSettings.json]"
+  },
+  {
+    "jsonSubPath": "context",
+    "selector": "[task.js$contextTypePlaceholder]"
+  },
+  {
+    "jsonSubPath": "difficulties",
+    "matchingRule": [
+      {
+        "jsonSubPath": "scene.tiles",
         "template": {
-            "file": "index.html",
-            "placeHolder": "language"
+          "file": "task.js",
+          "placeholder": [ "tilesEasy", "tilesMedium", "tilesHard" ]
         }
-    },
-    {
-        "jsonSubPath": "context",
-        "selector": "[task.js$contextTypePlaceholder]"
-    },
-    {
-        "jsonSubPath": "difficulties",
-        "matchingRule": [
-            {
-                "jsonSubPath": "scene.tiles",
-                "selector": ["[task.js$tilesEasy]", "[task.js$tilesMedium]", "[task.js$tilesHard]"]
-            },
-            {
-                "jsonSubPath": "scene.initItems",
-                "selector": ["[task.js$initItemsEasy]", "[task.js$initItemsMedium]", "[task.js$initItemsHard]"]
-            },
-            {
-                "jsonSubPath": "name",
-                "selector": ["[task.js$titleEasy]", "[task.js$titleMedium]", "[task.js$titleHard]"]
-            }
-        ]
-    },
-    {
-        "jsonSubPath": "testFiles.input",
-        "value": {
-            "type": "file",
-            "format": "tests/files/test[index].in"
+      },
+      {
+        "jsonSubPath": "scene.initItems",
+        "template": {
+          "file": "task.js",
+          "placeholder": [ "initItemsEasy", "nitItemsMedium", "initItemsHard" ]
         }
-    },
-    {
-        "jsonSubPath": "testFiles.output",
-        "value": {
-            "type": "file",
-            "format": "tests/files/test[index].out"
+      },
+      {
+        "jsonSubPath": "name",
+        "template": {
+          "file": "task.js",
+          "placeholder": [ "titleEasy", "titleMedium", "titleHard" ]
         }
+      },
+      {
+        "jsonSubPath": "name",
+        "selector": ["#testname", ".othertest", "#hardname"]
+      }
+    ]
+  },
+  {
+    "jsonSubPath": "testFiles.input",
+    "value": {
+      "type": "file",
+      "format": "tests/files/test[index].in"
     }
+  },
+  {
+    "jsonSubPath": "testFiles.output",
+    "value": {
+      "type": "file",
+      "format": "tests/files/test[index].out"
+    }
+  }
 ]

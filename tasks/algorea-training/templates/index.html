@@ -1,33 +1,35 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<title></title>
-		<link class="task" type="text/css" rel="stylesheet" href="../../modules/pemFioi/progTask.css">
-		<link class="task" type="text/css" rel="stylesheet" href="../../modules/ext/bootstrap/css/bootstrap.min.css">
-		<script class="remove" src="../../modules/ext/requirejs/require.js"></script>
-		<script type="text/javascript">
-            var modulesPath ='../../modules';
-            var taskPlatformPath ='../../task-platform';
-		</script>
-		<script type="text/javascript" src="../../modules/pemFioi/progTaskConfig-1.0.js"></script>
-		<script type="text/javascript" class="remove">
-// general metadata conforming the PEM API Documentation for getMetaData
-var PEMTaskMetaData;
-// Metadata specific to the AlgoreaTraining tasks
-var json;
-		</script>
-		<script type="text/javascript" src="task.js"></script>
-	</head>
-	<body ng-controller="taskController" onresize="task.displayedSubTask.updateScale()">
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <link class="task" type="text/css" rel="stylesheet" href="../../modules/pemFioi/progTask.css">
+    <link class="task" type="text/css" rel="stylesheet" href="../../modules/ext/bootstrap/css/bootstrap.min.css">
+    <script class="remove" src="../../modules/ext/requirejs/require.js"></script>
+    <script type="text/javascript">
+        var modulesPath = '../../modules';
+        var taskPlatformPath = '../../task-platform';
+    </script>
+    <script type="text/javascript" src="../../modules/pemFioi/progTaskConfig-1.0.js"></script>
+    <script type="text/javascript" class="remove">
+        // general metadata conforming the PEM API Documentation for getMetaData
+        var PEMTaskMetaData;
+        // Metadata specific to the AlgoreaTraining tasks
+        var json;
+        // use 3 curly braces like this in html {{{.}}} in order not to escape characters
+        import({{{language}}})
+    </script>
+    <script type="text/javascript" src="task.js"></script>
+</head>
+<body ng-controller="taskController" onresize="task.displayedSubTask.updateScale()">
 
-		<div id="task">
-		</div>
+    <div id="task">
+    </div>
 
-		<div class="hint">
-		</div>
+    <div class="hint">
+    </div>
 
-		<div id="solution">
-		</div>
-	</body>
+    <div id="solution">
+    </div>
+</body>
 </html>

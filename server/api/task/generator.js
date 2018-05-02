@@ -2,7 +2,7 @@ var fs = require('fs');
 var path = require('path');
 var formatValue = require('./formatters');
 
-Object.byString = function(o, s) {
+Object.byString = function (o, s) {
     s = s.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
     s = s.replace(/^\./, '');           // strip a leading dot
     var a = s.split('.');
@@ -17,6 +17,14 @@ Object.byString = function(o, s) {
     return o;
 }
 
+
+function registerPlaceholder(templateVariables, file, placeholder, val) {
+    if (templateVariables[file] == null) {
+        templateVariables[file] = {};
+    }
+    templateVariables[file][placeholder] = JSON.stringify(val);
+    return templateVariables;
+}
 
 module.exports = {
 
@@ -37,7 +45,7 @@ module.exports = {
                 function applyValue(val, idx) {
                     var formatted_value = val;
                     if ('template' in rule) {
-                        
+                        templateVariables = registerPlaceholder(templateVariables, rule.template.file, rule.template.placeholder, val);
                     }
                     if ('value' in rule) {
                         formatted_value = formatValue(rule.value, val, rule.json_path, idx)
@@ -53,8 +61,12 @@ module.exports = {
                     if (('matchingRule' in rule)) {
                         for (var i = 0; i < value.length; i++) {
                             for (var j = 0; j < rule.matchingRule.length; j++) {
-                                templates.inject(rule.matchingRule[j].selector[i], Object.byString(value[i], rule.matchingRule[j]['jsonSubPath']));
-                                templates.injectByTemplate(rule.matchingRule[j].selector[i], Object.byString(value[i], rule.matchingRule[j]['jsonSubPath']));
+                                var subRule = rule.matchingRule[j];
+                                if ('template' in rule.matchingRule[j]) {
+                                    templateVariables = registerPlaceholder(templateVariables, subRule.template.file, subRule.template.placeholder[i], Object.byString(value[i], subRule['jsonSubPath']));
+                                } else {
+                                    templates.inject(rule.matchingRule[j].selector[i], Object.byString(value[i], rule.matchingRule[j]['jsonSubPath']));
+                                }
                             }
                         }
                     }
@@ -68,6 +80,7 @@ module.exports = {
                     applyValue(value);
                 }
             })
+            templates.injectByTemplate(templateVariables);
             templates.save();
             callback(null, {
                 type: params.type,

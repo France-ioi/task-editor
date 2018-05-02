@@ -17,11 +17,11 @@ function initTask(subTask) {
    };
 
    subTask.data = {
-      {{titleEasy}}: [
+      {{{titleEasy}}}{{^titleEasy}}easy{{/titleEasy}}: [
          {
             tiles: {{tilesEasy}}
                ,
-            initItems: {{initItemsEasy}}
+            initItems: {{{initItemsEasy}}}
          }
       ]
       {{#mediumTiles}}
@@ -42,6 +42,7 @@ function initTask(subTask) {
          }
       ],
       {{/mediumTiles}}
+      {{#hardTiles}}
       hard: [
          {
             tiles: [
@@ -53,10 +54,11 @@ function initTask(subTask) {
                    [1, 1, 1, 1, 1],
                ],
             initItems: [
-                  { row: 5, col: 2, dir: 3, type: "green_robot" }
+                  { "row": 5, "col": 2, dir: 3, type: "green_robot" }
                ]
          }
       ]
+      {{/hardTiles}}
    };
 
    initBlocklySubTask(subTask);

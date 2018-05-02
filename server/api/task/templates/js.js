@@ -5,18 +5,9 @@ module.exports = function(content) {
 
     return {
 
-        injectByTemplate: function () {
-            var view = {
-                title: "Joe",
-                calc: function () {
-                    return 2 + 4;
-                }
-            };
-            var output = templateEngine.render("{{title}} spends {{calc}}{{#test}} hello there, this should't be printed {{/test}}", view);
-            console.log(output);
-            console.log("injectByTemplate called");
+        injectByTemplate: function (templatesVariables) {
+            content = templateEngine.render(content, templatesVariables);
         },
-
         // replace {{ variable }} by value
         inject: function(selector, value) {
             if(!selector.variable || selector.variable == null) return;
