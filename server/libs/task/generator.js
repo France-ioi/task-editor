@@ -1,13 +1,13 @@
 var fs = require('fs');
 var path = require('path');
-var formatValue = require('./formatters');
-
+var modifier = require('./modifier');
 
 module.exports = {
 
     output: (params, callback) => {
         var src_path = path.resolve(__dirname, '../../../tasks/' + params.type);
-        var substitutions = require('./substitutions')(src_path);
+
+        var schema = require('./schema')(src_path);
         var data = require('./data')(params.data);
 
         var post_processor = require('./post_processor')(params);
@@ -17,18 +17,15 @@ module.exports = {
         var files = require('./files')(params.path, params.files);
 
         try {
-            substitutions.map(rule => {
-                var value = data.get(rule.json_path);
-                var formatted_value = value;
-                var copy_file = false;
-                if('value' in rule) {
-                    formatted_value = formatValue(rule.value, value, rule.json_path)
-                    copy_file = rule.value.type == 'file';
+            schema.walk((data_path, input, output) => {
+                var value = data.get(data_path)
+                if(input && ('modifier' in input)) {
+                    value = modifier.execute(input.modifier, value, data_path)
                 }
-                if(rule.selector) {
-                    templates.inject(rule.selector, formatted_value);
-                } else if(copy_file) {
-                    files.copy(value, formatted_value)
+                if('inject' in output) {
+                    templates.inject(output.inject, value)
+                } else if('copy' in output) {
+                    files.copy(value, output.copy, data_path)
                 }
             })
             templates.save();

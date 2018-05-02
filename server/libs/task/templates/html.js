@@ -14,7 +14,11 @@ module.exports = function(content) {
 
 
         if(selector.query) {
-            var elements = $(selector.query).find('script');
+            //var elements = $(selector.query).find('script');
+            var elements = $(selector.query);
+            if(elements[0] && elements[0].type !== "script") {
+                elements = elements.find('script')
+            }
         } else {
             var elements = $('script');
         }
@@ -30,7 +34,7 @@ module.exports = function(content) {
         if(value instanceof Array) {
             value.map(item => {
                 el.before(
-                    el.clone().html(value.toString())
+                    el.clone().html(item.toString())
                 );
             })
             el.remove();

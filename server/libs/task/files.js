@@ -2,12 +2,34 @@ var path = require('path');
 var fs = require('fs');
 var shell = require('shelljs');
 var config = require('../../config');
-var formatValue = require('./formatters');
 
 
 module.exports = function(task_path, old_files) {
 
     var new_files = [];
+
+
+    function getRealName(file, data_path, index) {
+        var prefix = 'root.' + data_path.join('.') + '.';
+        if (index !== null) {
+            prefix = prefix + index + '.';
+        }
+        return file.replace(prefix, '');
+    }
+
+
+    function processMask(mask, real_name, index) {
+        var ext = path.extname(real_name);
+        var replace = {
+            '[index]': index,
+            '[name]': path.basename(real_name, ext),
+            '[ext]': ext
+        }
+        return mask.replace(/\[\w+\]/g, function (placeholder) {
+            return replace[placeholder] || '';
+        });
+    }
+
 
     function copyFile(src, dst) {
         new_files.push(
@@ -26,14 +48,18 @@ module.exports = function(task_path, old_files) {
 
     return {
 
-        copy: function(src, dst) {
+        copy: function(src, dst_mask, data_path) {
             if(src instanceof Array) {
                 for(var i=0; i<src.length; i++) {
-                    if(!src[i]) continue;
-                    copyFile(src[i], dst[i]);
+                    if(!src[i]) continue
+                    var real_name = getRealName(src[i], data_path, i)
+                    var dst = processMask(dst_mask, real_name, i + 1)
+                    copyFile(src[i], dst)
                 }
             } else if(typeof(src) == 'string' && src != '') {
-                copyFile(src, dst);
+                var real_name = getRealName(src, data_path, null)
+                var dst = processMask(dst_mask, real_name, null)
+                copyFile(src, dst)
             }
         },
 

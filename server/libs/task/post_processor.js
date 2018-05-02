@@ -16,7 +16,6 @@ module.exports = function(params) {
             return content.replace(
                 /%%\w+%%/g,
                 (key) => {
-                    console.log(key);
                     return values[key] || key
                 }
             )

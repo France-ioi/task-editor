@@ -38,16 +38,12 @@ module.exports = function (task_path, tpl_path, post_processor) {
     }
 
 
-    function parseSelector(full_selector) {
-        var file = full_selector.trim().match(/^\[.+\]/);
-        if(file) {
-            file = file.toString();
-            var selector = full_selector.substr(file.length);
-            file = file.replace(/\[|\]/g, '');
-        } else {
-            var selector = full_selector;
+    function parseSelector(selector) {
+        if(!selector) {
+            return {
+                query: ''
+            }
         }
-
         var variable = null;
         var tmp = selector.split('$');
         if(tmp.length > 2) {
@@ -60,19 +56,16 @@ module.exports = function (task_path, tpl_path, post_processor) {
         }
 
         return {
-            file,
-            selector: {
-                query,
-                variable
-            }
+            query,
+            variable
         }
     }
 
     return {
 
-        inject: function(full_selector, value) {
-            var p = parseSelector(full_selector);
-            get(p.file).inject(p.selector, value);
+        inject: function(destination, value) {
+            var selector = parseSelector(destination.selector);
+            get(destination.template).inject(selector, value);
         },
 
 
