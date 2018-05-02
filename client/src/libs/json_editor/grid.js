@@ -59,13 +59,14 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
         var self = this;
         // window.console.log("updateItemTypes called");
         // window.console.log(itemTypes);
-        $(".itemTypesContainer").empty();
+        var itemTypesContainer = '#' + self.id + '-item-types-container';
+        $(itemTypesContainer).empty();
         var $newItemType = $("<li>", {
-            id: "itemType1",
+            id: self.id + "-itemType1",
             "item-type-id": self.defaule_value,
-            class: "item-type dot"
+            class: self.id + "-item-type item-type dot"
         });
-        $(".itemTypesContainer").append($newItemType);
+        $(itemTypesContainer).append($newItemType);
         for (var itemType in itemTypes) {
             // window.console.log(itemTypes[itemType]);
             // window.console.log("num:");
@@ -81,7 +82,7 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
                         src: window.__CONFIG__.blockly.images_url + itemTypes[itemType].img,
                         alt: itemTypes[itemType].img,
                         type: itemType,
-                        class: "init-item item-type",
+                        class: "init-item item-type " + self.id + "-item-type",
                         dir: state
                     });
                     var offset = -1 * this.field_size * 2 * (state - 1);
@@ -89,7 +90,7 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
                         'margin-left': offset
                     });
                     $characterWrapper.append($newItemType);
-                    $(".itemTypesContainer").append($characterWrapper);
+                    $(itemTypesContainer).append($characterWrapper);
                 }
             } else {
                 if (itemTypes[itemType].color != undefined) {
@@ -101,13 +102,13 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
                     src: window.__CONFIG__.blockly.images_url + itemTypes[itemType].img,
                     alt: itemTypes[itemType].img,
                     "item-type-id": itemTypeId,
-                    class: "item-type"
+                    class: "item-type " + self.id + "-item-type",
                 });
                 if (itemTypes[itemType].color != undefined) {
                     $newItemType.css.color = itemTypes[itemType].color;
                     // window.console.log($newItemType.css);
                 }
-                $(".itemTypesContainer").append($newItemType);
+                $(itemTypesContainer).append($newItemType);
             }
         }
     },
@@ -167,8 +168,7 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
 
         // item types html
         var itemTypesContainer = document.createElement('div');
-        // itemTypesContainer.id = this.path + '-itemTypesContainer';
-        itemTypesContainer.id = 'itemTypesContainer';
+        itemTypesContainer.id = self.id + '-item-types-container';
         itemTypesContainer.classList.add('itemTypesContainer');
         this.container.appendChild(itemTypesContainer);
 
@@ -277,12 +277,14 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
 
     resizeGrid: function (size) {
 
+        var dotClass = this.id + '-dot';
+
         this.current_item = undefined;
         $("img.item-type.active").toggleClass("active");
         // var dot = ;
         var dots = '';
         for (var i = 0; i < size.height / this.field_size; i++) {
-            dots += '<li class="dot empty" data-row="' + i + '"></li>';
+            dots += '<li class="dot empty ' + dotClass +'" data-row="' + i + '"></li>';
         }
         $(this).find('.' + this.id + '-row1').html(dots);
         var grid = '<ul class="' + this.id + '-row1" data-column="0">' + dots + "</ul>";
@@ -296,7 +298,9 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
     configureItemTypesListeners: function () {
         var self = this;
 
-        $('.item-type').click(function () {
+        var itemTypeClass = '.' + self.id + '-item-type';
+
+        $(itemTypeClass).click(function () {
             if (self.current_item == undefined) {
                 self.current_item = {src: "", num: "", type: null, dir: null};
             }
@@ -315,7 +319,7 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
                 self.current_item.type = null;
                 self.current_item.dir = null;
             }
-            $('img.item-type.active').toggleClass("active");
+            $(itemTypeClass + '.active').toggleClass("active");
             $(this).toggleClass("active");
         });
     },
@@ -336,7 +340,10 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
         })
         $dot.empty();
         $('.' + self.id + '-dot-image[type=' + currentItem.type + ']').each(function () {
-            $(this).parent().css("background", '');
+            $(this).parent().css({
+                background: '',
+                borderRadius: ''
+            });
             $(this).remove();
         });
         $dot.append($characterImage);
@@ -345,7 +352,7 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
     addClickListeners: function () {
         var self = this;
 
-        $(".dot").on("mousedown mouseover", function (e) {
+        $("." + self.id + '-dot').on("mousedown mouseover", function (e) {
             if (e.buttons == 1 && self.current_item != undefined) {
                 var rowIndex = $(this).attr('data-row');
                 var columnIndex = $(this).parent().attr('data-column');

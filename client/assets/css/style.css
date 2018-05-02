@@ -73,7 +73,7 @@ ul.dot, li.dot {
     margin: 6px;
 }
 
-#itemTypesContainer > img {
+.itemTypesContainer > img {
     width: 40px;
     height: 40px;
     background: black;
