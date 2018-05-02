@@ -19,9 +19,9 @@ npm run start
 
 
 
-# schema.json generator prop
+## schema.json generator prop
 
-**Common syntax**
+###Common syntax
 ```
 "generator": [ // optional, array of rules
 
@@ -35,10 +35,10 @@ npm run start
             "var2": null
         },
         "input": { // optional
-            "modifier": "images_src" // optinal, set input modifier
+            "modifier": "images_src" // optional, set input modifier
         },
         "output": {
-            "inject": { // optinal, inject data into teplate, find place by selector
+            "inject": { // optional, inject data into teplate, find place by selector
                 "template": "index.html"
                 "selector": "#data"
             },
@@ -48,11 +48,11 @@ npm run start
 ],
 ```
 
-**Scope**
+##Scope
 Each node have own scope, it node scope = parent node scope + vars defined in node rules
 
 
-**Conditions**
+##Conditions
 Execute rule only if scope var "var1" equal to "1"
 ```
 "condition": {
@@ -67,7 +67,9 @@ Execute rule only if scope var "test_var" not defined in scope
 },
 ```
 
-**Input modifiers**
+##Input
+Optinal prop. If not defined then raw task data come to output.
+
 Extract src attribute from image tags:
 ```
 "input": {
@@ -75,11 +77,11 @@ Extract src attribute from image tags:
 }
 ```
 
-** Output **
+###Output
 Can have "inject" or/and "copy"  props.
 
 
-**Inject data to html**
+####Inject data to html
 Selector syntax based on jQuery selectors syntax + ability to define JS variable, for example:
 ```
 "output": {
@@ -90,7 +92,7 @@ Selector syntax based on jQuery selectors syntax + ability to define JS variable
 }
 ```
 
-**Inject data to json**
+####Inject data to json
 Dot-notation selector syntax, arrays not supported
 ```
 "output": {
@@ -102,7 +104,7 @@ Dot-notation selector syntax, arrays not supported
 ```
 
 
-**Copy file(s)**
+####Copy file(s)
 Placeholders supported. Scope vars + files specific vars [name] [ext] [index]
 ```
 "output": {
@@ -110,7 +112,7 @@ Placeholders supported. Scope vars + files specific vars [name] [ext] [index]
 }
 ```
 
-**Post processor**
+###Post processor
 Post processor placeholders may be used in templates and task data.
 
 Currently one placeholder supported:
