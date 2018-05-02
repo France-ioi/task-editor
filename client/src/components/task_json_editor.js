@@ -12,6 +12,7 @@ class TaskJsonEditor extends React.Component {
             schema: this.props.task.schema,
 //            disable_properties: true,
             display_required_only: true,
+//            disable_array_reorder: true,
             startval: this.props.task.data,
             upload: this.editorUpload,
             task: {

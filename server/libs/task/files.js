@@ -47,6 +47,8 @@ module.exports = function(task_path, old_files) {
 
 
     return {
+        getRealName: getRealName,
+        processMask: processMask,
 
         copy: function(src, dst_mask, data_path) {
             if(src instanceof Array) {

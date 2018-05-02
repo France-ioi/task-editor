@@ -18,9 +18,17 @@ module.exports = {
 
         try {
             schema.walk((data_path, input, output) => {
-                var value = data.get(data_path)
+                try {
+                    var value = data.get(data_path)
+                } catch(e) {
+                    return; // Path doesn't exist
+                }
                 if(input && ('modifier' in input)) {
                     value = modifier.execute(input.modifier, value, data_path)
+                }
+                if(input && ('value' in input)) {
+                    // Temporary until processMask is extracted from the files module
+                    value = files.processMask(input.value, files.getRealName(value, data_path, null), null);
                 }
                 if('inject' in output) {
                     templates.inject(output.inject, value)
