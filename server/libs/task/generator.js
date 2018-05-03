@@ -31,17 +31,21 @@ module.exports = {
                     value = files.processMask(input.value, files.getRealName(value, data_path, null), null);
                 }
                 if('inject' in output) {
+                    // Copy value in case it's an object
+                    value = JSON.parse(JSON.stringify(value));
                     templates.inject(output.inject, value)
                 } else if('copy' in output) {
                     files.copy(value, output.copy, data_path)
                 }
             })
             templates.save();
-            callback(null, {
-                type: params.type,
-                data: params.data,
-                files: files.clear()
-            });
+            files.clear((new_files) => {
+                callback(null, {
+                    type: params.type,
+                    data: params.data,
+                    files: new_files
+                    });
+                });
         } catch(err) {
             callback(err);
         }

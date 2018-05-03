@@ -100,6 +100,11 @@ var svn = {
     },
 
 
+    remove: (path, callback) => {
+        var cmd = 'svn rm ' + path;
+        exec(cmd, callback)
+    },
+
     removeDir: (credentials, path, callback) => {
         var cmd = 'svn rm ' + config.svn_repository + path + auth(credentials) + message()
         exec(cmd, callback)
