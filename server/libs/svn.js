@@ -34,6 +34,11 @@ function exec(cmd, callback) {
 var svn = {
 
     list: (credentials, path, callback) => {
+        console.log(
+            config.svn_repository,
+            path,
+            url.resolve(config.svn_repository, path)
+        )
         var cmd = 'svn list ' + url.resolve(config.svn_repository, path) + auth(credentials)
         exec(cmd, (err, stdout) => {
             if(err) return callback(err)

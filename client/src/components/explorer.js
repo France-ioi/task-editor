@@ -16,11 +16,11 @@ const List = (props) => {
     if(!props.list) return null;
     return (
         <div>
-            {props.list.map(dir =>
-                <div key={dir}>
+            {props.list.filter(item => item.is_dir).map(item =>
+                <div key={item.name}>
                     <a href="#"
-                        onClick={()=>props.nav(pathJoin(props.path, dir))}>
-                        <Glyphicon glyph="folder-close" /> {dir}
+                        onClick={()=>props.nav(pathJoin(props.path, item.name))}>
+                        <Glyphicon glyph="folder-close" /> {item.name}
                     </a>
                 </div>
             )}

@@ -17,6 +17,9 @@ const RowFile = (props) =>
     </a>
 
 
+function pathJoin(path1, path2) {
+    return path1 == '' ? path2 : path1 + '/' + path2;
+}
 
 
 class FilesManager extends React.Component {
@@ -50,9 +53,11 @@ class FilesManager extends React.Component {
                 { this.props.loading ? <Loader/> : <Breadcrumbs nav={this.nav} path={this.props.path}/>}
                 { this.props.list && this.props.list.map(item =>
                     <div key={item.name}>
-                        {item.type == 'file' && <RowFile name={item.name} href={href(item.name)}/>}
-                        {item.type == 'dir' && <RowDir name={item.name}
-                            nav={()=>this.nav(this.props.path + '/' + item.name)}/>}
+                        {item.is_dir ?
+                            <RowDir name={item.name} nav={()=>this.nav(pathJoin(this.props.path, item.name))}/>
+                            :
+                            <RowFile name={item.name} href={href(item.name)}/>
+                        }
                         {' '}
                         <a href="#" onClick={()=>this.remove(item.name)}>
                             <Glyphicon glyph="remove"/>

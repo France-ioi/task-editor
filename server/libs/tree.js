@@ -30,14 +30,15 @@ function fillNode(node, path, list) {
     node.loaded = true
     node.data.path = path
     list.map(item => {
-        if(item.indexOf('/') !== -1) {
-            node.data.flags.has_subfolders = true;
-            var name = item.replace(/\//g, '')
+        var is_dir = item.indexOf('/') !== -1
+        var name = item.replace(/\//g, '')
+        if(is_dir) {
+            node.data.flags.has_subfolders = true
             node.children[name] = newNode()
-            node.data.list.push(name)
         } else if(item == config.task.data_file) {
             node.data.flags.is_task = true;
         }
+        node.data.list.push({ name, is_dir})
     })
 }
 
