@@ -30,8 +30,7 @@ export default (state = default_state, action) => {
             return {
                 ...state,
                 list: null,
-                loading: false,
-                error: action.error
+                loading: false
             };
 
         default:

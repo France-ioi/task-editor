@@ -47,7 +47,6 @@ class TaskSvn extends React.Component {
                     <i> Save changes onto the SVN; automatically adds new files.</i>
                 </FormGroup>
                 { output && <pre className="console-output">{output}</pre>}
-                { this.props.error && <Alert bsStyle="danger">{this.props.error}</Alert> }
             </div>
         )
     }

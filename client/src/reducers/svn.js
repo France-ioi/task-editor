@@ -1,6 +1,5 @@
 var default_state = {
     data: null,
-    error: null,
     loading: false
 }
 
@@ -18,7 +17,6 @@ export default (state = default_state, action) => {
             return {
                 ...state,
                 data: action.data,
-                error: null,
                 loading: false
             };
 
@@ -26,8 +24,7 @@ export default (state = default_state, action) => {
             return {
                 ...state,
                 data: null,
-                loading: false,
-                error: action.error
+                loading: false
             };
 
         default:

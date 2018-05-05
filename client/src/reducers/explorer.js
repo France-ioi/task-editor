@@ -5,7 +5,6 @@ var default_state = {
     list: null,
     flags: {},
     loading: false,
-    error: null,
     path_src_history: []
 }
 
@@ -75,8 +74,7 @@ export default (state = default_state, action) => {
             return {
                 ...state,
                 list: null,
-                loading: false,
-                error: action.error
+                loading: false
             };
 
         default:

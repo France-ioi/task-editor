@@ -14,6 +14,7 @@ function* readDir(action) {
         yield put({type: 'EXPLORER_FETCH_SUCCESS', data });
     } catch (e) {
         yield put({type: 'EXPLORER_FETCH_FAIL', error: e.message});
+        yield put({type: 'ALERT_SHOW', message: e.message });
     }
 }
 
@@ -31,6 +32,7 @@ function* createDir(action) {
         yield put({type: 'EXPLORER_FETCH_SUCCESS', data });
     } catch (e) {
         yield put({type: 'EXPLORER_FETCH_FAIL', error: e.message});
+        yield put({type: 'ALERT_SHOW', message: e.message });
     }
 }
 
@@ -50,6 +52,7 @@ function* removeDir(action) {
             yield put({type: 'EXPLORER_FETCH_SUCCESS', data });
         } catch (e) {
             yield put({type: 'EXPLORER_FETCH_FAIL', error: e.message});
+            yield put({type: 'ALERT_SHOW', message: e.message });
         }
     }
 }

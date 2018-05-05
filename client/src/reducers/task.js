@@ -4,7 +4,6 @@ var default_state = {
     schema: {},
     loading: false,
     ready: false,
-    error: null,
     url: null
 }
 
@@ -20,7 +19,6 @@ export default (state = default_state, action) => {
                 schema: {},
                 loading: true,
                 ready: false,
-                error: null,
                 url: null
             };
 
@@ -29,7 +27,6 @@ export default (state = default_state, action) => {
             return {
                 ...state,
                 loading: true,
-                error: null,
                 url: null
             };
 
@@ -56,8 +53,7 @@ export default (state = default_state, action) => {
         case 'TASK_FETCH_FAIL':
             return {
                 ...state,
-                loading: false,
-                error: action.error
+                loading: false
             };
 
         default:

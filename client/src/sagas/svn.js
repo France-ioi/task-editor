@@ -15,6 +15,7 @@ function* fetchSvn(action) {
         yield put({type: 'SVN_FETCH_SUCCESS', data });
     } catch (e) {
         yield put({type: 'SVN_FETCH_FAIL', error: e.message});
+        yield put({type: 'ALERT_SHOW', message: e.message });
     }
 }
 

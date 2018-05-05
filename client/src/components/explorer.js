@@ -140,7 +140,6 @@ class Explorer extends React.Component {
                 <Modal.Body>
                     { this.props.loading ? <Loader/> : <Breadcrumbs nav={this.nav} path={this.props.path}/>}
                     <List list={this.props.list} nav={this.nav} path={this.props.path}/>
-                    { this.props.error && <Alert bsStyle="danger">{this.props.error}</Alert> }
                 </Modal.Body>
                 { !is_home && controls.create_dir && !this.props.loading &&
                     <Modal.Footer>

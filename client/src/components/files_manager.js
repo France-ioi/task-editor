@@ -59,7 +59,6 @@ class FilesManager extends React.Component {
                         </a>
                     </div>
                 )}
-                { this.props.error && <Alert bsStyle="danger">{this.props.error}</Alert> }
             </div>
         );
     }

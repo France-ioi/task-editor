@@ -57,6 +57,7 @@ function* create(action) {
         yield put({type: 'TASK_FETCH_SUCCESS'});
     } catch (e) {
         yield put({type: 'TASK_FETCH_FAIL', error: e.message});
+        yield put({type: 'ALERT_SHOW', message: e.message });
     }
 }
 
@@ -74,6 +75,7 @@ function* load(action) {
         yield put({type: 'TASK_FETCH_SUCCESS'});
     } catch (e) {
         yield put({type: 'TASK_FETCH_FAIL', error: e.message});
+        yield put({type: 'ALERT_SHOW', message: e.message });
     }
 }
 
@@ -93,6 +95,7 @@ function* clone(action) {
         yield put({type: 'TASK_FETCH_SUCCESS'});
     } catch (e) {
         yield put({type: 'TASK_FETCH_FAIL', error: e.message});
+        yield put({type: 'ALERT_SHOW', message: e.message });
     }
 }
 
@@ -109,7 +112,8 @@ function* save(action) {
         const data = yield call(api_task.save, params);
         yield put({type: 'TASK_FETCH_SUCCESS'});
     } catch (e) {
-        yield put({type: 'TASK_FETCH_FAIL', error: e.message});
+        yield put({type: 'TASK_FETCH_FAIL', error: e.message });
+        yield put({type: 'ALERT_SHOW', message: e.message });
     }
 }
 
@@ -136,6 +140,7 @@ function* saveView(action) {
         yield put({type: 'TASK_FETCH_SUCCESS', url: res.tasks[0].normalUrl});
     } catch (e) {
         yield put({type: 'TASK_FETCH_FAIL', error: e.message});
+        yield put({type: 'ALERT_SHOW', message: e.message });
     }
 }
 
