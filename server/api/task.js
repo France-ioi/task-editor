@@ -87,13 +87,13 @@ var api = {
                 files: []
             }
             svn.checkout(req.user, req.body.path, (err) => {
-                if(err) return res.status(400).send('Access denied');
+                if(err) return res.status(400).send(err.message);
                 saveTaskData(req.body.path, task_data, (err) => {
                     if(err) return res.status(400).send(err.message);
                     svn.addCommit(req.user, req.body.path, (err) => {
                         if(err) {
                             shell.rm('-rf', path.join(config.path, req.body.path));
-                            return res.status(400).send('Access denied');
+                            return res.status(400).send(err.message);
                         }
                         res.json({
                             schema,
@@ -128,7 +128,7 @@ var api = {
                 saveTaskData(req.body.path, task_data, (err) =>  {
                     if(err) return res.status(400).send(err.message);
                     svn.addCommit(req.user, req.body.path, (err) => {
-                        if(err) return res.status(400).send('Access denied');
+                        if(err) return res.status(400).send(err.message);
                         res.json({});
                     })
                 })
@@ -139,9 +139,9 @@ var api = {
 
     clone: (req, res) => {
         svn.checkout(req.user, req.body.path_src, (err) => {
-            if(err) return res.status(400).send('Access denied');
+            if(err) return res.status(400).send(err.message);
             svn.checkout(req.user, req.body.path, (err) => {
-                if(err) return res.status(400).send('Access denied');
+                if(err) return res.status(400).send(err.message);
                 var src = path.join(config.path, req.body.path_src);
                 var dst = path.join(config.path, req.body.path);
                 shell.cp('-rf', src + '/*', dst + '/');
@@ -149,7 +149,7 @@ var api = {
                 svn.addCommit(req.user, req.body.path, (err) => {
                     if(err) {
                         shell.rm('-rf', dst);
-                        return res.status(400).send('Access denied');
+                        return res.status(400).send(err.message);
                     }
                     loadTask(req, res);
                 })

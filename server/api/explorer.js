@@ -19,7 +19,7 @@ function readDir(req, res) {
 function createDir(req, res) {
     var rel_dir = path.join(req.body.path, req.body.dir)
     svn.createDir(req.user, rel_dir, (err) => {
-        if(err) return res.status(400).send('Access denied');
+        if(err) return res.status(400).send(err.message);
         tree.clear(req.user, req.body.path)
         tree.readDir(req.user, req.body.path, (err, data) => {
             if(err) return res.status(400).send(err.message)
@@ -32,7 +32,7 @@ function createDir(req, res) {
 
 function remove(req, res) {
     svn.removeDir(req.user, req.body.path, (err) => {
-        if(err) return res.status(400).send('Access denied')
+        if(err) return res.status(400).send(err.message)
         var parent_dir = req.body.path.split('/')
         parent_dir.pop()
         parent_dir = parent_dir.join('/')
