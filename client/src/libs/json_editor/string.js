@@ -23,7 +23,6 @@ function createImagesListHandler(path) {
 JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
     setValue: function(value,initial,from_template) {
         var self = this;
-
         if(this.template && !from_template) {
         return;
         }

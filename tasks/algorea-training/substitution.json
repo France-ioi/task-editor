@@ -4,32 +4,57 @@
     "selector": "title"
   },
   {
-    "jsonSubPath": "task",
-    "selector": "#task"
+    "jsonSubPath": "windowLanguage",
+    "template":{
+      "file": "index.html",
+      "placeholder": "windowLanguagePlaceholder"
+    }
   },
   {
-    "jsonSubPath": "hints",
-    "selector": ".hint"
-  },
-  {
-    "jsonSubPath": "solution",
-    "selector": "#solution"
+    "jsonSubPath": "AlgoreaTrainingTaskMetaData.LanguageModules",
+    "template": {
+      "file": "index.html",
+      "placeholder": "languageModulesPlaceholder"
+    }
   },
   {
     "jsonSubPath": "PEMTaskMetaData",
-    "selector": "$PEMTaskMetaData"
-  },
-  {
-    "jsonSubPath": "AlgoreaTrainingTaskMetaData",
     "selector": "$json"
   },
+
   {
-    "jsonSubPath": "taskSettings",
-    "selector": "[taskSettings.json]"
+    "jsonSubPath": "task.title",
+    "selector": "#taskTitle"
+  },
+  {
+    "jsonSubPath": "task.taskIntro",
+    "selector": "#taskIntro"
   },
   {
     "jsonSubPath": "context",
     "selector": "[task.js$contextTypePlaceholder]"
+  },
+  {
+    "jsonSubPath": "conceptViewer",
+    "template": {
+      "file": "task.js",
+      "placeholder": "conceptViewerPlaceholder"
+    }
+  },
+  {
+    "jsonSubPath": "groupByCategory",
+    "template": {
+      "file": "task.js",
+      "placeholder": "groupByCategoryPlaceholder"
+    }
+  },
+  {
+    "jsonSubPath": "generatedBlocks",
+    "template": {
+      "file": "task.js",
+      "placeholder": "generatedBlocksPlaceholder"
+    },
+    "keepArray": "true"
   },
   {
     "jsonSubPath": "difficulties",
@@ -58,21 +83,15 @@
       {
         "jsonSubPath": "name",
         "selector": ["#testname", ".othertest", "#hardname"]
+      },
+      {
+        "jsonSubPath": "gridInfo.maxInstructions",
+        "template": {
+          "file": "task.js",
+          "placeholder": ["maxInstructionsEasy","maxInstructionsMedium","maxInstructionsHard"]
+        }
       }
     ]
-  },
-  {
-    "jsonSubPath": "testFiles.input",
-    "value": {
-      "type": "file",
-      "format": "tests/files/test[index].in"
-    }
-  },
-  {
-    "jsonSubPath": "testFiles.output",
-    "value": {
-      "type": "file",
-      "format": "tests/files/test[index].out"
-    }
   }
+
 ]

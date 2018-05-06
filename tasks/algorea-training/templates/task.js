@@ -1,12 +1,16 @@
 function initTask(subTask) {
    subTask.gridInfos = {
-      conceptViewer: true,
-		contextType: {{contextTypePlaceholder}},
-      maxInstructions: {{maxInstructions}},
+      conceptViewer: {{conceptViewerPlaceholder}},
+      contextType: {{contextTypePlaceholder}},
+      maxInstructions: {
+      {{{titleEasy}}}{{^titleEasy}}easy{{/titleEasy}}: {{maxInstructionsEasy}}{{#tilesMedium}},
+      {{{titleMedium}}}{{^titleMedium}}medium{{/titleMedium}}: {{maxInstructionsMedium}}{{/tilesMedium}}{{#tilesHard}},
+      {{{titleHard}}}{{^titleHard}}hard{{/titleHard}}: {{maxInstructionsHard}}{{/tilesHard}}
+      },
       includeBlocks: {
-         groupByCategory: false,
+         groupByCategory: {{groupByCategoryPlaceholder}},
          generatedBlocks: {
-            robot: ["left", "right", "forward"]
+            robot: {{{generatedBlocksPlaceholder}}}
          },
          standardBlocks: {
             includeAll: false,

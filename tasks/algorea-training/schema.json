@@ -126,100 +126,36 @@
     }
   },
   "properties": {
-    "files": {
-      "type": "array",
-      "format": "tabs",
-      "title": "Files",
-      "description": "Extra files to place in the task folder.",
-      "uniqueItems": true,
-      "items": {
-        "type": "object",
-        "title": "File",
-        "properties": {
-          "path": {
-            "type": "string",
-            "title": "Path"
-          },
-          "type": {
-            "type": "string",
-            "title": "Type",
-            "enum": [
-              "image",
-              "testCase",
-              "solution"
-            ]
-          },
-          "description": {
-            "type": "string",
-            "title": "Description"
-          },
-          "usedInStatement": {
-            "type": "boolean",
-            "format": "checkbox",
-            "title": "Used in statement"
-          },
-          "usedInSolution": {
-            "type": "boolean",
-            "format": "checkbox",
-            "title": "Used in solution"
-          },
-          "usedInHints": {
-            "type": "boolean",
-            "format": "checkbox",
-            "title": "Used in hints"
-          }
-        },
-        "required": [
-          "path",
-          "type",
-          "description",
-          "usedInStatement",
-          "usedInSolution",
-          "usedInHints"
-        ]
-      }
-    },
-    "context": {
+    "title": {
       "type": "string",
+      "description": "Title of the window.",
+      "title": "Title"
+    },
+    "windowLanguage": {
+      "type": "string",
+      "description": "Language for the window.",
       "enum": [
-        "none",
-        "arrows",
-        "cards",
-        "chticode_abs",
-        "chticode_rel",
-        "cones",
-        "course",
-        "dominoes",
-        "marbles",
-        "objects_in_space",
-        "paint",
-        "rocket",
-        "sokoban",
-        "new"
+        "fr",
+        "en",
+        "de"
       ]
     },
-    "difficulties": {
-      "type": "array",
-      "format": "tabs",
-      "title": "difficulties",
-      "minItems": 1,
-      "items": {
-        "type": "object",
-        "title": "level",
-        "headerTemplate": "level {{ i1 }}",
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "scene": {
-            "type": "grid",
-            "watch": {
-              "sceneContext": "root.context"
-            }
-          }
-        },
-        "required": ["scene"]
-      }
+    "AlgoreaTrainingTaskMetaData": {
+      "type": "object",
+      "description": "Meta-data specific to taskplatform tasks.",
+      "properties": {
+        "LanguageModules": {
+          "type": "string",
+          "title": "Language",
+          "enum": [
+            "blockly",
+            "python"
+          ]
+        }
+      },
+      "required": [
+        "LanguageModules"
+      ]
     },
     "PEMTaskMetaData": {
       "type": "object",
@@ -259,53 +195,6 @@
         "baseUrl": {
           "type": "string",
           "title": "baseUrl"
-        },
-        "limits": {
-          "type": "array",
-          "description": "Execution limits (time and memory) for this task, for each language.",
-          "format": "tabs",
-          "title": "Limits",
-          "items": {
-            "type": "object",
-            "options": {
-              "layout": "grid"
-            },
-            "properties": {
-              "language": {
-                "title": "Language",
-                "type": "string",
-                "enum": [
-                  "*",
-                  "cpp",
-                  "c",
-                  "java",
-                  "py"
-                ],
-                "options": {
-                  "grid_columns": 6
-                }
-              },
-              "time": {
-                "title": "Time (ms)",
-                "type": "string",
-                "options": {
-                  "grid_columns": 3
-                }
-              },
-              "memory": {
-                "title": "Memory (KB)",
-                "type": "string",
-                "options": {
-                  "grid_columns": 3
-                }
-              }
-            },
-            "required": [
-              "language",
-              "time",
-              "memory"
-            ]
-          }
         }
       },
       "required": [
@@ -314,379 +203,553 @@
         "language"
       ]
     },
-    "AlgoreaTrainingTaskMetaData": {
+
+    "task": {
       "type": "object",
-      "description": "Meta-data specific to taskgrader/taskplatform tasks.",
+      "description": "Task statement",
       "properties": {
-        "supportedLanguages": {
-          "type": "array",
-          "description": "Languages supported by the task. Use \"*\" to enable all languages.",
-          "items": {
-            "type": "string",
-            "title": "supportedLanguage",
-            "enum": [
-              "*",
-              "c",
-              "cpp",
-              "java",
-              "py"
-            ]
-          }
+        "title": {
+          "type": "string",
+          "description": "Title of the task.",
+          "title": "Title"
         },
-        "hasUserTests": {
-          "type": "boolean",
-          "description": "Allow the user to test their solution against their own tests. If \"true\", the user will be presented with a test editor under the code editor, allowing them to write themselves the input which will be given to their program, and the expected output.",
-          "title": "User can user their own tests"
+        "taskIntro": {
+          "title": "Task statement",
+          "description": "Task statement, displayed to the user.",
+          "type": "string",
+          "format": "html",
+          "options": {
+            "wysiwyg": true
+          }
         }
       },
       "required": [
-        "supportedLanguages",
-        "hasUserTests"
+        "title",
+        "taskIntro"
       ]
     },
-    "title": {
+    "context": {
       "type": "string",
-      "description": "Title of the task.",
-      "title": "Title"
+      "enum": [
+        "none",
+        "arrows",
+        "cards",
+        "chticode_abs",
+        "chticode_rel",
+        "cones",
+        "course",
+        "dominoes",
+        "marbles",
+        "objects_in_space",
+        "paint",
+        "rocket",
+        "sokoban",
+        "new"
+      ]
     },
-    "task": {
-      "title": "Task statement",
-      "description": "Task statement, displayed to the user.",
-      "type": "string",
-      "format": "html",
-      "options": {
-        "wysiwyg": true
-      }
+    "conceptViewer": {
+      "type": "boolean",
+      "format": "checkbox",
+      "title": "conceptViewer"
     },
-    "solution": {
-      "title": "Solution",
-      "description": "Task solution, displayed to the user when they complete the task.",
-      "type": "string",
-      "format": "html",
-      "options": {
-        "wysiwyg": true
-      }
+    "groupByCategory": {
+      "type": "boolean",
+      "format": "checkbox",
+      "title": "groupByCategory"
     },
-    "hints": {
+    "generatedBlocks": {
       "type": "array",
-      "description": "Hints the user can request automatically; each request will give one new hint.",
-      "format": "tabs",
-      "title": "Hints",
+      "uniqueItems": true,
+      "format": "select",
+      "description": " La gestion des instructions pour le robot",
       "items": {
-        "title": "Hint",
         "type": "string",
-        "format": "html",
-        "options": {
-          "wysiwyg": true
-        }
-      }
-    },
-    "testFiles": {
-      "title": "Test files",
-      "description": "Tests, consisting in an input and an optional expected output, the solution will be tested against. A basic task may only consist in input and expected output files.",
-      "type": "array",
-      "items": {
-        "type": "object",
-        "description": "Click \"Object Properties\" to add an expected output file as well.",
-        "properties": {
-          "input": {
-            "type": "string",
-            "description": "Input file",
-            "format": "url",
-            "options": {
-              "upload": true
-            }
-          },
-          "output": {
-            "type": "string",
-            "description": "Output file (optional)",
-            "format": "url",
-            "options": {
-              "upload": true
-            }
-          }
-        },
-        "required": [
-          "input"
+        "title": "generatedBlocks",
+        "enum": [
+          "row",
+          "col",
+          "north",
+          "south",
+          "east",
+          "west",
+          "left",
+          "right",
+          "right",
+          "turnAround",
+          "forward",
+          "backwards",
+          "jump",
+          "obstacleInFront",
+          "obstacleEast",
+          "obstacleWest",
+          "obstacleNorth",
+          "obstacleSouth",
+          "obstacleRight",
+          "obstacleLeft",
+          "gridEdgeEast",
+          "gridEdgeWest",
+          "gridEdgeNorth",
+          "gridEdgeSouth",
+          "gridEdgeEast",
+          "gridEdgeWest",
+          "gridEdgeNorth",
+          "gridEdgeSouth",
+          "platformInFront",
+          "platformAbove",
+          "withdrawObject",
+          "dropObject",
+          "onObject",
+          "onContainer",
+          "onNumber",
+          "onWritable",
+          "writeNumber",
+          "readNumber",
+          "pushObject",
+          "pushableInFront",
+          "dropInFront",
+          "dropAbove",
+          "shoot_noShadow",
+          "shoot",
+          "shootCondition_noShadow",
+          "shootCondition"
         ]
       }
     },
-    "taskSettings": {
-      "title": "taskSettings.json",
-      "description": "Optional taskSettings.json file for the task. Please refer to the documentation at https://france-ioi.github.io/taskgrader/tasksettings/ .",
-      "type": "object",
-      "properties": {
-        "generator": {
-          "type": "string",
-          "description": "Path to the generator, relative to the task folder."
-        },
-        "sanitizer": {
-          "type": "string",
-          "description": "Path to the sanitizer, relative to the task folder."
-        },
-        "checker": {
-          "type": "string",
-          "description": "Path to the checker, relative to the task folder."
-        },
-        "sanitizerLang": {
-          "type": "string",
-          "description": "Language of the sanitizer."
-        },
-        "checkerLang": {
-          "type": "string",
-          "description": "Language of the checker."
-        },
-        "generatorDeps": {
-          "type": "array",
-          "description": "List of dependencies for the generator.",
-          "items": {
-            "$ref": "#/definitions/fileDescr"
-          }
-        },
-        "sanitizerDeps": {
-          "type": "array",
-          "description": "List of dependencies for the sanitizer.",
-          "items": {
-            "$ref": "#/definitions/fileDescr"
-          }
-        },
-        "checkerDeps": {
-          "type": "array",
-          "description": "List of dependencies for the checker.",
-          "items": {
-            "$ref": "#/definitions/fileDescr"
-          }
-        },
-        "extraDir": {
-          "type": "string",
-          "description": "Path to scan for \"extraFiles\", such as test files or libraries which aren't generated. Default is \"tests/files/\"."
-        },
-        "ignoreTests": {
-          "type": "array",
-          "description": "List of glob-style filenames to ignore while scanning for test cases. These test cases will be ignored by genJson, and thus not used for evaluation.",
-          "items": {
-            "type": "string",
-            "description": "Glob-style filename to ignore."
-          }
-        },
-        "correctSolutions": {
-          "type": "array",
-          "description": "List of \"correct solutions\", which are solutions which will be automatically evaluated against the task and checked for consistency against an expected grade.",
-          "items": {
+    "difficulties": {
+      "type": "array",
+      "format": "tabs",
+      "title": "difficulties",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "title": "level",
+        "headerTemplate": "level {{ i1 }}",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "scene": {
+            "type": "grid",
+            "watch": {
+              "sceneContext": "root.context"
+            }
+          },
+          "gridInfo": {
             "type": "object",
-            "description": "A correct solution.",
+            "description": "Meta-data specific to subTask.gridInfos..",
             "properties": {
-              "path": {
-                "type": "string",
-                "description": "Full path to the solution."
+              "showLabels": {
+                "type": "boolean",
+                "format": "checkbox",
+                "title": "showLabels"
               },
-              "language": {
-                "type": "string",
-                "description": "Language of the solution."
-              },
-              "grade": {
-                "oneOf": [
-                  {
-                    "type": "integer"
+              "bagInit": {
+                "type": "object",
+                "description": " nombre d item ",
+                "properties": {
+                  "count": {
+                    "type": "integer",
+                    "description": "Nombre ."
                   },
-                  {
-                    "type": "array",
-                    "items": {
-                      "type": "integer"
-                    }
+                  "type": {
+                    "type": "string",
+                    "title": "type"
                   }
-                ],
-                "description": "Expected average grade or list of grades."
+                },
+                "required": [
+                  "count",
+                  "type"
+                ]
               },
-              "nbtests": {
+              "maxInstructions": {
                 "type": "integer",
-                "description": "Number of test cases this solution is expected to be evaluated against."
-              }
-            },
-            "required": [
-              "path"
-            ]
-          }
-        },
-        "overrideParams": {
-          "type": "object",
-          "description": "Paramters to override in the generated \"defaultParams.json\" file. The keys of this object will be copied as-is to the file."
-        },
-        "defaultGenerators": {
-          "type": "array",
-          "description": "List of generators to compile. Will override automatic detection. Recommended only for advanced users.",
-          "items": {
-            "type": "object",
-            "description": "Generator, generates tests and libraries to be used for evaluation.",
-            "properties": {
-              "id": {
-                "type": "string",
-                "description": "Name of the generator."
+                "title": "maxInstructions"
               },
-              "compilationDescr": {
-                "$ref": "#/definitions/compilationDescr"
-              },
-              "compilationExecution": {
-                "$ref": "#/definitions/executionParams"
-              }
-            },
-            "required": [
-              "id",
-              "compilationDescr",
-              "compilationExecution"
-            ]
-          }
-        },
-        "defaultGenerations": {
-          "type": "array",
-          "description": "List of generations (executions of generators). Will override automatic detection. Recommended only for advanced users.",
-          "items": {
-            "type": "object",
-            "description": "Generation (execution of a generator).",
-            "properties": {
-              "id": {
-                "type": "string",
-                "description": "Name of the generation."
-              },
-              "idGenerator": {
-                "type": "string",
-                "description": "Name of the tests and libraries generator."
-              },
-              "idOutputGenerator": {
-                "type": "string",
-                "description": "Name of the results generator, if applicable."
-              },
-              "genExecution": {
-                "$ref": "#/definitions/executionParams"
-              },
-              "outGenExecution": {
-                "$ref": "#/definitions/executionParams"
-              },
-              "testCases": {
-                "type": "array",
-                "description": "List of specific test cases to generate.",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "name": {
-                      "$ref": "#/definitions/filename",
-                      "description": "Filename of the test to generate."
+              "languageStrings": {
+                "type": "object",
+                "description": " personnalisation du texte ",
+                "properties": {
+                  "blocklyRobot_lib": {
+                    "type": "object",
+                    "description": " personalisation dans la bibli blocklyRobot ",
+                    "properties": {
+                      "label": {
+                        "type": "array",
+                        "description": "tableau de textes.",
+                        "items": {
+                          "type": "string",
+                          "title": "label"
+                        }
+                      },
+                      "message": {
+                        "type": "object",
+                        "description": " personalisation des message lors de l'execution du programme ",
+                        "properties": {
+                          "successReachExit": {
+                            "type": "string",
+                            "description": "en cas de succes.",
+                            "successReachExit": ""
+                          },
+                          "failureReachExit": {
+                            "type": "string",
+                            "description": "en cas d echec.",
+                            "failureReachExit": ""
+                          }
+                        },
+                        "required": [
+                          "successReachExit",
+                          "failureReachExit"
+                        ]
+                      }
                     },
-                    "params": {
-                      "type": "string",
-                      "description": "Command-line arguments for the generator."
-                    }
+                    "required": [
+                      "label",
+                      "message"
+                    ]
+                  }
+                },
+                "required": [
+                  "blocklyRobot_lib"
+                ]
+              },
+              "includeBlocks": {
+                "type": "object",
+                "description": " La gestion des blocs ",
+                "properties": {
+                  "standardBlocks": {
+                    "type": "object",
+                    "description": " La gestion des blocs pour l algorithme",
+                    "properties": {
+                      "includeAll": {
+                        "type": "boolean",
+                        "format": "checkbox",
+                        "title": "includeAll"
+                      },
+                      "wholeCategories": {
+                        "type": "array",
+                        "description": "Bloc pour le robot.",
+                        "items": {
+                          "type": "string",
+                          "title": "generatedBlocks",
+                          "enum": [
+                            "row",
+                            "col",
+                            "north",
+                            "south",
+                            "east",
+                            "west",
+                            "left",
+                            "right",
+                            "right",
+                            "turnAround",
+                            "forward",
+                            "backwards",
+                            "jump",
+                            "obstacleInFront",
+                            "obstacleEast",
+                            "obstacleWest",
+                            "obstacleNorth",
+                            "obstacleSouth",
+                            "obstacleRight",
+                            "obstacleLeft",
+                            "gridEdgeEast",
+                            "gridEdgeWest",
+                            "gridEdgeNorth",
+                            "gridEdgeSouth",
+                            "gridEdgeEast",
+                            "gridEdgeWest",
+                            "gridEdgeNorth",
+                            "gridEdgeSouth",
+                            "platformInFront",
+                            "platformAbove",
+                            "withdrawObject",
+                            "dropObject",
+                            "onObject",
+                            "onContainer",
+                            "onNumber",
+                            "onWritable",
+                            "writeNumber",
+                            "readNumber",
+                            "pushObject",
+                            "pushableInFront",
+                            "dropInFront",
+                            "dropAbove",
+                            "shoot_noShadow",
+                            "shoot",
+                            "shootCondition_noShadow",
+                            "shootCondition"
+                          ]
+                        }
+                      },
+                      "singleBlocks": {
+                        "type": "array",
+                        "description": "La gestion des blocs pour l'algorithme.",
+                        "items": {
+                          "type": "string",
+                          "title": "singleBlocks",
+                          "enum": [
+                            "controls_if",
+                            "ccontrols_if_else",
+                            "controls_repeat",
+                            "controls_repeat_ext",
+                            "controls_whileUntil",
+                            "controls_untilWhile",
+                            "logic_negate",
+                            "logic_boolean",
+                            "logic_compare",
+                            "logic_operation",
+                            "text_join",
+                            "math_arithmetic",
+                            "math_number"
+                          ]
+                        }
+                      }
+                    },
+                    "required": [
+                      "includeAll",
+                      "wholeCategories",
+                      "singleBlocks"
+                    ]
+                  }
+                },
+                "required": [
+                  "standardBlocks"
+                ]
+              },
+              "additionalBlocksByLevel": {
+                "type": "object",
+                "description": " La gestion des blocs ",
+                "properties": {
+                  "generatedBlocks": {
+                    "type": "object",
+                    "description": " La gestion des instruction pour le robot",
+                    "properties": {
+                      "robot": {
+                        "type": "array",
+                        "description": " La gestion des instruction selon le niveau ",
+                        "items": {
+                          "type": "string",
+                          "title": "generatedBlocks",
+                          "enum": [
+                            "row",
+                            "col",
+                            "north",
+                            "south",
+                            "east",
+                            "west",
+                            "left",
+                            "right",
+                            "right",
+                            "turnAround",
+                            "forward",
+                            "backwards",
+                            "jump",
+                            "obstacleInFront",
+                            "obstacleEast",
+                            "obstacleWest",
+                            "obstacleNorth",
+                            "obstacleSouth",
+                            "obstacleRight",
+                            "obstacleLeft",
+                            "gridEdgeEast",
+                            "gridEdgeWest",
+                            "gridEdgeNorth",
+                            "gridEdgeSouth",
+                            "gridEdgeEast",
+                            "gridEdgeWest",
+                            "gridEdgeNorth",
+                            "gridEdgeSouth",
+                            "platformInFront",
+                            "platformAbove",
+                            "withdrawObject",
+                            "dropObject",
+                            "onObject",
+                            "onContainer",
+                            "onNumber",
+                            "onWritable",
+                            "writeNumber",
+                            "readNumber",
+                            "pushObject",
+                            "pushableInFront",
+                            "dropInFront",
+                            "dropAbove",
+                            "shoot_noShadow",
+                            "shoot",
+                            "shootCondition_noShadow",
+                            "shootCondition"
+                          ]
+                        }
+                      }
+                    },
+                    "required": [
+                      "robot"
+                    ]
                   },
-                  "required": [
-                    "name",
-                    "params"
-                  ]
-                }
-              }
-            },
-            "required": [
-              "id",
-              "idGenerator",
-              "genExecution"
-            ]
-          }
-        },
-        "defaultExtraTests": {
-          "type": "array",
-          "description": "List of specific test files to import.",
-          "items": {
-            "$ref": "#/definitions/fileDescr"
-          }
-        },
-        "defaultSanitizer": {
-          "description": "Sanitizer, tests whether an input file is a valid test. Will override automatic detection. Recommended only for advanced users.",
-          "$ref": "#/definitions/compileAndRunParams"
-        },
-        "defaultChecker": {
-          "description": "Checker, grades the solution's result. Will override automatic detection. Recommended only for advanced users.",
-          "$ref": "#/definitions/compileAndRunParams"
-        },
-        "defaultSolutions": {
-          "type": "array",
-          "description": "List of solutions to grade. Will override automatic detection. Recommended only for advanced users.",
-          "items": {
-            "type": "object",
-            "description": "Solution to be graded.",
-            "properties": {
-              "id": {
+                  "standardBlocks": {
+                    "type": "object",
+                    "description": " La gestion des blocs pour l algorithme",
+                    "properties": {
+                      "includeAll": {
+                        "type": "boolean",
+                        "format": "checkbox",
+                        "title": "includeAll"
+                      },
+                      "wholeCategories": {
+                        "type": "array",
+                        "description": "Bloc pour le robot.",
+                        "items": {
+                          "type": "string",
+                          "title": "generatedBlocks",
+                          "enum": [
+                            "row",
+                            "col",
+                            "north",
+                            "south",
+                            "east",
+                            "west",
+                            "left",
+                            "right",
+                            "right",
+                            "turnAround",
+                            "forward",
+                            "backwards",
+                            "jump",
+                            "obstacleInFront",
+                            "obstacleEast",
+                            "obstacleWest",
+                            "obstacleNorth",
+                            "obstacleSouth",
+                            "obstacleRight",
+                            "obstacleLeft",
+                            "gridEdgeEast",
+                            "gridEdgeWest",
+                            "gridEdgeNorth",
+                            "gridEdgeSouth",
+                            "gridEdgeEast",
+                            "gridEdgeWest",
+                            "gridEdgeNorth",
+                            "gridEdgeSouth",
+                            "platformInFront",
+                            "platformAbove",
+                            "withdrawObject",
+                            "dropObject",
+                            "onObject",
+                            "onContainer",
+                            "onNumber",
+                            "onWritable",
+                            "writeNumber",
+                            "readNumber",
+                            "pushObject",
+                            "pushableInFront",
+                            "dropInFront",
+                            "dropAbove",
+                            "shoot_noShadow",
+                            "shoot",
+                            "shootCondition_noShadow",
+                            "shootCondition"
+                          ]
+                        }
+                      },
+                      "singleBlocks": {
+                        "type": "array",
+                        "description": "La gestion des blocs pour l'algorithme.",
+                        "items": {
+                          "type": "string",
+                          "title": "singleBlocks",
+                          "enum": [
+                            "controls_if",
+                            "ccontrols_if_else",
+                            "controls_repeat",
+                            "controls_repeat_ext",
+                            "controls_whileUntil",
+                            "controls_untilWhile",
+                            "logic_negate",
+                            "logic_boolean",
+                            "logic_compare",
+                            "logic_operation",
+                            "text_join",
+                            "math_arithmetic",
+                            "math_number"
+                          ]
+                        }
+                      }
+                    },
+                    "required": [
+                      "includeAll",
+                      "wholeCategories",
+                      "singleBlocks"
+                    ]
+                  }
+                },
+                "required": [
+                  "generatedBlocks",
+                  "standardBlocks"
+                ]
+              },
+              "checkEndCondition": {
                 "type": "string",
-                "description": "Name of the solution."
+                "description": "methode de verification de la solution.",
+                "enum": [
+                  "checkReachExit",
+                  "checkPickedAllWithdrawables",
+                  "checkContainersFilled",
+                  "checkBothReachAndCollect"
+                ]
               },
-              "compilationDescr": {
-                "$ref": "#/definitions/compilationDescr"
+              "actionDelay": {
+                "type": "integer",
+                "description": "Nombre "
               },
-              "compilationExecution": {
-                "$ref": "#/definitions/executionParams"
-              }
-            },
-            "required": [
-              "id",
-              "compilationDescr",
-              "compilationExecution"
-            ]
-          }
-        },
-        "defaultExecutions": {
-          "type": "array",
-          "description": "List of solution executions. Will override automatic detection. Recommended only for advanced users.",
-          "items": {
-            "type": "object",
-            "description": "Execution of a solution on one or multiple tests.",
-            "properties": {
-              "id": {
-                "type": "string",
-                "description": "Name of the execution."
+              "checkEndEveryTurn": {
+                "type": "boolean",
+                "format": "checkbox",
+                "title": "checkEndEveryTurn"
               },
-              "idSolution": {
-                "type": "string",
-                "description": "Name of the solution to grade."
+              "ignoreInvalidMoves": {
+                "type": "boolean",
+                "format": "checkbox",
+                "title": "cignoreInvalidMoves"
               },
-              "filterTests": {
+              "maxIterWithoutAction": {
+                "type": "integer",
+                "description": "Nombre "
+              },
+              "hideSaveOrLoad": {
+                "type": "boolean",
+                "format": "checkbox",
+                "title": "hideSaveOrLoad"
+              },
+              "variables": {
                 "type": "array",
-                "description": "List of globs filtering tests to input to the solution.",
+                "description": "Context used by the task.",
                 "items": {
                   "type": "string",
-                  "pattern": "^[^/]+$"
+                  "title": "variables"
                 }
-              },
-              "noFeedbackTests": {
-                "type": "array",
-                "description": "List of globs filtering tests (selected with filterTests) whose outputs will be hidden.",
-                "items": {
-                  "type": "string",
-                  "pattern": "^[^/]+$"
-                }
-              },
-              "runExecution": {
-                "$ref": "#/definitions/executionParams"
               }
             },
             "required": [
-              "id",
-              "idSolution",
-              "filterTests",
-              "runExecution"
+              "maxInstructions",
+              "includeBlocks"
             ]
           }
-        }
+
+
+        },
+        "required": ["scene", "gridInfo"]
       }
     }
   },
   "required": [
-    "difficulties",
-    "PEMTaskMetaData",
-    "AlgoreaTrainingTaskMetaData",
     "title",
+    "windowLanguage",
+    "conceptViewer",
+    "groupByCategory",
+    "generatedBlocks",
+    "AlgoreaTrainingTaskMetaData",
+    "PEMTaskMetaData",
     "task",
-    "solution",
-    "hints",
-    "testFiles",
-    "taskSettings",
-    "context"
+    "context",
+    "difficulties"
   ]
 }

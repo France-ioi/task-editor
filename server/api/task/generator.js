@@ -57,7 +57,7 @@ module.exports = {
                         files.copy(val, formatted_value)
                     }
                 };
-                if (value instanceof Array) {
+                if (value instanceof Array && !('keepArray' in rule)) {
                     if (('matchingRule' in rule)) {
                         for (var i = 0; i < value.length; i++) {
                             for (var j = 0; j < rule.matchingRule.length; j++) {
