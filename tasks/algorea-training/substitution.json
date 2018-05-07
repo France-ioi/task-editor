@@ -67,6 +67,14 @@
         }
       },
       {
+        "jsonSubPath": "scene.images",
+        "template": {
+          "file": "index.html",
+          "placeholder": ["images"],
+          "json": "true"
+        }
+      },
+      {
         "jsonSubPath": "scene.initItems",
         "template": {
           "file": "task.js",

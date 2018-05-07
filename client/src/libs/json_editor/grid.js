@@ -31,7 +31,7 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
         // this.refreshValue();
         // window.console.log("inside postbuild:");
         // window.console.log(this.value);
-        this.setValue({'tiles': [[this.defaule_value]], 'initItems': []}, true);
+        this.setValue({'tiles': [[this.defaule_value]], 'initItems': [], 'images': []}, true);
     },
 
     setupWatchListeners: function () {
@@ -67,7 +67,14 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
             class: self.id + "-item-type item-type dot"
         });
         $(itemTypesContainer).append($newItemType);
+        if (itemTypes != null) {
+            self.value.images.length = 0;
+        }
         for (var itemType in itemTypes) {
+            if (itemTypes[itemType].img != null) {
+                // self.value.images.push(itemTypes[itemType].img);
+                self.value.images.push({'src': window.__CONFIG__.blockly.images_url + itemTypes[itemType].img});
+            }
             // window.console.log(itemTypes[itemType]);
             // window.console.log("num:");
             // window.console.log(itemTypes[itemType].num);

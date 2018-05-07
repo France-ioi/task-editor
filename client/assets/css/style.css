@@ -109,20 +109,6 @@ img.init-item {
     margin: 0;
 }
 
-/*@keyframes bgfade*/
-/*{*/
-/*0%   {opacity:0;}*/
-/*25%  {opacity:0.25;}*/
-/*50%  {opacity:0.5;}*/
-/*75%  {opacity:0.75;}*/
-/*100% {opacity:1;}*/
-/*}*/
-
-/*@-webkit-keyframes bgfade !* Safari and Chrome *!*/
-/*{*/
-/*0%   {opacity:0;}*/
-/*25%  {opacity:0.25;}*/
-/*50%  {opacity:0.5;}*/
-/*75%  {opacity:0.75;}*/
-/*100% {opacity:1;}*/
-/*}*/
+.itemTypesContainer {
+    min-height: 55px;
+}

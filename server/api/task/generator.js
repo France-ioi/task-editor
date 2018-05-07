@@ -18,11 +18,15 @@ Object.byString = function (o, s) {
 }
 
 
-function registerPlaceholder(templateVariables, file, placeholder, val) {
+function registerPlaceholder(templateVariables, file, placeholder, val, json) {
     if (templateVariables[file] == null) {
         templateVariables[file] = {};
     }
-    templateVariables[file][placeholder] = JSON.stringify(val);
+    if (!json) {
+        templateVariables[file][placeholder] = JSON.stringify(val);
+    } else {
+        templateVariables[file][placeholder] = val;
+    }
     return templateVariables;
 }
 
@@ -45,7 +49,7 @@ module.exports = {
                 function applyValue(val, idx) {
                     var formatted_value = val;
                     if ('template' in rule) {
-                        templateVariables = registerPlaceholder(templateVariables, rule.template.file, rule.template.placeholder, val);
+                        templateVariables = registerPlaceholder(templateVariables, rule.template.file, rule.template.placeholder, val, 'json' in rule.template);
                     }
                     if ('value' in rule) {
                         formatted_value = formatValue(rule.value, val, rule.json_path, idx)
@@ -63,8 +67,8 @@ module.exports = {
                             for (var j = 0; j < rule.matchingRule.length; j++) {
                                 var subRule = rule.matchingRule[j];
                                 if ('template' in rule.matchingRule[j]) {
-                                    templateVariables = registerPlaceholder(templateVariables, subRule.template.file, subRule.template.placeholder[i], Object.byString(value[i], subRule['jsonSubPath']));
-                                } else if (Object.byString(value[i], rule.matchingRule[j]['jsonSubPath']) != null){
+                                    templateVariables = registerPlaceholder(templateVariables, subRule.template.file, subRule.template.placeholder[i], Object.byString(value[i], subRule['jsonSubPath']), 'json' in subRule.template);
+                                } else if (Object.byString(value[i], rule.matchingRule[j]['jsonSubPath']) != null) {
                                     templates.inject(rule.matchingRule[j].selector[i], Object.byString(value[i], rule.matchingRule[j]['jsonSubPath']));
                                 }
                             }
