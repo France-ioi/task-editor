@@ -234,6 +234,7 @@
         "none",
         "arrows",
         "cards",
+        "gems",
         "chticode_abs",
         "chticode_rel",
         "cones",
@@ -315,6 +316,106 @@
         ]
       }
     },
+    "standardBlocks": {
+          "type": "object",
+          "description": " La gestion des blocs pour l algorithme",
+          "properties": {
+            "includeAll": {
+              "type": "boolean",
+              "format": "checkbox",
+              "title": "includeAll"
+            },
+            "wholeCategories": {
+              "type": "array",
+              "uniqueItems": true,
+              "format": "select",
+              "description": "Bloc pour le robot.",
+              "items": {
+                "type": "string",
+                "title": "generatedBlocks",
+                "enum": [
+                  "row",
+                  "col",
+                  "north",
+                  "south",
+                  "east",
+                  "west",
+                  "left",
+                  "right",
+                  "right",
+                  "turnAround",
+                  "forward",
+                  "backwards",
+                  "jump",
+                  "obstacleInFront",
+                  "obstacleEast",
+                  "obstacleWest",
+                  "obstacleNorth",
+                  "obstacleSouth",
+                  "obstacleRight",
+                  "obstacleLeft",
+                  "gridEdgeEast",
+                  "gridEdgeWest",
+                  "gridEdgeNorth",
+                  "gridEdgeSouth",
+                  "gridEdgeEast",
+                  "gridEdgeWest",
+                  "gridEdgeNorth",
+                  "gridEdgeSouth",
+                  "platformInFront",
+                  "platformAbove",
+                  "withdrawObject",
+                  "dropObject",
+                  "onObject",
+                  "onContainer",
+                  "onNumber",
+                  "onWritable",
+                  "writeNumber",
+                  "readNumber",
+                  "pushObject",
+                  "pushableInFront",
+                  "dropInFront",
+                  "dropAbove",
+                  "shoot_noShadow",
+                  "shoot",
+                  "shootCondition_noShadow",
+                  "shootCondition"
+                ]
+              }
+            },
+            "singleBlocks": {
+              "type": "array",
+              "uniqueItems": true,
+              "format": "select",
+              "description": "La gestion des blocs pour l'algorithme.",
+              "items": {
+                "type": "string",
+                "title": "singleBlocks",
+                "enum": [
+                  "controls_if",
+                  "ccontrols_if_else",
+                  "controls_repeat",
+                  "controls_repeat_ext",
+                  "controls_whileUntil",
+                  "controls_untilWhile",
+                  "logic_negate",
+                  "logic_boolean",
+                  "logic_compare",
+                  "logic_operation",
+                  "text_join",
+                  "math_arithmetic",
+                  "math_number"
+                ]
+              }
+            }
+          },
+          "required": [
+            "includeAll",
+            "wholeCategories",
+            "singleBlocks"
+          ]
+        },
+
     "difficulties": {
       "type": "array",
       "format": "tabs",
@@ -412,110 +513,7 @@
                   "blocklyRobot_lib"
                 ]
               },
-              "includeBlocks": {
-                "type": "object",
-                "description": " La gestion des blocs ",
-                "properties": {
-                  "standardBlocks": {
-                    "type": "object",
-                    "description": " La gestion des blocs pour l algorithme",
-                    "properties": {
-                      "includeAll": {
-                        "type": "boolean",
-                        "format": "checkbox",
-                        "title": "includeAll"
-                      },
-                      "wholeCategories": {
-                        "type": "array",
-                        "description": "Bloc pour le robot.",
-                        "items": {
-                          "type": "string",
-                          "title": "generatedBlocks",
-                          "enum": [
-                            "row",
-                            "col",
-                            "north",
-                            "south",
-                            "east",
-                            "west",
-                            "left",
-                            "right",
-                            "right",
-                            "turnAround",
-                            "forward",
-                            "backwards",
-                            "jump",
-                            "obstacleInFront",
-                            "obstacleEast",
-                            "obstacleWest",
-                            "obstacleNorth",
-                            "obstacleSouth",
-                            "obstacleRight",
-                            "obstacleLeft",
-                            "gridEdgeEast",
-                            "gridEdgeWest",
-                            "gridEdgeNorth",
-                            "gridEdgeSouth",
-                            "gridEdgeEast",
-                            "gridEdgeWest",
-                            "gridEdgeNorth",
-                            "gridEdgeSouth",
-                            "platformInFront",
-                            "platformAbove",
-                            "withdrawObject",
-                            "dropObject",
-                            "onObject",
-                            "onContainer",
-                            "onNumber",
-                            "onWritable",
-                            "writeNumber",
-                            "readNumber",
-                            "pushObject",
-                            "pushableInFront",
-                            "dropInFront",
-                            "dropAbove",
-                            "shoot_noShadow",
-                            "shoot",
-                            "shootCondition_noShadow",
-                            "shootCondition"
-                          ]
-                        }
-                      },
-                      "singleBlocks": {
-                        "type": "array",
-                        "description": "La gestion des blocs pour l'algorithme.",
-                        "items": {
-                          "type": "string",
-                          "title": "singleBlocks",
-                          "enum": [
-                            "controls_if",
-                            "ccontrols_if_else",
-                            "controls_repeat",
-                            "controls_repeat_ext",
-                            "controls_whileUntil",
-                            "controls_untilWhile",
-                            "logic_negate",
-                            "logic_boolean",
-                            "logic_compare",
-                            "logic_operation",
-                            "text_join",
-                            "math_arithmetic",
-                            "math_number"
-                          ]
-                        }
-                      }
-                    },
-                    "required": [
-                      "includeAll",
-                      "wholeCategories",
-                      "singleBlocks"
-                    ]
-                  }
-                },
-                "required": [
-                  "standardBlocks"
-                ]
-              },
+
               "additionalBlocksByLevel": {
                 "type": "object",
                 "description": " La gestion des blocs ",
@@ -729,14 +727,19 @@
               }
             },
             "required": [
-              "maxInstructions",
-              "includeBlocks"
+              "maxInstructions"
+
             ]
+          },
+          "displayHelper": {
+            "type": "integer",
+            "title": "displayHelper"
           }
 
 
+
         },
-        "required": ["scene", "gridInfo"]
+        "required": ["scene", "gridInfo","displayHelper"]
       }
     }
   },
@@ -746,6 +749,7 @@
     "conceptViewer",
     "groupByCategory",
     "generatedBlocks",
+    "standardBlocks",
     "AlgoreaTrainingTaskMetaData",
     "PEMTaskMetaData",
     "task",

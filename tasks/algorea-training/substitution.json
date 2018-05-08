@@ -41,6 +41,7 @@
       "placeholder": "conceptViewerPlaceholder"
     }
   },
+
   {
     "jsonSubPath": "groupByCategory",
     "template": {
@@ -56,6 +57,34 @@
     },
     "keepArray": "true"
   },
+  {
+    "jsonSubPath": "standardBlocks.includeAll",
+    "template": {
+      "file": "task.js",
+      "placeholder": "includeAllPlaceholder"
+    }
+  },
+
+
+  {
+    "jsonSubPath": "standardBlocks.wholeCategories",
+    "template": {
+      "file": "task.js",
+      "placeholder": "wholeCategoriesPlaceholder"
+    },
+    "keepArray": "true"
+  },
+  {
+    "jsonSubPath": "standardBlocks.singleBlocks",
+    "template": {
+      "file": "task.js",
+      "placeholder": "singleBlocksPlaceholder"
+    },
+    "keepArray": "true"
+  },
+
+
+
   {
     "jsonSubPath": "difficulties",
     "matchingRule": [
@@ -78,7 +107,7 @@
         "jsonSubPath": "scene.initItems",
         "template": {
           "file": "task.js",
-          "placeholder": [ "initItemsEasy", "nitItemsMedium", "initItemsHard" ]
+          "placeholder": [ "initItemsEasy", "initItemsMedium", "initItemsHard" ]
         }
       },
       {
@@ -98,7 +127,17 @@
           "file": "task.js",
           "placeholder": ["maxInstructionsEasy","maxInstructionsMedium","maxInstructionsHard"]
         }
+      },
+
+      {
+        "jsonSubPath": "displayHelper",
+        "template": {
+          "file": "task.js",
+          "placeholder": ["displayHelperEasy","displayHelperMedium","displayHelperHard"]
+        }
       }
+
+
     ]
   }
 

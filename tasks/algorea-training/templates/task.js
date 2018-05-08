@@ -12,10 +12,12 @@ function initTask(subTask) {
          generatedBlocks: {
             robot: {{{generatedBlocksPlaceholder}}}
          },
+
+
          standardBlocks: {
-            includeAll: false,
-            wholeCategories: [],
-				singleBlocks: []
+            includeAll: {{includeAllPlaceholder}},
+            wholeCategories: {{{wholeCategoriesPlaceholder}}},
+				singleBlocks: {{{singleBlocksPlaceholder}}}
          }
       }
    };
@@ -28,46 +30,36 @@ function initTask(subTask) {
             initItems: {{{initItemsEasy}}}
          }
       ]
+
+
+
       {{#mediumTiles}}
       ,medium: [
          {
             tiles: {{tilesMedium}},
-            tiles: [
-                   [3, 1, 1, 1, 1],
-                   [1, 1, 1, 1, 3],
-                   [1, 1, 1, 5, 1],
-                   [1, 1, 1, 1, 1],
-                   [1, 1, 1, 1, 1],
-                   [1, 1, 1, 1, 1],
-               ],
-            initItems: [
-                  { row: 5, col: 1, dir: 0, type: "green_robot" }
-               ]
+
+            initItems:  {{{initItemsMedium}}}
+
+
          }
       ],
       {{/mediumTiles}}
       {{#hardTiles}}
       hard: [
          {
-            tiles: [
-                   [3, 1, 1, 1, 1],
-                   [1, 1, 1, 1, 3],
-                   [1, 1, 4, 5, 1],
-                   [1, 1, 1, 4, 1],
-                   [1, 1, 1, 1, 1],
-                   [1, 1, 1, 1, 1],
-               ],
-            initItems: [
-                  { "row": 5, "col": 2, dir: 3, type: "green_robot" }
-               ]
-         }
+             tiles: {{tilesHard}},
+
+          initItems:  {{{initItemsHard}}}
+
+      }
       ]
       {{/hardTiles}}
    };
 
    initBlocklySubTask(subTask);
-   displayHelper.thresholdEasy = 5000;
-   displayHelper.thresholdMedium = 10000;
+   displayHelper.thresholdEasy =  {{{titleEasy}}}{{^titleEasy}}{{/titleEasy}} {{displayHelperEasy}};
+   displayHelper.thresholdMedium = {{#tilesMedium}},
+          {{{titleMedium}}}{{^titleMedium}}{{/titleMedium}} {{displayHelpeMedium}}{{/tilesMedium}};
 }
 
 initWrapper(initTask, ["easy", "medium", "hard"], null, true);
