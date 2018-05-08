@@ -67,11 +67,11 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
             class: self.id + "-item-type item-type dot"
         });
         $(itemTypesContainer).append($newItemType);
-        if (itemTypes != null) {
-            self.value.images.length = 0;
+        if (itemTypes != null && self.value != null) {
+            self.value.images = [{'src': window.__CONFIG__.blockly.images_url + "icon.png"}];
         }
         for (var itemType in itemTypes) {
-            if (itemTypes[itemType].img != null) {
+            if (itemTypes[itemType].img != null && self.value != null) {
                 // self.value.images.push(itemTypes[itemType].img);
                 self.value.images.push({'src': window.__CONFIG__.blockly.images_url + itemTypes[itemType].img});
             }
@@ -80,7 +80,7 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
             // window.console.log(itemTypes[itemType].num);
             var itemTypeId = itemTypes[itemType].num;
             if (itemTypeId == undefined) {
-                for (var state = 1; state <= itemTypes[itemType].nbStates / 2; state++) {
+                for (var state = 0; state <= itemTypes[itemType].nbStates / 2; state++) {
                     var $characterWrapper = $('<div>', {
                         class: "init-item-wrapper"
                     });
@@ -372,9 +372,9 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
                         }
                     }
                     self.value.initItems.push({
-                        row: rowIndex,
-                        col: columnIndex,
-                        dir: self.current_item.dir,
+                        row: parseInt(rowIndex),
+                        col: parseInt(columnIndex),
+                        dir: parseInt(self.current_item.dir),
                         type: self.current_item.type
                     });
                 } else if (self.current_item.num == self.defaule_value) {

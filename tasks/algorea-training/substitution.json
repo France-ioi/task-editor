@@ -82,9 +82,6 @@
     },
     "keepArray": "true"
   },
-
-
-
   {
     "jsonSubPath": "difficulties",
     "matchingRule": [
@@ -130,10 +127,10 @@
       },
 
       {
-        "jsonSubPath": "displayHelper",
+        "jsonSubPath": "displayHelperThreshold",
         "template": {
           "file": "task.js",
-          "placeholder": ["displayHelperEasy","displayHelperMedium","displayHelperHard"]
+          "placeholder": ["thresholdEasy","thresholdMedium","thresholdHard"]
         }
       }
 

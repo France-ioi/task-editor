@@ -421,6 +421,7 @@
       "format": "tabs",
       "title": "difficulties",
       "minItems": 1,
+      "maxItems": 3,
       "items": {
         "type": "object",
         "title": "level",
@@ -731,15 +732,13 @@
 
             ]
           },
-          "displayHelper": {
+          "displayHelperThreshold": {
             "type": "integer",
-            "title": "displayHelper"
+            "title": "threshold",
+            "description": "Threshold of the displayHelper for the current difficulty"
           }
-
-
-
         },
-        "required": ["scene", "gridInfo","displayHelper"]
+        "required": ["scene", "gridInfo","displayHelperThreshold"]
       }
     }
   },

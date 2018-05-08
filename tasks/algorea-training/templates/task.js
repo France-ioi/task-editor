@@ -11,10 +11,7 @@ function initTask(subTask) {
          groupByCategory: {{groupByCategoryPlaceholder}},
          generatedBlocks: {
             robot: {{{generatedBlocksPlaceholder}}}
-         },
-
-
-         standardBlocks: {
+         },standardBlocks: {
             includeAll: {{includeAllPlaceholder}},
             wholeCategories: {{{wholeCategoriesPlaceholder}}},
 				singleBlocks: {{{singleBlocksPlaceholder}}}
@@ -24,42 +21,31 @@ function initTask(subTask) {
 
    subTask.data = {
       {{{titleEasy}}}{{^titleEasy}}easy{{/titleEasy}}: [
-         {
-            tiles: {{tilesEasy}}
-               ,
-            initItems: {{{initItemsEasy}}}
-         }
-      ]
-
-
-
-      {{#mediumTiles}}
-      ,medium: [
-         {
-            tiles: {{tilesMedium}},
-
-            initItems:  {{{initItemsMedium}}}
-
-
-         }
-      ],
-      {{/mediumTiles}}
-      {{#hardTiles}}
-      hard: [
-         {
-             tiles: {{tilesHard}},
-
-          initItems:  {{{initItemsHard}}}
-
-      }
-      ]
-      {{/hardTiles}}
+          {
+              tiles: {{tilesEasy}},
+              initItems: {{{initItemsEasy}}}
+          }
+      ]{{#tilesMedium}},
+      {{{titleMedium}}}{{^titleMedium}}medium{{/titleMedium}}: [
+          {
+              tiles: {{tilesMedium}},
+              initItems:  {{{initItemsMedium}}}
+          }
+      ]{{/tilesMedium}}{{#tilesHard}},
+      {{{titleHard}}}{{^titleHard}}hard{{/titleHard}}: [
+          {
+              tiles: {{tilesHard}},
+              initItems:  {{{initItemsHard}}}
+          }
+      ]{{/tilesHard}}
    };
 
    initBlocklySubTask(subTask);
-   displayHelper.thresholdEasy =  {{{titleEasy}}}{{^titleEasy}}{{/titleEasy}} {{displayHelperEasy}};
-   displayHelper.thresholdMedium = {{#tilesMedium}},
-          {{{titleMedium}}}{{^titleMedium}}{{/titleMedium}} {{displayHelpeMedium}}{{/tilesMedium}};
+   displayHelper.thresholdEasy =  {{thresholdEasy}};
+   {{#thresholdMedium}}
+   displayHelper.thresholdMedium = {{thresholdMedium}};
+   {{/thresholdMedium}}
 }
 
-initWrapper(initTask, ["easy", "medium", "hard"], null, true);
+
+initWrapper(initTask, [{{{titleEasy}}}{{^titleEasy}}"easy"{{/titleEasy}}{{#tilesMedium}}, {{{titleMedium}}}{{^titleMedium}}"medium"{{/titleMedium}}{{/tilesMedium}}{{#tilesHard}}, {{{titleHard}}}{{^titleHard}}"hard"{{/titleHard}}{{maxInstructionsHard}}{{/tilesHard}}], null, true);
