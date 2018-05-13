@@ -38,7 +38,9 @@ function* createDir(action) {
 
 
 function* removeDir(action) {
-    const confirmed = yield call(confirmation, 'Remove dir?');
+    const { path } = yield select(state => state.explorer)
+    const title = "Remove dir '" + path + "'?";
+    const confirmed = yield call(confirmation, title);
     if(confirmed) {
         try {
             yield put({type: 'EXPLORER_FETCH_REMOVE_DIR', data });

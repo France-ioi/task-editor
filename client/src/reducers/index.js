@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 
+import active_section from './active_section'
 import auth from './auth'
 import task from './task';
 import explorer from './explorer';
@@ -9,6 +10,7 @@ import confirmation from './confirmation'
 import alert_popup from './alert_popup'
 
 const reducers = combineReducers({
+    active_section,
     auth,
     task,
     explorer,

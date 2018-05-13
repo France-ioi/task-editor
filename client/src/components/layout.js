@@ -30,6 +30,31 @@ class Layout extends React.Component {
                 path: window.__CONFIG__.dev.task_autoload
             })
         }
+
+        // Check for URL elements
+        if(window.location.hash) {
+            var hashSplit = window.location.hash.split('/');
+            var hashCmd = hashSplit.shift();
+            var hashPath = hashSplit.join('/');
+            if(hashCmd == '#create' && hashPath) {
+                // Create a new task
+                this.props.dispatch({
+                    type: 'TASK_OPEN',
+                    path: hashPath,
+                    controls: {
+                        load_task: true,
+                        create_task: true,
+                        create_dir: true,
+                        remove_dir: true
+                    }
+                });
+            } else if(hashCmd == '#edit' && hashPath) {
+                this.props.dispatch({
+                    type: 'TASK_FETCH_LOAD',
+                    path: hashPath
+                });
+            }
+        }
     }
 
 
@@ -67,16 +92,17 @@ class Layout extends React.Component {
 
 
     showSection = (active_section) => {
-        this.setState({
+/*        this.setState({
             ...this.state,
             active_section
-        });
+        });*/
+        this.props.dispatch({type: 'LAYOUT_CHANGE_SECTION', active_section});
     }
 
 
     render() {
-        const { task, auth } = this.props;
-        const { active_section } = this.state;
+        const { task, auth, active_section } = this.props;
+//        const { active_section } = this.state;
 
         const sectionVisible = (name) => task.ready && active_section == name;
 

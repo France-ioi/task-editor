@@ -122,22 +122,14 @@ function* saveView(action) {
     try {
         const { token } = yield select(state => state.auth)
         const task = yield select(state => state.task)
-        var params = {
+        const params = {
             token,
             path: task.path,
             data: task.data
         }
         yield call(api_task.save, params);
-
-        var params = {
-            token,
-            path: task.path
-        }
-        const res = yield call(api_importer.checkoutSvn, params);
-        if(!res || !res.success) {
-            throw new Error('Task importer return: ' + (res.error || 'unknown error'));
-        }
-        yield put({type: 'TASK_FETCH_SUCCESS', url: res.tasks[0].normalUrl});
+        yield put({type: 'TASK_FETCH_SUCCESS'});
+        yield put({type: 'LAYOUT_CHANGE_SECTION', active_section: 'import'});
     } catch (e) {
         yield put({type: 'TASK_FETCH_FAIL', error: e.message});
         yield put({type: 'ALERT_SHOW', message: e.message });
