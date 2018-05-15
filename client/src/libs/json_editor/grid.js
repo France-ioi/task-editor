@@ -80,7 +80,7 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
             // window.console.log(itemTypes[itemType].num);
             var itemTypeId = itemTypes[itemType].num;
             if (itemTypeId == undefined) {
-                for (var state = 0; state <= itemTypes[itemType].nbStates / 2; state++) {
+                for (var state = 0; state <= itemTypes[itemType].nbStates / 2 - 1; state++) {
                     var $characterWrapper = $('<div>', {
                         class: "init-item-wrapper"
                     });
@@ -92,7 +92,7 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
                         class: "init-item item-type " + self.id + "-item-type",
                         dir: state
                     });
-                    var offset = -1 * this.field_size * 2 * (state - 1);
+                    var offset = -1 * this.field_size * 2 * (state);
                     $newItemType.css({
                         'margin-left': offset
                     });
@@ -333,7 +333,7 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
 
     setUpInitItemImage: function (currentItem, $dot) {
         var self = this;
-        var offset = (currentItem.dir - 1) * 2 * (self.field_size - 10) * -1 + 'px';
+        var offset = (currentItem.dir) * 2 * (self.field_size - 10) * -1 + 'px';
         var $characterImage = $('<div>', {
             class: self.id + "-dot-image dot-image",
             type: currentItem.type
