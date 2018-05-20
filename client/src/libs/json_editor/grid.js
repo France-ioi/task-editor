@@ -27,6 +27,11 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
                     self.input_row.dispatchEvent(new Event('change'));
                 }
             });
+            if (self.contextBackground != null) {
+                $("#" + self.id + "-resizable").css({
+                    background: self.contextBackground
+                });
+            }
         });
         // this.refreshValue();
         // window.console.log("inside postbuild:");
@@ -39,6 +44,7 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
     },
     onWatchedFieldChange: function () {
         this._super();
+        var self = this;
 
         // load itemtypes according to context, getContextParams is available from BLOCKLY_API_URL
         if (typeof getContextParams === "function") {
@@ -46,9 +52,9 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
                 // window.console.log(getContextParams()[this.watched_values.sceneContext].itemTypes);
                 this.itemTypes = getContextParams()[this.watched_values.sceneContext].itemTypes;
                 this.updateItemTypes(this.itemTypes);
-                var contextBackground = getContextParams()[this.watched_values.sceneContext].backgroundColor;
+                self.contextBackground = getContextParams()[this.watched_values.sceneContext].backgroundColor;
                 $('.ui-resizable').css({
-                    background: contextBackground
+                    background: self.contextBackground
                 });
                 this.configureItemTypesListeners();
             }
@@ -291,7 +297,7 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
         // var dot = ;
         var dots = '';
         for (var i = 0; i < size.height / this.field_size; i++) {
-            dots += '<li class="dot empty ' + dotClass +'" data-row="' + i + '"></li>';
+            dots += '<li class="dot empty ' + dotClass + '" data-row="' + i + '"></li>';
         }
         $(this).find('.' + this.id + '-row1').html(dots);
         var grid = '<ul class="' + this.id + '-row1" data-column="0">' + dots + "</ul>";
