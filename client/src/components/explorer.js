@@ -76,7 +76,7 @@ class Explorer extends React.Component {
 
 
     removeDir = () => {
-        this.props.dispatch({type: 'EXPLORER_REMOVE_DIR' });
+        this.props.dispatch({type: 'EXPLORER_REMOVE_DIR', dir: this.props.path });
     }
 
 

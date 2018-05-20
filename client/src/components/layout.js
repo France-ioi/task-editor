@@ -41,8 +41,9 @@ class Layout extends React.Component {
                 this.props.dispatch({
                     type: 'TASK_OPEN',
                     path: hashPath,
+                    creating: true,
                     controls: {
-                        load_task: true,
+                        load_task: true, // TODO :: yes or no?
                         create_task: true,
                         create_dir: true,
                         remove_dir: true

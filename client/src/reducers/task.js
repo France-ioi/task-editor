@@ -4,7 +4,8 @@ var default_state = {
     schema: {},
     loading: false,
     ready: false,
-    url: null
+    url: null,
+    lastUrl: null
 }
 
 export default (state = default_state, action) => {
@@ -28,6 +29,13 @@ export default (state = default_state, action) => {
                 ...state,
                 loading: true,
                 url: null
+            };
+
+        case 'TASK_GOT_URL':
+            return {
+                ...state,
+                url: action.testUrl,
+                lastUrl: action.testUrl
             };
 
         case 'TASK_SET_DATA':
@@ -55,6 +63,9 @@ export default (state = default_state, action) => {
                 ...state,
                 loading: false
             };
+
+        case 'TASK_CLOSE':
+            return state.path == action.path ? default_state : state;
 
         default:
             return state;

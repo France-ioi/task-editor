@@ -38,6 +38,8 @@ class ControlPanel extends React.Component {
                     { task.ready && <Button onClick={()=>saveTask('view')} title="Save, commit, import and view">Save &amp; import</Button> }
                     {' '}
                     { task.ready && task.url && <a target="_blank" href={task.url} className="btn btn-primary">View</a> }
+                    {' '}
+                    { task.ready && !task.url && task.lastUrl && <a target="_blank" href={task.lastUrl} className="btn btn-default">View last imported version</a> }
                 </Navbar.Form>
 
                 <Navbar.Form pullRight>

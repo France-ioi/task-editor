@@ -22,6 +22,7 @@ function* open(action) {
             yield put({
                 type: 'TASK_FETCH_CREATE',
                 task_type: res.task_type,
+                creating: action.creating,
                 path: res.path
             });
             break;
@@ -55,6 +56,9 @@ function* create(action) {
         yield put({type: 'TASK_SET_SCHEMA', schema});
         yield put({type: 'TASK_SET_DATA', data});
         yield put({type: 'TASK_FETCH_SUCCESS'});
+        if(action.creating) {
+            yield put({type: 'TASK_FETCH_SAVE_VIEW'});
+        }
     } catch (e) {
         yield put({type: 'TASK_FETCH_FAIL', error: e.message});
         yield put({type: 'ALERT_SHOW', message: e.message });
@@ -137,6 +141,19 @@ function* saveView(action) {
 }
 
 
+function* gotUrl(action) {
+    try {
+        const channel = yield select(state => state.channel);
+        channel.notify({method: 'link', params: {
+            url: action.url,
+            ltiUrl: action.ltiUrl,
+            testUrl: action.testUrl
+            }});
+    } catch(e) {
+        console.log(e);
+    }
+}
+
 
 
 export default function* () {
@@ -146,4 +163,5 @@ export default function* () {
     yield takeEvery('TASK_FETCH_CLONE', clone);
     yield takeEvery('TASK_FETCH_SAVE_VIEW', saveView);
     yield takeEvery('TASK_FETCH_CREATE', create);
+    yield takeEvery('TASK_GOT_URL', gotUrl);
 }

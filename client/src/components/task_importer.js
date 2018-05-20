@@ -1,7 +1,21 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import Channel from 'jschannel';
 
 
 class TaskImporter extends React.Component {
+
+    componentDidMount() {
+        this.channel = Channel.build({
+            window: this.iframe.contentWindow,
+            origin: '*',
+            scope: 'importer'
+            });
+        var that = this;
+        this.channel.bind('link', function(ctx, params) {
+            that.props.dispatch({type: 'TASK_GOT_URL', url: params.url});
+            });
+    }
 
 
     getUrl = () => {
@@ -35,4 +49,6 @@ class TaskImporter extends React.Component {
 
 }
 
-export default TaskImporter;
+export default connect(
+    state => state
+)(TaskImporter);

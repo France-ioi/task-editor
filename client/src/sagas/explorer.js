@@ -38,19 +38,18 @@ function* createDir(action) {
 
 
 function* removeDir(action) {
-    const { path } = yield select(state => state.explorer)
-    const title = "Remove dir '" + path + "'?";
+    const title = "Remove dir '" + action.dir + "'?";
     const confirmed = yield call(confirmation, title);
     if(confirmed) {
         try {
             yield put({type: 'EXPLORER_FETCH_REMOVE_DIR', data });
             const { token } = yield select(state => state.auth)
-            const { path } = yield select(state => state.explorer)
             const params = {
                 token,
-                path
+                path: action.dir
             }
             const data = yield call(api.remove, params);
+            yield put({type: 'TASK_CLOSE', path: action.dir });
             yield put({type: 'EXPLORER_FETCH_SUCCESS', data });
         } catch (e) {
             yield put({type: 'EXPLORER_FETCH_FAIL', error: e.message});
@@ -64,9 +63,9 @@ export function* explorer(params) {
     yield put({type: 'EXPLORER_SHOW', ...params });
     yield readDir(params);
     const res = yield take('EXPLORER_ACTION_RETURN');
-    const { path } = yield select(state => state.explorer)
+    const { path, creating } = yield select(state => state.explorer)
     yield put({type: 'EXPLORER_HIDE' });
-    return { path, ...res };
+    return { path, creating, ...res };
 }
 
 

@@ -29,6 +29,7 @@ export default (state = default_state, action) => {
                 ...state,
                 path: action.path,
                 controls: action.controls,
+                creating: action.creating || false,
                 visible: true
             }
             break;

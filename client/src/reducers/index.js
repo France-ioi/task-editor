@@ -2,6 +2,7 @@ import { combineReducers } from 'redux';
 
 import active_section from './active_section'
 import auth from './auth'
+import channel from './channel'
 import task from './task';
 import explorer from './explorer';
 import svn from './svn';
@@ -12,6 +13,7 @@ import alert_popup from './alert_popup'
 const reducers = combineReducers({
     active_section,
     auth,
+    channel,
     task,
     explorer,
     svn,

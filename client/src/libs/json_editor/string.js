@@ -77,8 +77,8 @@ JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
 
                 window.tinymce.init({
                     target: self.input,
-                    plugins: 'image link fullscreen lists textcolor colorpicker table ' + (self.input_type === 'bbcode' ? 'bbcode' : ''),
-                    toolbar: 'image link forecolor backcolor table numlist bullist fullscreen',
+                    plugins: 'image link codesample fullscreen lists textcolor colorpicker table ' + (self.input_type === 'bbcode' ? 'bbcode' : ''),
+                    toolbar: 'image link codesample forecolor backcolor table numlist bullist fullscreen',
                     branding: false,
                     skin: false,
                     setup: function(editor) {
