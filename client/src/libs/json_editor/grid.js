@@ -86,7 +86,7 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
             // window.console.log(itemTypes[itemType].num);
             var itemTypeId = itemTypes[itemType].num;
             if (itemTypeId == undefined) {
-                for (var state = 0; state <= itemTypes[itemType].nbStates / 2 - 1; state++) {
+                for (var state = 0; state <= Math.max(itemTypes[itemType].nbStates / 2 - 1, 0); state++) {
                     var $characterWrapper = $('<div>', {
                         class: "init-item-wrapper"
                     });
