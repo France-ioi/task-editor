@@ -75,6 +75,7 @@ JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
                 ['html','bbcode'].indexOf(this.input_type) >= 0 &&
                 window.tinymce) {
 
+                // do not forget to add plugins to webpack.config.js > vendor
                 window.tinymce.init({
                     target: self.input,
                     plugins: 'image link codesample fullscreen lists textcolor colorpicker table ' + (self.input_type === 'bbcode' ? 'bbcode' : ''),

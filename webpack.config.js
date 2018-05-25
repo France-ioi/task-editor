@@ -17,6 +17,7 @@ module.exports = function(env) {
         './node_modules/tinymce/plugins/fullscreen/plugin.js',
         './node_modules/tinymce/plugins/link/plugin.js',
         './node_modules/tinymce/plugins/image/plugin.js',
+        './node_modules/tinymce/plugins/codesample/plugin.js',
         'react',
         'react-bootstrap',
         'react-dom',
