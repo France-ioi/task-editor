@@ -21,7 +21,9 @@ module.exports = {
 
 
     logout: (req, res) => {
-        tree.clear(req.user, '')
+        if(req.user) {
+            tree.clear(req.user, '')
+        }
         user.remove(req.body.token)
         res.json({});
     },
