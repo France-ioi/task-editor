@@ -9,9 +9,11 @@ class ControlPanel extends React.Component {
         var { task, saveTask, openTask, showSection, logout, active_section, username } = this.props;
         return (
             <Navbar inverse fixedTop>
-                <Navbar.Form pullLeft>
-                    <Button onClick={openTask}>Open</Button>
-                </Navbar.Form>
+                {!window.location.hash &&
+                    <Navbar.Form pullLeft>
+                        <Button onClick={openTask}>Open</Button>
+                    </Navbar.Form>
+                }
                 { task.ready &&
                     <Navbar.Text pullLeft>
                         <Glyphicon glyph="folder-open"/>
