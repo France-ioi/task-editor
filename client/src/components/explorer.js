@@ -159,7 +159,9 @@ class Explorer extends React.Component {
                         <ButtonToolbar className="pull-left">
                             <Button onClick={this.navRefresh}>Refresh</Button>
                             { !is_home && controls.remove_dir && !is_current_task &&
-                                <Button bsStyle="danger" onClick={this.removeDir}>Delete dir</Button>
+                                <Button bsStyle="danger" onClick={this.removeDir}>
+                                    { flags.is_task ? 'Delete task' : 'Delete dir' }
+                                </Button>
                             }
                         </ButtonToolbar>
 
