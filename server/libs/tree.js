@@ -13,6 +13,7 @@ function initNode(node) {
         list: [],
         flags: {
             is_task: false,
+            is_task_subfolder: false,
             has_subfolders: false
         }
     }
@@ -37,6 +38,7 @@ function fillNode(node, path, list) {
             node.children[name] = newNode()
         } else if(item == config.task.data_file) {
             node.data.flags.is_task = true;
+            node.data.flags.is_task_subfolder = true;
         }
         node.data.list.push({ name, is_dir})
     })
@@ -48,6 +50,7 @@ function getNode(username, path) {
         data[username] = newNode()
     }
     var node = data[username]
+    var is_task_subfolder = node.data.flags.is_task_subfolder;
     if(path != '') {
         var steps = path.split('/')
         while(steps.length > 0) {
@@ -56,6 +59,10 @@ function getNode(username, path) {
                 node.children[step] = newNode()
             }
             node = node.children[step]
+
+            // Propagate is_task_subfolder
+            is_task_subfolder = is_task_subfolder || node.data.flags.is_task || node.data.flags.is_task_subfolder;
+            node.data.flags.is_task_subfolder = is_task_subfolder;
         }
     }
     return node

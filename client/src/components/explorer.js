@@ -130,7 +130,7 @@ class Explorer extends React.Component {
         const is_current_task = this.props.task_path && this.props.task_path === this.props.path;
         const is_home = !this.props.path;
         const { flags, controls } = this.props;
-        const task_create_available = !flags.is_task && !flags.has_subfolders && !is_home;
+        const task_create_available = !flags.is_task_subfolder && !flags.has_subfolders && !is_home;
         const title = controls.select_path ? 'Select task to clone' : 'Select task folder';
         return (
             <Modal show={this.props.visible} onHide={this.cancel}>
