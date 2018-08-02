@@ -38,7 +38,7 @@ function* createDir(action) {
 
 
 function* removeDir(action) {
-    const title = "Delete '" + action.dir + "'?";
+    const title = "Remove dir '" + action.dir + "'?";
     const confirmed = yield call(confirmation, title);
     if(confirmed) {
         try {
