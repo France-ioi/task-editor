@@ -83,7 +83,19 @@ module.exports = function(src_path) {
 
         var subNodes = null;
         if('properties' in node) { subNodes = node.properties; }
-        if('items' in node) { subNodes = [node.items]; }
+        if('items' in node) {
+            if(node.items.type == 'object') {
+                subNodes = node.items.properties;
+            } else {
+                processNode(
+                    node.items,
+                    data_path,
+                    node_scope,
+                    callback
+                )
+                return;
+            }
+        }
         if(subNodes) {
             for(var key in subNodes) {
                 var subnode_data_path = data_path.slice();

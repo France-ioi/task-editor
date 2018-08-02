@@ -24,11 +24,19 @@ module.exports = {
                     return; // Path doesn't exist
                 }
                 if(input && ('modifier' in input)) {
-                    value = modifier.execute(input.modifier, value, data_path)
+                    if(value instanceof Array) {
+                        value = value.map(v => modifier.execute(input.modifier, v, data_path));
+                    } else {
+                        value = modifier.execute(input.modifier, value, data_path)
+                    }
                 }
                 if(input && ('value' in input)) {
                     // Temporary until processMask is extracted from the files module
-                    value = files.processMask(input.value, files.getRealName(value, data_path, null), null);
+                    if(value instanceof Array) {
+                        value = value.map(v => files.processMask(input.value, files.getRealName(v, data_path, null), null));
+                    } else {
+                        value = files.processMask(input.value, files.getRealName(value, data_path, null), null);
+                    }
                 }
                 if('replace' in output) {
                     // Copy value in case it's an object
