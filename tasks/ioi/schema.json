@@ -195,10 +195,44 @@
                   "title": "supportedLanguage",
                   "enum": ["*", "c", "cpp", "java", "py"]
                }
+            },
+            "taskSources": {
+               "type": "object",
+               "description": "Source files available in the task.",
+               "properties": {
+                    "defaultSource": {
+                        "type": "array",
+                        "description": "Source files which will populate the editor for each language, when the user first loads a task or opens a new tab with that language.",
+                        "items": {
+                            "type": "string",
+                            "format": "url",
+                            "options": {
+                                "upload": true,
+                                "editor": true
+                            },
+                            "description": "Checker program. The language of the checker will be automatically determined from its file extension.",
+                            "generator": [{
+                                "output": {
+                                    "copy": "sources/[name][ext]"
+                                    }
+                                }, {
+                                "input": {
+                                    "value": "[name][ext]"
+                                    },
+                                "output": {
+                                    "replace": true
+                                    }
+                                }]
+                        }
+                    }
+               }
             }
          },
-         "required": ["supportedLanguages", "hasUserTests"],
+         "required": ["supportedLanguages"],
          "generator": [{
+            "input": {
+                "step": 2
+            },
             "output": {
                 "inject": {
                     "template": "index.html",

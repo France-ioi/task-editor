@@ -25,7 +25,6 @@ module.exports = function(src_path) {
     }
 
     expandRefs(tree)
-    //console.log(util.inspect(tree, { showHidden: false, depth: null }))
 
 
     function testCondition(condition, scope) {
@@ -79,13 +78,12 @@ module.exports = function(src_path) {
                         formatOutput(rule.output, node_scope)
                     )
                 }
-                console.log(i, data_path.join('.'), scope, node_scope)
             }
         }
 
         var subNodes = null;
         if('properties' in node) { subNodes = node.properties; }
-        if(('items' in node) && ('properties' in node.items)) { subNodes = node.items.properties; }
+        if('items' in node) { subNodes = [node.items]; }
         if(subNodes) {
             for(var key in subNodes) {
                 var subnode_data_path = data_path.slice();
