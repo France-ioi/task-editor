@@ -33,7 +33,7 @@ module.exports = {
                 if(input && ('value' in input)) {
                     // Temporary until processMask is extracted from the files module
                     if(value instanceof Array) {
-                        value = value.map(v => files.processMask(input.value, files.getRealName(v, data_path, null), null));
+                        value = value.map((v, idx) => files.processMask(input.value, files.getRealName(v, data_path, idx), idx+1));
                     } else {
                         value = files.processMask(input.value, files.getRealName(value, data_path, null), null);
                     }
