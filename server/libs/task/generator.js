@@ -17,37 +17,81 @@ module.exports = {
         var files = require('./files')(params.path, params.files);
 
         try {
-            function generate(data_path, input, output) {
-                try {
-                    var value = data.get(data_path)
-                } catch(e) {
-                    return; // Path doesn't exist
-                }
-                if(input && ('modifier' in input)) {
-                    if(value instanceof Array) {
-                        value = value.map(v => modifier.execute(input.modifier, v, data_path));
-                    } else {
-                        value = modifier.execute(input.modifier, value, data_path)
+            function generate(data_path, input, output, value, data_fn, idx) {
+                if(typeof value == 'undefined') {
+                    try {
+                        var value = data.get(data_path)
+                    } catch(e) {
+                        return; // Path doesn't exist
                     }
                 }
-                if(input && ('value' in input)) {
-                    // Temporary until processMask is extracted from the files module
-                    if(value instanceof Array) {
-                        value = value.map((v, idx) => files.processMask(input.value, files.getRealName(v, data_path, idx), idx+1));
-                    } else {
-                        value = files.processMask(input.value, files.getRealName(value, data_path, null), null);
+                if(typeof idx == 'undefined') {
+                    idx = null;
+                }
+                if(value instanceof Array && (!input || !input.keepArray)) {
+                    value.map((v, idx) => {
+                        if(v === null) { return; }
+                        if(v && v.path) {
+                            generate(v.path, input, output, v.value, null, idx);
+                        } else {
+                            generate(data_path, input, output, v, null, idx);
+                        }
+                    });
+                    return;
+                } else {
+                    if(input && ('modifier' in input)) {
+                        value = modifier.execute(input.modifier, value, data_path)
+                    }
+                    if(input && ('value' in input)) {
+                        // Temporary until processMask is extracted from the files module
+                        if(value instanceof Array) {
+                            value = value.map((v, midx) => files.processMask(input.value, files.getRealName(v, data_path, midx), midx));
+                        } else {
+                            value = files.processMask(input.value, files.getRealName(value, data_path, idx), idx !== null ? idx+1 : null);
+                        }
+                    }
+                    if(input && ('object' in input)) {
+                        // Replace input by an object. Currently only supports some specific objects
+                        function processValue(val, idx) {
+                            var newValue = {};
+                            for(attr in input.object) {
+                                var curParams = input.object[attr];
+                                if(curParams.input || curParams.output) {
+                                    function setAttr(v) {
+                                        newValue[attr] = v;
+                                    }
+                                    // Generate at the current path, with this attribute's generation settings
+                                    generate(data_path, curParams.input, curParams.output, val, setAttr, idx);
+                                } else {
+                                    // Just copy the value in the schema as-is
+                                    newValue[attr] = curParams;
+                                }
+                            }
+                            return newValue;
+                        }
+                        value = processValue(value, idx);
                     }
                 }
                 if('replace' in output) {
                     // Copy value in case it's an object
                     value = JSON.parse(JSON.stringify(value));
-                    data.set(data_path, value);
+                    if(!data_fn) {
+                        data.set(data_path, value);
+                    }
                 } else if ('inject' in output) {
                     // Copy value in case it's an object
                     value = JSON.parse(JSON.stringify(value));
                     templates.inject(output.inject, value)
                 } else if('copy' in output) {
-                    files.copy(value, output.copy, data_path)
+                    files.copy(value, output.copy, data_path, idx !== null ? idx+1 : null)
+                }
+                if(data_fn) {
+                    value = JSON.parse(JSON.stringify(value));
+                    if(data_fn === true) {
+                        return value;
+                    } else {
+                        data_fn(value);
+                    }
                 }
             }
             var generators = [];
