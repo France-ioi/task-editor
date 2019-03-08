@@ -6,5 +6,9 @@
     {
         "type": "ioi",
         "title": "IOI task"
+    },
+    {
+        "type": "video",
+        "title": "Course with YouTube video"
     }
 ]
