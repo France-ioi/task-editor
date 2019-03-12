@@ -1,18 +1,19 @@
 module.exports = function(content) {
 
 
-    function formatVariable(variable) {
-        return 'var ' + variable;
+    function injectVariable(variable, value) {
+        var search = 'var ' + variable;
+        var replace = search + ' = ' + JSON.stringify(value);
+        content = content.replace(search, replace);
     }
 
     return {
 
         inject: function(selector, value) {
-            if(!selector.variable) return;
-            var search = formatVariable(selector.variable);
-            if(search) {
-                var replace = search + ' = ' + JSON.stringify(value);
-                content = content.replace(search, replace);
+            if(selector.variable) {
+                injectVariable(selector.variable, value)
+            } else {
+                content = typeof value === 'string' ? value : JSON.stringify(value)
             }
         },
 

@@ -10,5 +10,9 @@
     {
         "type": "video",
         "title": "Course with YouTube video"
+    },
+    {
+        "type": "quizze",
+        "title": "Quizze"
     }
 ]
