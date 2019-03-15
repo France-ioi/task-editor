@@ -20,7 +20,7 @@ function loadSchema(task_type, callback) {
         { encoding: 'utf-8' },
         (err, content) => {
             if(err) return callback(
-                new Error('Task schema not found: ' + task_type)
+                new Error('Task schema not found: ' + task_type + '. Update task editor to latest version.')
             );
             try {
                 var schema = JSON.parse(content);
