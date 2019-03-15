@@ -1,8 +1,8 @@
 var path = require('path');
 var svn = require('../libs/svn')
 var tree = require('../libs/tree')
-
-
+var shell = require('shelljs')
+var config = require('../config')
 
 function readDir(req, res) {
     if(req.body.refresh) {
@@ -36,6 +36,7 @@ function remove(req, res) {
         var parent_dir = req.body.path.split('/')
         parent_dir.pop()
         parent_dir = parent_dir.join('/')
+        shell.rm('-rf', path.join(config.path, req.body.path))
         tree.clear(req.user, parent_dir)
         tree.readDir(req.user, parent_dir, (err, data) => {
             if(err) return res.status(400).send(err.message)

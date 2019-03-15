@@ -4,7 +4,7 @@ var generator = require('../libs/task/generator')
 var config = require('../config')
 var svn = require('../libs/svn')
 var shell = require('shelljs')
-
+var tree = require('../libs/tree')
 
 
 function taskDataFile(task_subpath) {
@@ -97,6 +97,7 @@ var api = {
                             shell.rm('-rf', path.join(config.path, req.body.path));
                             return res.status(400).send(err.message);
                         }
+                        tree.clear(req.user, req.body.path);
                         res.json({
                             schema,
                             data: null
@@ -153,6 +154,7 @@ var api = {
                         shell.rm('-rf', dst);
                         return res.status(400).send(err.message);
                     }
+                    tree.clear(req.user, req.body.path);
                     loadTask(req, res);
                 })
             })
