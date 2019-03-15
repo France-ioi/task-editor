@@ -19,7 +19,9 @@ function loadSchema(task_type, callback) {
         json_path,
         { encoding: 'utf-8' },
         (err, content) => {
-            if(err) callback(err);
+            if(err) return callback(
+                new Error('Task schema not found: ' + task_type)
+            );
             try {
                 var schema = JSON.parse(content);
             } catch(e) {

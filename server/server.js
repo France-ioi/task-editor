@@ -19,8 +19,9 @@ require('./middleware')(app);
 require('./routes')(app);
 
 var config = JSON.stringify(require('./config'));
+var app_instance_id = Math.random().toString().replace('0.', '');
 app.get('/', (req, res) => {
-    res.status(200).render('index.html', { config });
+    res.status(200).render('index.html', { config, app_instance_id });
 });
 
 app.listen(process.env.PORT, () => {
