@@ -129,7 +129,7 @@
         "output": {
           "inject": {
             "template": "index.html",
-            "selector": ".taskContent"
+            "selector": "#solution"
           }
         }
       }]
