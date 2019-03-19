@@ -122,7 +122,7 @@
           "output": {
             "inject": {
               "template": "grader_data.js",
-              "selector": "grader_data"
+              "selector": "$window.QuizzeGrader.data"
             }
           }
         }

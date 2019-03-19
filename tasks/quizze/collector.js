@@ -19,6 +19,7 @@ module.exports = function(questions) {
             // single select
             res.push(parseInt(question.correct_answer, 10))
         } else {
+            // multiple select
             var arr = [];
             question.answers.map(function(answer, idx) {
                 if(answer.correct) {

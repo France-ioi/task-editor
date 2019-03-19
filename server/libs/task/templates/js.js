@@ -5,8 +5,8 @@ module.exports = function(content) {
 
 
     function injectVariable(variable, value) {
-        var search = 'var ' + variable;
-        var replace = search + ' = ' + toSource(value);
+        var search = variable + ';';
+        var replace = variable + ' = ' + toSource(value);
         content = content.replace(search, replace);
     }
 
