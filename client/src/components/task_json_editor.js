@@ -15,6 +15,7 @@ class TaskJsonEditor extends React.Component {
 //            disable_array_reorder: true,
             startval: this.props.task.data,
             upload: this.editorUpload,
+            keep_oneof_values: false,
             task: {
                 getFileUrl: (filename) => {
                     return [

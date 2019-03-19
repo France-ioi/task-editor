@@ -87,44 +87,50 @@
     },
     "questions": {
       "title": "Questions",
-      "description": "Questions list.",
-      "type": "string",
-      "format": "textarea",
-      "options": {
-        "input_height": "300px"
+      "type": "array",
+      "items": {
+        "title": "Question",
+        "oneOf": [
+          { "title": "Question single choice",
+            "$ref": "#/definitions/question_single" },
+          { "title": "Question multiple choice",
+            "$ref": "#/definitions/question_multiple" },
+          { "title": "Question with input",
+            "$ref": "#/definitions/question_input" }
+        ]
       },
-      "generator": [{
-        "output": {
-          "inject": {
-            "template": "index.html",
-            "selector": ".taskContent"
+      "generator": [
+        {
+          "input": {
+            "keepArray": true
+          },
+          "output": {
+            "render": {
+              "template": "questions.html"
+            },
+            "inject": {
+              "template": "index.html",
+              "selector": ".taskContent"
+            }
+          }
+        },
+        {
+          "input": {
+            "collector": "collector.js",
+            "keepArray": true
+          },
+          "output": {
+            "inject": {
+              "template": "grader_data.js",
+              "selector": "grader_data"
+            }
           }
         }
-      }]
-    },
-    "graderData": {
-      "title": "Grader code",
-      "description": "JavaScript grader code",
-      "type": "string",
-      "format": "textarea",
-      "options": {
-        "input_height": "300px"
-      },
-      "generator": [{
-        "output": {
-          "inject": {
-            "template": "grader_data.js"
-          }
-        }
-      }]
+      ]
     },
     "solution": {
-      "title": "Solution",
-      "type": "string",
-      "format": "html",
-      "options": {
-        "wysiwyg": true
-      },
+      "title": "Task solution",
+      "$ref": "#/definitions/solution",
       "generator": [{
         "output": {
           "inject": {
@@ -135,5 +141,166 @@
       }]
     }
   },
-  "required": ["taskMetaData", "title", "intro", "questions", "graderData"]
+  "required": ["taskMetaData", "title", "intro", "questions"],
+
+
+  "definitions": {
+
+    "question_single": {
+      "title": "Question",
+      "type": "object",
+      "required": ["text", "answers", "correct_answer"],
+      "id": "question_single",
+      "properties": {
+        "text": {
+          "title": "Question text",
+          "type": "string",
+          "format": "html",
+          "options": {
+            "wysiwyg": true
+          }
+        },
+        "answers": {
+          "title": "Answers",
+          "type": "array",
+          "format": "tabs",
+          "items": {
+            "headerTemplate": "Answer #{{i}}",
+            "type": "object",
+            "required": ["text"],
+            "properties": {
+              "text": {
+                "title": "Answer text",
+                "type": "string",
+                "format": "html",
+                "options": {
+                  "wysiwyg": true
+                }
+              }
+            }
+          }
+        },
+        "correct_answer": {
+          "title": "Correct answer",
+          "type": "string",
+          "watch": {
+            "answers": "question_single.answers"
+          },
+          "enumSource": [{
+            "source": "answers",
+            "title": "Answer #{{i}}",
+            "value": "{{i}}"
+          }]
+        },
+        "solution": {
+          "title": "Question solution",
+          "$ref": "#/definitions/solution"
+        }
+      }
+    },
+
+
+    "question_multiple": {
+      "title": "Question",
+      "type": "object",
+      "required": ["text", "answers"],
+      "id": "question_multiple",
+      "properties": {
+        "text": {
+          "title": "Question text",
+          "type": "string",
+          "format": "html",
+          "options": {
+            "wysiwyg": true
+          }
+        },
+        "answers": {
+          "title": "Answers",
+          "type": "array",
+          "format": "tabs",
+          "items": {
+            "headerTemplate": "Answer #{{i}}",
+            "type": "object",
+            "required": ["text", "correct"],
+            "properties": {
+              "text": {
+                "title": "Answer text",
+                "type": "string",
+                "format": "html",
+                "options": {
+                  "wysiwyg": true
+                }
+              },
+              "correct": {
+                "title": "Correct answer",
+                "type": "boolean"
+              }
+            }
+          }
+        },
+        "solution": {
+          "title": "Question solution",
+          "$ref": "#/definitions/solution"
+        }
+      }
+    },
+
+    "question_input": {
+      "title": "Question",
+      "type": "object",
+      "required": ["text", "correct_answer", "format", "validator"],
+      "properties": {
+        "text": {
+          "title": "Question text",
+          "type": "string",
+          "format": "html",
+          "options": {
+            "wysiwyg": true
+          }
+        },
+        "format": {
+          "title": "Answer input format",
+          "type": "string",
+          "enum": ["string", "number", "regexp"]
+        },
+        "validator": {
+          "title": "Answer input validator regexp (optional param for regexp input type)",
+          "type": "string"
+        },
+        "correct_answer": {
+          "title": "Correct answer",
+          "type": "object",
+          "required": ["type", "value"],
+          "properties": {
+            "type": {
+              "title": "Type",
+              "type": "string",
+              "enum": ["value", "function"]
+            },
+            "value": {
+              "title": "Enter value or JS function (according to selected type)",
+              "type": "string",
+              "format": "textarea",
+              "options": {
+                "input_height": "100px"
+              }
+            }
+          }
+        },
+        "solution": {
+          "title": "Question solution",
+          "$ref": "#/definitions/solution"
+        }
+      }
+    },
+
+    "solution": {
+      "type": "string",
+      "format": "html",
+      "options": {
+        "wysiwyg": true
+      }
+    }
+
+  }
 }

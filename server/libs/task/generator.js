@@ -1,6 +1,7 @@
 var fs = require('fs');
 var path = require('path');
 var modifier = require('./modifier');
+var clone = require('clone')
 
 module.exports = {
 
@@ -13,6 +14,8 @@ module.exports = {
         var post_processor = require('./post_processor')(params);
         var tpl_path = path.join(src_path, 'templates');
         var templates = require('./templates')(params.path, tpl_path, post_processor);
+        var collector = require('./collector')(src_path);
+        var renderer = require('./renderer')(tpl_path);
 
         var files = require('./files')(params.path, params.files);
 
@@ -28,6 +31,14 @@ module.exports = {
                 if(typeof idx == 'undefined') {
                     idx = null;
                 }
+
+                if(idx === null && input && 'collector' in input) {
+                    value = collector.execute(input.collector, value)
+                }
+                if(idx === null && output && 'render' in output) {
+                    value = renderer.execute(output.render, value)
+                }
+
                 if(value instanceof Array && (!input || !input.keepArray)) {
                     value.map((v, idx) => {
                         if(v === null) { return; }
@@ -73,20 +84,18 @@ module.exports = {
                     }
                 }
                 if('replace' in output) {
-                    // Copy value in case it's an object
-                    value = JSON.parse(JSON.stringify(value));
+                    value = clone(value)
                     if(!data_fn) {
                         data.set(data_path, value);
                     }
                 } else if ('inject' in output) {
-                    // Copy value in case it's an object
-                    value = JSON.parse(JSON.stringify(value));
+                    value = clone(value)
                     templates.inject(output.inject, value)
                 } else if('copy' in output) {
                     files.copy(value, output.copy, data_path, idx !== null ? idx+1 : null)
                 }
                 if(data_fn) {
-                    value = JSON.parse(JSON.stringify(value));
+                    value = clone(value);
                     if(data_fn === true) {
                         return value;
                     } else {
@@ -117,8 +126,8 @@ module.exports = {
                     type: params.type,
                     data: params.data,
                     files: new_files
-                    });
                 });
+            });
         } catch(err) {
             callback(err);
         }
