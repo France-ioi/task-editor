@@ -78,6 +78,7 @@ JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
                 // do not forget to add plugins to webpack.config.js > vendor
                 window.tinymce.init({
                     target: self.input,
+                    menubar: 'edit format',
                     plugins: 'image link codesample fullscreen lists textcolor colorpicker table ' + (self.input_type === 'bbcode' ? 'bbcode' : ''),
                     toolbar: 'image link codesample forecolor backcolor table numlist bullist fullscreen',
                     branding: false,
