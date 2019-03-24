@@ -121,6 +121,22 @@ body, html {
     background-color: rgba(0,0,0,0.5);
 }
 
+/* text editors */
 .mce-menubar {
     float: left;
+}
+
+i.mce-i-markdown:before {
+    content: "\e243";
+    position: relative;
+    top: 1px;
+    display: inline-block;
+    font-family: 'Glyphicons Halflings';
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1;
+ }
+
+.editor-toolbar.fullscreen {
+    z-index: 1040;
 }

@@ -3,9 +3,7 @@ var cheerio = require('cheerio')
 
 module.exports = function(content) {
 
-
     var $ = cheerio.load(content)
-
 
     function injectVariable(selector, value) {
         if(!selector.variable) return;
@@ -43,9 +41,26 @@ module.exports = function(content) {
         }
     }
 
+    function toString(value) {
+        if(typeof value === 'object' && '__type' in value) {
+            switch(value.__type) {
+                case 'html':
+                    return value.__value;
+                    break;
+                case 'markdown':
+                    return '<div class="markdown">' + value.__value + '</div>'
+                    break;
+                default:
+                    return value.__value;
+            }
+        }
+        return value
+    }
+
     return {
 
         inject: function(selector, value) {
+            value = toString(value)
             if(selector.variable) {
                 injectVariable(selector, value)
             } else {

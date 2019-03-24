@@ -18,6 +18,8 @@ module.exports = function(env) {
         './node_modules/tinymce/plugins/link/plugin.js',
         './node_modules/tinymce/plugins/image/plugin.js',
         './node_modules/tinymce/plugins/codesample/plugin.js',
+        './node_modules/tinymce/plugins/code/plugin.js',
+        'easymde',
         'react',
         'react-bootstrap',
         'react-dom',
@@ -25,6 +27,7 @@ module.exports = function(env) {
         'redux',
         'redux-saga',
         'uuid',
+        'showdown',
         './client/assets/index.js'
     ]
 
@@ -71,7 +74,7 @@ module.exports = function(env) {
             ],
         },
         output: {
-            path: path.resolve(__dirname, 'server/public'),
+            path: path.resolve(__dirname, 'server/public/app'),
             filename: '[name].js'
         },
         module: {
@@ -96,11 +99,11 @@ module.exports = function(env) {
                 },
                 {
                     test: /\.(png|jpg|gif)$/,
-                    loader: 'file-loader?name=images/[name].[ext]'
+                    loader: 'file-loader?name=app/images/[name].[ext]'
                 },
                 {
                     test: /\.(eot|svg|ttf|woff|woff2)$/,
-                    loader: 'file-loader?name=fonts/[name].[ext]'
+                    loader: 'file-loader?name=app/fonts/[name].[ext]'
                 }
             ],
         },

@@ -1,3 +1,5 @@
+var clone = require('clone')
+
 module.exports = function(task_data) {
 
     var local_data = task_data;
@@ -62,7 +64,7 @@ module.exports = function(task_data) {
         set: function(json_path, value) {
             if(!local_modifications) {
                 // Make an actual copy of task_data to not modify the editor data
-                local_data = JSON.parse(JSON.stringify(task_data));
+                local_data = clone(task_data);
                 local_modifications = true;
             }
             return find(json_path.slice(), local_data, false, value)

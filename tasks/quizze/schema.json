@@ -75,6 +75,7 @@
       "type": "string",
       "format": "html",
       "options": {
+        "multitext": true,
         "wysiwyg": true
       },
       "generator": [{
