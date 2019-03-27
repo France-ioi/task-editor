@@ -6,7 +6,7 @@
   "properties": {
     "taskMetaData": {
       "type": "object",
-      "description": "Task meta-data.",
+      "title": "Task meta-data",
       "properties": {
         "id": {
           "type": "string",
@@ -55,12 +55,39 @@
           "title": "Shuffle answers"
         }
       },
-      "required": ["id", "authors", "language", "graderUrl"],
+      "required": ["id", "authors", "language"],
       "generator": [{
         "output": {
           "inject": {
             "template": "index.html",
             "selector": "$json"
+          }
+        }
+      }]
+    },
+    "quizze_settings": {
+      "type": "object",
+      "title": "Quizz settings",
+      "properties": {
+        "graderUrl": {
+          "type": "string",
+          "title": "Server side grader URL"
+        },
+        "shuffle_questions": {
+          "type": "boolean",
+          "title": "Shuffle questions"
+        },
+        "shuffle_answers": {
+          "type": "boolean",
+          "title": "Shuffle answers"
+        }
+      },
+      "required": ["graderUrl"],
+      "generator": [{
+        "output": {
+          "inject": {
+            "template": "index.html",
+            "selector": "$quizze_settings"
           }
         }
       }]
@@ -146,7 +173,7 @@
       }]
     }
   },
-  "required": ["taskMetaData", "title", "intro", "questions"],
+  "required": ["taskMetaData", "quizze_settings", "title", "intro", "questions"],
 
 
   "definitions": {

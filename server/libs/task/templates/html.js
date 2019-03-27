@@ -6,13 +6,10 @@ module.exports = function(content) {
     var $ = cheerio.load(content)
 
     function injectVariable(selector, value) {
-        if(!selector.variable) return;
         var search = 'var ' + selector.variable;
         var replace = search + ' = ' + JSON.stringify(value);
 
-
         if(selector.query) {
-            //var elements = $(selector.query).find('script');
             var elements = $(selector.query);
             if(elements[0] && elements[0].type !== "script") {
                 elements = elements.find('script')
