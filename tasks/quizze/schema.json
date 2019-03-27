@@ -162,7 +162,11 @@
     },
     "solution": {
       "title": "Task solution",
-      "$ref": "#/definitions/solution",
+      "type": "string",
+      "format": "html",
+      "options": {
+        "wysiwyg": true
+      },
       "generator": [{
         "output": {
           "inject": {
@@ -226,7 +230,11 @@
         },
         "solution": {
           "title": "Question solution",
-          "$ref": "#/definitions/solution"
+          "type": "string",
+          "format": "html",
+          "options": {
+            "wysiwyg": true
+          }
         }
       }
     },
@@ -272,7 +280,11 @@
         },
         "solution": {
           "title": "Question solution",
-          "$ref": "#/definitions/solution"
+          "type": "string",
+          "format": "html",
+          "options": {
+            "wysiwyg": true
+          }
         }
       }
     },
@@ -321,18 +333,13 @@
         },
         "solution": {
           "title": "Question solution",
-          "$ref": "#/definitions/solution"
+          "type": "string",
+          "format": "html",
+          "options": {
+            "wysiwyg": true
+          }
         }
       }
-    },
-
-    "solution": {
-      "type": "string",
-      "format": "html",
-      "options": {
-        "wysiwyg": true
-      }
     }
-
   }
 }
