@@ -80,12 +80,8 @@
     "intro": {
       "title": "Statement, before questions",
       "description": "Task statement, displayed to the user before the questions.",
-      "type": "string",
+      "type": "multitext",
       "format": "html",
-      "options": {
-        "multitext": true,
-        "wysiwyg": true
-      },
       "generator": [{
         "output": {
           "inject": {
