@@ -45,7 +45,7 @@ module.exports = function(content) {
                     return value.__value;
                     break;
                 case 'markdown':
-                    return '<div class="markdown">' + value.__value + '</div>'
+                    return '<div class="markdown">\n' + value.__value + '\n</div>'
                     break;
                 default:
                     return value.__value;
