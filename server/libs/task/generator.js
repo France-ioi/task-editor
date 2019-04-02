@@ -11,7 +11,7 @@ module.exports = {
         var schema = require('./schema')(src_path);
         var data = require('./data')(params.data);
 
-        var post_processor = require('./post_processor')(params);
+        var post_processor = require('./post_processor')(params, data.info());
         var tpl_path = path.join(src_path, 'templates');
         var templates = require('./templates')(params.path, tpl_path, post_processor);
         var collector = require('./collector')(src_path);

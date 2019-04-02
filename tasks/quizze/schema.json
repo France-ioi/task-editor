@@ -80,6 +80,18 @@
         "shuffle_answers": {
           "type": "boolean",
           "title": "Shuffle answers"
+        },
+        "mathjax": {
+          "type": "boolean",
+          "title": "MathJax",
+          "generator": [{
+            "output": {
+              "inject": {
+                "template": "index.html",
+                "selector": "$include_mathjax"
+              }
+            }
+          }]
         }
       },
       "required": ["graderUrl"],

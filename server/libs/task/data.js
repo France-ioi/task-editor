@@ -5,6 +5,35 @@ module.exports = function(task_data) {
     var local_data = task_data;
     var local_modifications = false;
 
+    var info = {
+        markdown: false
+    }
+
+    function discoverNode(node) {
+        if('__type' in node && node.__type == 'markdown') {
+            info.markdown = true;
+        }
+    }
+
+    function recursiveRunner(data) {
+        if(typeof data == 'object' && data !== null) {
+            discoverNode(data);
+            for(var k in data) {
+                if(data.hasOwnProperty(k)) {
+                    recursiveRunner(data[k]);
+                }
+            }
+        } else if(data instanceof Array) {
+            for(var i=0; i<data.length; i++) {
+                recursiveRunner(data[i]);
+            }
+        }
+    }
+
+    recursiveRunner(task_data)
+
+
+
     function find(path, data, inArray, value) {
         var subpath = path.slice();
         var curpath = [];
@@ -58,9 +87,11 @@ module.exports = function(task_data) {
 
 
     return {
+
         get: function(json_path) {
             return find(json_path.slice(), local_data)
         },
+
         set: function(json_path, value) {
             if(!local_modifications) {
                 // Make an actual copy of task_data to not modify the editor data
@@ -68,6 +99,10 @@ module.exports = function(task_data) {
                 local_modifications = true;
             }
             return find(json_path.slice(), local_data, false, value)
+        },
+
+        info: function() {
+            return info;
         }
     }
 

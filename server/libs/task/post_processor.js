@@ -1,7 +1,7 @@
 var path = require('path')
 var config = require('../../config')
 
-module.exports = function(params) {
+module.exports = function(params, data_info) {
 
     var values = {}
 
@@ -10,6 +10,7 @@ module.exports = function(params) {
     }
 
     addValue('TASK_PATH', path.relative(params.path, config.path))
+    addValue('TASK_DATA_INFO', JSON.stringify(data_info))
 
     return {
         apply: function(content) {
