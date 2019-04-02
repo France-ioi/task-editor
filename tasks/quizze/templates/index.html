@@ -5,6 +5,7 @@
         <title></title>
         <script>
             window.stringsLanguage = 'en';
+            var quizze_settings;
         </script>
         <script class="remove" type="text/javascript" src="%%TASK_PATH%%/_common/modules/pemFioi/importModules-1.4-mobileFirst.js" id="import-modules"></script>
         <script class="remove" type="text/javascript">
@@ -29,8 +30,7 @@
                         'showdownConvert'
                     ]);
                 }
-                var include_mathjax;
-                if(include_mathjax) {
+                if(quizze_settings.mathjax) {
                     modules.push('mathjax');
                 }
                 importModules(modules);
@@ -38,9 +38,6 @@
         </script>
         <script class="remove" type="text/javascript">
             var json;
-        </script>
-        <script type="text/javascript">
-            var quizze_settings;
         </script>
         <script class="remove" type="text/javascript" src="grader_data.js"></script>
     </head>

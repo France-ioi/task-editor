@@ -83,15 +83,7 @@
         },
         "mathjax": {
           "type": "boolean",
-          "title": "MathJax",
-          "generator": [{
-            "output": {
-              "inject": {
-                "template": "index.html",
-                "selector": "$include_mathjax"
-              }
-            }
-          }]
+          "title": "MathJax"
         }
       },
       "required": ["graderUrl"],
