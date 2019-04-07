@@ -5,7 +5,7 @@
         <title></title>
         <script>
             window.stringsLanguage = 'en';
-            var quizze_settings;
+            var quiz_settings;
             var task_data_info = %%TASK_DATA_INFO%%;
         </script>
         <script class="remove" type="text/javascript" src="%%TASK_PATH%%/_common/modules/pemFioi/importModules-1.4-mobileFirst.js" id="import-modules"></script>
@@ -20,14 +20,14 @@
                 'platform-pr',
                 'installationAPI.01',
                 'miniPlatform',
-                'quizze_styles',
-                'quizze_ui',
-                'quizze_task',
-                'quizze_grader'
+                'quiz_styles',
+                'quiz_ui',
+                'quiz_task',
+                'quiz_grader'
             ];
             task_data_info.markdown && modules.push('showdown');
-            quizze_settings.mathjax && modules.push('mathjax');
-            (task_data_info.markdown || quizze_settings.mathjax) && modules.push('post_processor');
+            quiz_settings.mathjax && modules.push('mathjax');
+            (task_data_info.markdown || quiz_settings.mathjax) && modules.push('post_processor');
             importModules(modules);
         </script>
         <script class="remove" type="text/javascript" src="grader_data.js"></script>

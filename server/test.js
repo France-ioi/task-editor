@@ -35,7 +35,7 @@ function saveTaskData(task_subpath, task_data, callback) {
 }
 
 
-var task_path = 'Examples/quizze'
+var task_path = 'Examples/quiz'
 loadTaskData(task_path, (err, task_data) => {
     if (err) return console.error(err)
     var params = {

@@ -12,7 +12,7 @@
         "title": "Course with YouTube video"
     },
     {
-        "type": "quizze",
-        "title": "Quizze"
+        "type": "quiz",
+        "title": "Quiz"
     }
 ]

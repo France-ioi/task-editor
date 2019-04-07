@@ -65,7 +65,7 @@
         }
       }]
     },
-    "quizze_settings": {
+    "quiz_settings": {
       "type": "object",
       "title": "Quizz settings",
       "properties": {
@@ -91,7 +91,7 @@
         "output": {
           "inject": {
             "template": "index.html",
-            "selector": "$quizze_settings"
+            "selector": "$quiz_settings"
           }
         }
       }]
@@ -158,7 +158,7 @@
           "output": {
             "inject": {
               "template": "grader_data.js",
-              "selector": "$window.QuizzeGrader.data"
+              "selector": "$window.QuizGrader.data"
             }
           }
         }
@@ -181,7 +181,7 @@
       }]
     }
   },
-  "required": ["taskMetaData", "quizze_settings", "title", "intro", "questions"],
+  "required": ["taskMetaData", "quiz_settings", "title", "intro", "questions"],
 
 
   "definitions": {
