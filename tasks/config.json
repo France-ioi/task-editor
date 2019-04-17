@@ -14,5 +14,9 @@
     {
         "type": "quiz",
         "title": "Quiz"
+    },
+    {
+        "type": "course",
+        "title": "Course with Markdown/MathJax text"
     }
 ]
