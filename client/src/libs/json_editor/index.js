@@ -2,3 +2,4 @@
 import './multitext'
 import './string'
 import './upload'
+import './theme'
