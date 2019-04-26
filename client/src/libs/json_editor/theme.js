@@ -31,6 +31,16 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
     if(type !== 'checkbox') {
       el.className += 'form-control';
     }
+    if (type !== 'text') return el;
+    var container = document.createElement('div');
+    container.className = 'input-field-container';
+    var labelContainer = document.createElement('div');
+    labelContainer.className = 'input-label-container';
+    var label = document.createElement('span');
+    label.innerHTML = 'Aa';
+    labelContainer.appendChild(label);
+    container.appendChild(labelContainer);
+    container.appendChild(el);
     return el;
   },
   getFormControl: function(label, input, description) {
@@ -58,12 +68,43 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
         leftGroup.appendChild(label);
       }
       if(description) leftGroup.appendChild(description);
-      rightGroup.appendChild(input);
+      if (input.parentNode) {
+        rightGroup.appendChild(input.parentNode);
+      } else {
+        rightGroup.appendChild(input);
+      }
       group.appendChild(leftGroup);
       group.appendChild(rightGroup);
     }
 
     return group;
+  },
+  getArrayItemControl: function(item) {
+    var group = document.createElement('div');
+    group.className = 'array-item';
+    if (item.parentNode) {
+      group.appendChild(item.parentNode);
+    } else {
+      group.appendChild(item);
+    }
+
+    return group;
+  },
+  getArrayItemContainer: function() {
+    var el = document.createElement('div');
+    return el;
+  },
+  getArrayDeleteButton: function() {
+    var el = document.createElement('span');
+    el.className = 'array-delete-item glyphicon glyphicon-trash';
+    el.setAttribute('aria-hidden', 'true');
+    return el;
+  },
+  getArrayMoveButton: function() {
+    var el = document.createElement('span');
+    el.className = 'array-move-item glyphicon glyphicon-option-vertical';
+    el.setAttribute('aria-hidden', 'true');
+    return el;
   },
   getIndentedPanel: function() {
     var el = document.createElement('div');
@@ -159,14 +200,13 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
     el.style.maxWidth = 'none';
     return el;
   },
-
-  addInputError: function(input,text) {
+  addInputError: function(input, text) {
     if(!input.controlgroup) return;
     input.controlgroup.className += ' has-error';
     if(!input.errmsg) {
       input.errmsg = document.createElement('p');
       input.errmsg.className = 'help-block errormsg';
-      input.controlgroup.appendChild(input.errmsg);
+      input.controlgroup.lastChild.appendChild(input.errmsg);
     }
     else {
       input.errmsg.style.display = '';
@@ -182,7 +222,7 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
   getTabHolder: function() {
     var el = document.createElement('div');
     el.innerHTML = "<div class='tabs list-group col-md-2'></div><div class='col-md-10'></div>";
-    el.className = 'rows';
+    el.className = 'rows tab-holder';
     return el;
   },
   getTab: function(text) {
