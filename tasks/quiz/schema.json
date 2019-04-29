@@ -308,11 +308,13 @@
         },
         "format": {
           "title": "Answer input format",
+          "description": "This controls the client-side validation of the answer, and will display a warning to the user if their answer is not in the expected format. Do not use it to check the answer!",
           "type": "string",
           "enum": ["string", "number", "regexp"]
         },
         "validator": {
           "title": "Answer input validator regexp (optional param for regexp input type)",
+          "description": "RegExps are interpreted by JavaScript. Enter it either as a string which will be passed to the RegExp constructor (^ab+$), either as a RegExp in JS syntax (/^ab+$/i).",
           "type": "string"
         },
         "correct_answer": {
@@ -326,7 +328,8 @@
               "enum": ["value", "function"]
             },
             "value": {
-              "title": "Enter value or JS function (according to selected type)",
+              "title": "Value or JS function (according to selected type)",
+              "description": "If function is selected, enter a function which takes as sole argument the user's answer, and returns either a boolean which is true if the answer is right, either an object {valid: [boolean], message: [string]} to display a message to the user.",
               "type": "string",
               "format": "textarea",
               "options": {
