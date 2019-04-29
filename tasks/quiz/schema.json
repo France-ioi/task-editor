@@ -329,7 +329,7 @@
             },
             "value": {
               "title": "Value or JS function (according to selected type)",
-              "description": "If function is selected, enter a function which takes as sole argument the user's answer, and returns either a boolean which is true if the answer is right, either an object {valid: [boolean], message: [string]} to display a message to the user.",
+              "description": "If function is selected, enter a function which takes as sole argument the user's answer, and returns either a boolean which is true if the answer is right, either an object {score: [float between 0 and 1], message: [string]} to display a message to the user.",
               "type": "string",
               "format": "textarea",
               "options": {
