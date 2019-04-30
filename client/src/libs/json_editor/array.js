@@ -227,10 +227,15 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
       holder = this.theme.getArrayItemContainer();
     }
 
-    this.row_holder.appendChild(holder);
+    var row_container = document.createElement('div');
+    row_container.className = 'array-row-container';
+    this.row_holder.appendChild(row_container);
+
     var before_controls = document.createElement('div');
     before_controls.className = 'before-item-controls';
-    holder.appendChild(before_controls);
+    row_container.appendChild(before_controls);
+    holder.className = 'array-item-holder';
+    row_container.appendChild(holder);
 
     var ret = this.jsoneditor.createEditor(editor,{
       jsoneditor: this.jsoneditor,
@@ -246,7 +251,7 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
     ret.before_controls = before_controls;
 
     ret.array_controls = document.createElement('div');
-    holder.appendChild(ret.array_controls);
+    row_container.appendChild(ret.array_controls);
 
     return ret;
   },
@@ -277,7 +282,7 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
     if(hard) self.row_cache = [];
   },
   destroyRow: function(row,hard) {
-    var holder = row.container;
+    var holder = row.container.parentNode;
     if(hard) {
       row.destroy();
       if(holder.parentNode) holder.parentNode.removeChild(holder);
@@ -345,7 +350,7 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
       else if(self.row_cache[i]) {
         self.rows[i] = self.row_cache[i];
         self.rows[i].setValue(val,initial);
-        self.rows[i].container.style.display = '';
+        self.rows[i].container.parentNode.style.display = '';
         if(self.rows[i].tab) self.rows[i].tab.style.display = '';
         self.rows[i].register();
       }
@@ -591,7 +596,7 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
       if(self.row_cache[i]) {
         self.rows[i] = self.row_cache[i];
         self.rows[i].setValue(self.rows[i].getDefault(), true);
-        self.rows[i].container.style.display = '';
+        self.rows[i].container.parentNode.style.display = '';
         if(self.rows[i].tab) self.rows[i].tab.style.display = '';
         self.rows[i].register();
       }

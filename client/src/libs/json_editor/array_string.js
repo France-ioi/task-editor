@@ -118,9 +118,10 @@ JSONEditor.defaults.editors.array_string = JSONEditor.defaults.editors.string.ex
         this.input = this.theme.getExternalInput();
         var enablerInput = this.input.parentNode.firstChild.firstChild;
         enablerInput.addEventListener('click', function() {
-          self.afterInputReady();
+          setTimeout(() => self.afterInputReady(), 0);
         });
-        this.container.className += ' array-wide-item';
+        this.container.parentNode.className += ' array-wide-item';
+        this.container.parentNode.parentNode.parentNode.className += ' wide-array';
       }
       // HTML5 Input type
       else {
@@ -352,11 +353,6 @@ JSONEditor.defaults.editors.array_string = JSONEditor.defaults.editors.string.ex
           self.value = self.input.value;
           self.is_dirty = true;
           self.onChange(true);
-        },
-        onBlur: function() {
-          if (self.input.parentNode && self.input.parentNode.className.indexOf('external-control') != 1) {
-            self.input.parentNode.className = self.input.parentNode.className.replace(/\s?active-editor/g,'');
-          }
         }
       })
     }

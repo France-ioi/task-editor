@@ -36,14 +36,12 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
     var el = document.createElement('textarea');
     el.className = 'form-control';
     input.addEventListener('click', function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      var wholeContainer = container.parentNode.parentNode.parentNode;
+      var wholeContainer = container.parentNode.parentNode.parentNode.parentNode;
       for (var child = 0; child < wholeContainer.children.length; child++) {
-        wholeContainer.children[child].children[1].children[0].className = 'external-control';
+        var el = wholeContainer.children[child].children[1].children[0].children[0];
+        if (el !== container) el.className = 'external-control';
       }
-      setTimeout(() => container.className = 'external-control active-editor', 0);
-      window.tinymce.EditorManager.get(container.lastChild.id).focus();
+      container.className = 'external-control active-editor';
     });
     exitButton.addEventListener('click', function(e) {
       container.className = 'external-control';

@@ -406,10 +406,35 @@ input[type="external_preview"] {
 
 .array-wide-item {
     width: 100%;
+}
+
+.arry-wide-item>div[data-schematype="string"] {
+    width: 100%;
+}
+
+.array-wide-item>.array-item-holder {
+    flex-grow: 1;
     display: flex;
 }
 
-.array-wide-item>.array-item {
+.array-wide-item>.array-item-holder>.array-item {
     max-width: 100%;
     flex-grow: 1;
 }
+
+.array-row-container {
+    display: flex;
+}
+
+.wide-array>.btn-group, .wide-array>.btn-group>button {
+    width: 100%;
+}
+
+.array-row-holder+.btn-group {
+    margin-left: 8px;
+}
+
+div[data-schematype="array"]>div>.form-right-group {
+    margin-left: -8px;
+}
+
