@@ -50,6 +50,17 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
 		container.appendChild(el);
     return el;
   },
+  getBoolean: function(names) {
+    var container = this.getButtonHolder();
+    container.className += ' boolean-group';
+    var noButton = this.getButton(names[0]);
+    var yesButton = this.getButton(names[1]);
+    noButton.className += ' round-btn';
+    yesButton.className += ' round-btn';
+    container.appendChild(noButton);
+    container.appendChild(yesButton);
+    return container;
+  },
   getRangeInput: function(min, max, step) {
     // TODO: use better slider
     return this._super(min, max, step);
