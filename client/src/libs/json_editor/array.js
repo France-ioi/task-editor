@@ -40,8 +40,7 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
       for(var i=0; i<this.rows.length; i++) {
         this.rows[i].enable();
         
-        if(this.rows[i].moveup_button) this.rows[i].moveup_button.disabled = false;
-        if(this.rows[i].movedown_button) this.rows[i].movedown_button.disabled = false;
+        if(this.rows[i].move_button) this.rows[i].move_button.disabled = false;
         if(this.rows[i].delete_button) this.rows[i].delete_button.disabled = false;
       }
     }
@@ -55,9 +54,8 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
     if(this.rows) {
       for(var i=0; i<this.rows.length; i++) {
         this.rows[i].disable();
-        
-        if(this.rows[i].moveup_button) this.rows[i].moveup_button.disabled = true;
-        if(this.rows[i].movedown_button) this.rows[i].movedown_button.disabled = true;
+
+        if(this.rows[i].move_button) this.rows[i].move_button.disabled = true;
         if(this.rows[i].delete_button) this.rows[i].delete_button.disabled = true;
       }
     }
@@ -86,7 +84,7 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
       this.error_holder = document.createElement('div');
 
       this.panel = document.createElement('div');
-      if(this.schema.format === 'tabs') {
+      if(false && this.schema.format === 'tabs') {
         this.controls = this.theme.getButtonHolder();
         this.tabs_holder = this.theme.getTabHolder();
         this.row_holder = this.theme.getTabContentHolder(this.tabs_holder);
@@ -247,11 +245,9 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
     ret.postBuild();
     ret.before_controls = before_controls;
 
-    if(!ret.title_controls) {
-      ret.array_controls = document.createElement('div');
-      holder.appendChild(ret.array_controls);
-    }
-    
+    ret.array_controls = document.createElement('div');
+    holder.appendChild(ret.array_controls);
+
     return ret;
   },
   destroy: function() {
@@ -487,7 +483,7 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
       self.theme.addTab(self.tabs_holder, self.rows[i].tab);
     }
     
-    var controls_holder = self.rows[i].title_controls || self.rows[i].array_controls;
+    var controls_holder = self.rows[i].array_controls;
     var before_controls_holder = self.rows[i].before_controls;
     
     // Buttons to delete row, move row up, and move row down
@@ -586,7 +582,7 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
     //}
     
     // Add "new row" and "delete last" buttons below editor
-    this.add_row_button = this.getButton(this.getItemTitle(),'add',this.translate('button_add_row_title',[this.getItemTitle()]));
+    this.add_row_button = this.getButton(this.getItemTitle(),'add',this.translate('button_add_row_title',['']));
     
     this.add_row_button.addEventListener('click',function(e) {
       e.preventDefault();

@@ -13,6 +13,8 @@ class TaskJsonEditor extends React.Component {
             disable_properties: true,
             display_required_only: true,
             disable_edit_json: true,
+            disable_array_delete_last_row: true,
+            disable_array_delete_all_rows: true,
 //            disable_array_reorder: true,
             startval: this.props.task.data,
             upload: this.editorUpload,

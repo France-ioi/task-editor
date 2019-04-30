@@ -243,6 +243,7 @@ div[data-schemaid="root"][data-schemapath="root"]>.description-container {
     outline: none;
     color: #787878;
     font-weight: bold;
+    text-overflow: ellipsis;
 }
 
 .input-field-container {
@@ -349,4 +350,66 @@ div[data-schematype="array"]>.indented-panel {
 .array-row-holder>div {
     margin-bottom: 8px;
     margin-left: 8px;
+}
+
+.json-editor-btn-add {
+    color: #4A90E2;
+    padding: 5px 16px;
+    font-size: 16px;
+    font-weight: bold;
+    border: 1px solid #4A90E2;
+		border-radius: 15px !important;
+}
+
+.json-editor-btn-add:hover, .json-editor-btn-add:active, .json-editor-btn-add:focus, .json-editor-btn-add:hover:active, .json-editor-btn-add:focus:active {
+    color: #2275d3;
+    border: 1px solid #2275d3;
+    background-color: white;
+}
+
+.add-button {
+    margin-right: 8px;
+}
+
+.well {
+    min-height: 0;
+}
+
+.mce-edit-area, .mce-content-body {
+    background-color: #F1F2F7 !important;
+		color: #787878 !important;
+}
+
+.external-preview-bar {
+    display: flex;
+}
+
+.external-preview-bar>span {
+    background-color: #F1F2F7;
+    padding: 8px;
+    color: #4A90E2;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.external-control:not(.active-editor)>.mce-container {
+    display: none;
+}
+
+.external-control:not(.active-editor)>.external-preview-bar>span {
+    display: none;
+}
+
+input[type="external_preview"] {
+    cursor: text !important;
+}
+
+.array-wide-item {
+    width: 100%;
+    display: flex;
+}
+
+.array-wide-item>.array-item {
+    max-width: 100%;
+    flex-grow: 1;
 }

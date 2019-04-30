@@ -22,6 +22,36 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
     el.className = 'form-control';
     return el;
   },
+  getExternalInput: function() {
+	  var container = document.createElement('div');
+    container.className = 'external-control';
+    var topContainer = document.createElement('div');
+    var input = this.getFormInputField('external_preview');
+    var exitButton = document.createElement('span');
+    exitButton.innerHTML = 'EXIT';
+		topContainer.appendChild(input);
+    topContainer.appendChild(exitButton);
+    topContainer.className = 'external-preview-bar';
+    input.setAttribute('readonly', true);
+    var el = document.createElement('textarea');
+    el.className = 'form-control';
+    input.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      var wholeContainer = container.parentNode.parentNode.parentNode;
+      for (var child = 0; child < wholeContainer.children.length; child++) {
+        wholeContainer.children[child].children[1].children[0].className = 'external-control';
+      }
+      setTimeout(() => container.className = 'external-control active-editor', 0);
+      window.tinymce.EditorManager.get(container.lastChild.id).focus();
+    });
+    exitButton.addEventListener('click', function(e) {
+      container.className = 'external-control';
+    });
+    container.appendChild(topContainer);
+		container.appendChild(el);
+    return el;
+  },
   getRangeInput: function(min, max, step) {
     // TODO: use better slider
     return this._super(min, max, step);
@@ -172,6 +202,12 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
       return el;
     }
     var el = this._super(text, icon, title);
+    if (text === 'Add ') {
+      var icon = document.createElement('span');
+      icon.className = 'add-button glyphicon glyphicon-plus';
+      icon.setAttribute('aria-hidden', 'true');
+      el.insertBefore(icon, el.firstChild);
+    }
     el.className += 'btn btn-default';
     return el;
   },

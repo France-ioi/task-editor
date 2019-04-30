@@ -27,16 +27,21 @@ module.exports = function(params) {
 
     window.tinymce.init({
         target: params.element,
+        auto_focus: params.autoFocus,
         plugins: 'image link codesample fullscreen lists textcolor colorpicker table code',
         menubar: 'edit format',
         toolbar: 'view_mode image link codesample forecolor backcolor table numlist bullist | fullscreen code '  + (params.multitext ? 'markdown' : ''),
         branding: false,
         skin: false,
         codesample_content_css: 'assets/prism.css',
+        content_css: 'assets/tinymce_custom.css',
         setup: function(editor) {
             instance = editor;
+            editor.on('init blur', function() {
+                params.onChange && params.onChange(editor.getContent(), editor.getContent({format : 'text'}));
+            });
             editor.on('blur', function() {
-                params.onChange && params.onChange(editor.getContent())
+                params.onBlur && params.onBlur();
             });
             if(params.multitext) {
                 editor.addButton('markdown', {
