@@ -134,6 +134,11 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
         this.panel.appendChild(this.error_holder);
       }
       this.container.appendChild(this.theme.getFormControl(this.label, this.panel, this.description))
+      var schema = this.getItemSchema(0);
+      schema = this.jsoneditor.expandRefs(schema);
+      if (schema.type === 'string' && schema.format === 'html') {
+        this.container.lastChild.className += ' wide-array';
+      }
     }
     else {
         this.panel = this.theme.getIndentedPanel();
@@ -471,7 +476,7 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
   addRow: function(value, initial) {
     var self = this;
     var i = this.rows.length;
-    
+
     self.rows[i] = this.getElementEditor(i);
     self.row_cache[i] = self.rows[i];
 

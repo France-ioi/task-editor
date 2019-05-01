@@ -158,7 +158,6 @@ JSONEditor.defaults.editors.array_string = JSONEditor.defaults.editors.string.ex
           setTimeout(() => self.afterInputReady(), 0);
         });
         this.container.parentNode.className += ' array-wide-item';
-        this.container.parentNode.parentNode.parentNode.className += ' wide-array';
       }
       // HTML5 Input type
       else {

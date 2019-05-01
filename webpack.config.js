@@ -75,7 +75,8 @@ module.exports = function(env) {
         },
         output: {
             path: path.resolve(__dirname, 'server/public/app'),
-            filename: '[name].js'
+            filename: '[name].js',
+            publicPath: 'app/',
         },
         module: {
             rules: [
@@ -99,11 +100,11 @@ module.exports = function(env) {
                 },
                 {
                     test: /\.(png|jpg|gif)$/,
-                    loader: 'file-loader?name=app/images/[name].[ext]'
+                    loader: 'file-loader?name=images/[name].[ext]'
                 },
                 {
                     test: /\.(eot|svg|ttf|woff|woff2)$/,
-                    loader: 'file-loader?name=app/fonts/[name].[ext]'
+                    loader: 'file-loader?name=fonts/[name].[ext]'
                 }
             ],
         },

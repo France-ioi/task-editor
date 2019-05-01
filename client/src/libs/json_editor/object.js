@@ -163,6 +163,9 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
 
         if(editor.options.hidden) editor.container.style.display = 'none';
         else self.theme.setGridColumnSize(editor.container,12);
+        if (self.isRequired(editor)) {
+          editor.container.className += ' required-field';
+        }
         row.appendChild(editor.container);
       });
     }
