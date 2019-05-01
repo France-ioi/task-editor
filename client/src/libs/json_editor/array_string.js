@@ -12,6 +12,42 @@ JSONEditor.defaults.editors.array_string = JSONEditor.defaults.editors.string.ex
     if(!this.input) return;
     this.input.removeAttribute('name');
   },
+  setValue: function(value,initial,from_template) {
+    var self = this;
+
+    if(this.template && !from_template) {
+      return;
+    }
+
+    if(value === null || typeof value === 'undefined') value = "";
+    else if(typeof value === "object") value = JSON.stringify(value);
+    else if(typeof value !== "string") value = ""+value;
+
+    if(value === this.serialized) return;
+
+    // Sanitize value before setting it
+    var sanitized = this.sanitize(value);
+
+    if(this.input.value === sanitized) {
+      return;
+    }
+
+    this.input.value = sanitized;
+
+    this.html_editor && this.html_editor.setContent(sanitized)
+
+    var changed = from_template || this.getValue() !== value;
+
+    this.refreshValue();
+
+    if(initial) this.is_dirty = false;
+    else if(this.jsoneditor.options.show_errors === "change") this.is_dirty = true;
+
+    if(this.adjust_height) this.adjust_height(this.input);
+
+    // Bubble this setValue to parents if the value changed
+    this.onChange(changed);
+  },
   getNumColumns: function() {
     var min = Math.ceil(Math.max(this.getTitle().length,this.schema.maxLength||0,this.schema.minLength||0)/5);
     var num;
@@ -24,6 +60,8 @@ JSONEditor.defaults.editors.array_string = JSONEditor.defaults.editors.string.ex
   },
   build: function() {
     var self = this, i;
+    if(!this.options.compact) this.header = this.label = this.theme.getFormInputLabel(this.getTitle());
+    if(this.schema.description) this.description = this.theme.getFormInputDescription(this.schema.description);
 
     this.format = this.schema.format;
     if(!this.format && this.schema.media && this.schema.media.type) {
@@ -114,7 +152,6 @@ JSONEditor.defaults.editors.array_string = JSONEditor.defaults.editors.string.ex
         this.input_type = this.format;
         this.source_code = true;
 
-        //this.input = this.theme.getFormInputField(this.input_type);
         this.input = this.theme.getExternalInput();
         var enablerInput = this.input.parentNode.firstChild.firstChild;
         enablerInput.addEventListener('click', function() {
@@ -215,7 +252,7 @@ JSONEditor.defaults.editors.array_string = JSONEditor.defaults.editors.string.ex
 
     if(this.format) this.input.setAttribute('data-schemaformat',this.format);
 
-    this.control = this.theme.getArrayItemControl(this.input);
+    this.control = this.theme.getFormControl(this.label, this.input, this.description);
     this.container.appendChild(this.control);
 
     // Any special formatting that needs to happen after the input is added to the dom
@@ -248,10 +285,38 @@ JSONEditor.defaults.editors.array_string = JSONEditor.defaults.editors.string.ex
     // TODO: WYSIWYG and Markdown editors
     this._super();
   },
+  afterInputReady: function() {
+    this.html_editor && this.html_editor.destroy();
+    var self = this;
+    if(this.options.wysiwyg && ['html','bbcode'].indexOf(this.input_type) >= 0) {
+      this.html_editor = HTMLEditor({
+        element: this.input,
+        autoFocus: this.input.id,
+        path: this.jsoneditor.options.task.path,
+        onChange: function(content, textContent) {
+          self.setSummary(textContent);
+          self.input.value = content;
+          self.value = self.input.value;
+          self.is_dirty = true;
+          self.onChange(true);
+        }
+      })
+    }
+    self.theme.afterInputReady(self.input);
+  },
   refreshValue: function() {
     this.value = this.input.value;
     if(typeof this.value !== "string") this.value = '';
     this.serialized = this.value;
+  },
+  destroy: function() {
+    this.html_editor && this.html_editor.destroy();
+    this.template = null;
+    if(this.input && this.input.parentNode) this.input.parentNode.removeChild(this.input);
+    if(this.label && this.label.parentNode) this.label.parentNode.removeChild(this.label);
+    if(this.description && this.description.parentNode) this.description.parentNode.removeChild(this.description);
+
+    this._super();
   },
   /**
    * This is overridden in derivative editors
@@ -295,42 +360,6 @@ JSONEditor.defaults.editors.array_string = JSONEditor.defaults.editors.string.ex
       this.theme.removeInputError(this.input);
     }
   },
-  setValue: function(value,initial,from_template) {
-    var self = this;
-
-    if(this.template && !from_template) {
-      return;
-    }
-
-    if(value === null || typeof value === 'undefined') value = "";
-    else if(typeof value === "object") value = JSON.stringify(value);
-    else if(typeof value !== "string") value = ""+value;
-
-    if(value === this.serialized) return;
-
-    // Sanitize value before setting it
-    var sanitized = this.sanitize(value);
-
-    if(this.input.value === sanitized) {
-      return;
-    }
-
-    this.input.value = sanitized;
-
-    this.html_editor && this.html_editor.setContent(sanitized)
-
-    var changed = from_template || this.getValue() !== value;
-
-    this.refreshValue();
-
-    if(initial) this.is_dirty = false;
-    else if(this.jsoneditor.options.show_errors === "change") this.is_dirty = true;
-
-    if(this.adjust_height) this.adjust_height(this.input);
-
-    // Bubble this setValue to parents if the value changed
-    this.onChange(changed);
-  },
   setSummary: function(content) {
     if (this.input.parentNode && this.input.parentNode.firstChild) {
       const summaryInput = this.input.parentNode.firstChild.firstChild;
@@ -338,33 +367,5 @@ JSONEditor.defaults.editors.array_string = JSONEditor.defaults.editors.string.ex
         summaryInput.value = content;
       }
     }
-  },
-  afterInputReady: function() {
-    this.html_editor && this.html_editor.destroy();
-    var self = this;
-    if(this.options.wysiwyg && ['html','bbcode'].indexOf(this.input_type) >= 0) {
-      this.html_editor = HTMLEditor({
-        element: this.input,
-        autoFocus: this.input.id,
-        path: this.jsoneditor.options.task.path,
-        onChange: function(content, textContent) {
-          self.setSummary(textContent);
-          self.input.value = content;
-          self.value = self.input.value;
-          self.is_dirty = true;
-          self.onChange(true);
-        }
-      })
-    }
-    self.theme.afterInputReady(self.input);
-  },
-  destroy: function() {
-    this.html_editor && this.html_editor.destroy();
-    this.template = null;
-    if(this.input && this.input.parentNode) this.input.parentNode.removeChild(this.input);
-    if(this.label && this.label.parentNode) this.label.parentNode.removeChild(this.label);
-    if(this.description && this.description.parentNode) this.description.parentNode.removeChild(this.description);
-
-    this._super();
   }
 });

@@ -36,9 +36,9 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
     var el = document.createElement('textarea');
     el.className = 'form-control';
     input.addEventListener('click', function(e) {
-      var wholeContainer = container.parentNode.parentNode.parentNode.parentNode;
+      var wholeContainer = container.parentNode.parentNode.parentNode.parentNode.parentNode;
       for (var child = 0; child < wholeContainer.children.length; child++) {
-        var el = wholeContainer.children[child].children[1].children[0].children[0];
+        var el = wholeContainer.children[child].children[1].children[0].children[1].children[0];
         if (el !== container) el.className = 'external-control';
       }
       container.className = 'external-control active-editor';
@@ -118,26 +118,34 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
 
     return group;
   },
-  getArrayItemControl: function(item) {
-    var group = document.createElement('div');
-    group.className = 'array-item';
-    if (item.parentNode) {
-      group.appendChild(item.parentNode);
-    } else {
-      group.appendChild(item);
-    }
-
-    return group;
-  },
   getArrayItemContainer: function() {
     var el = document.createElement('div');
     return el;
   },
   getArrayDeleteButton: function() {
+    var container = document.createElement('span');
     var el = document.createElement('span');
     el.className = 'array-delete-item glyphicon glyphicon-trash';
     el.setAttribute('aria-hidden', 'true');
-    return el;
+    var confirm = document.createElement('span');
+    confirm.className = 'array-delete-confirm';
+    var okButton = document.createElement('span');
+    okButton.className = 'glyphicon glyphicon-ok';
+    okButton.setAttribute('aria-hidden', 'true');
+    var cancelButton = document.createElement('span');
+    cancelButton.className = 'glyphicon glyphicon-remove';
+    cancelButton.setAttribute('aria-hidden', 'true');
+    el.addEventListener('click', function() {
+      confirm.style.display = 'inline';
+    });
+    cancelButton.addEventListener('click', function() {
+      confirm.style.display = 'none';
+    });
+    confirm.appendChild(okButton);
+    confirm.appendChild(cancelButton);
+    container.appendChild(el);
+    container.appendChild(confirm);
+    return container;
   },
   getArrayMoveButton: function() {
     var el = document.createElement('span');

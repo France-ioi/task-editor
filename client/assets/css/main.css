@@ -212,6 +212,8 @@ div[data-schemaid="root"][data-schemapath="root"]>.description-container {
     margin-bottom: 0;
     padding: 16px 36px;
     border-left: 5px solid #4A90E2;
+    margin-top: -1px;
+    margin-bottom: -1px;
     display: flex;
 }
 
@@ -231,7 +233,7 @@ div[data-schemaid="root"][data-schemapath="root"]>.description-container {
 }
 
 .form-control {
-    background-color: #F1F2F7;
+    background-color: #F1F2F7 !important;
     display: inline-block;
     flex-grow: 1;
     flex-shrink: 1;
@@ -284,22 +286,16 @@ div[data-schematype="array"]>.indented-panel {
     margin-bottom: 0;
 }
 
-.array-item {
+.array-item-holder {
     display: inline-block;
-    max-width: 150px;
 }
 
-.array-item~div, .before-item-controls {
-    display: inline-block;
-    vertical-align: top;
-}
-
-.array-item>.input-field-container>.form-control {
+.array-item-holder>.field-container>.form-right-group>.input-field-container>.form-control {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
 }
 
-.array-item>.input-field-container>.input-label-container {
+.array-item-holder>.field-container>.form-right-group>.input-field-container>.input-label-container {
     display: none;
 }
 
@@ -340,6 +336,15 @@ div[data-schematype="array"]>.indented-panel {
     left: 7px;
     cursor: move;
     color: #D8D8D8;
+}
+
+.array-item-holder>.field-container {
+    padding: 0;
+    border: none;
+}
+
+.array-item-holder>.field-container>.form-left-group {
+    display: none;
 }
 
 .array-row-holder {
@@ -404,11 +409,7 @@ input[type="external_preview"] {
     cursor: text !important;
 }
 
-.array-wide-item {
-    width: 100%;
-}
-
-.arry-wide-item>div[data-schematype="string"] {
+.array-wide-item, .array-wide-item>.array-item-holder, .array-wide-item>.array-item-holder>.field-container  {
     width: 100%;
 }
 
@@ -417,12 +418,13 @@ input[type="external_preview"] {
     display: flex;
 }
 
-.array-wide-item>.array-item-holder>.array-item {
+.array-wide-item>.array-item-holder {
     max-width: 100%;
     flex-grow: 1;
 }
 
 .array-row-container {
+    position: relative;
     display: flex;
 }
 
@@ -456,14 +458,7 @@ div[data-schematype="array"]>div>.form-right-group {
     margin-left: 0 !important;
 }
 
-.boolean-group>button:hover, .boolean-group>button:hover:active, .boolean-group>button:hover:focus:active, .boolean-group>button:hover:focus {
-    background-color: #4A90E2;
-    color: white;
-    opacity: 0.5;
-    border: none;
-}
-
-.boolean-group>button:active, .boolean-group>button:focus, .boolean-group>button:focus:active {
+.boolean-group>button:hover, .boolean-group>button:hover:active, .boolean-group>button:active, .boolean-group>button:focus, .boolean-group>button:focus:active {
     background-color: #F1F2F7;
     color: #c5c4c4;
     opacity: 1;
@@ -477,10 +472,55 @@ div[data-schematype="array"]>div>.form-right-group {
     z-index: 10 !important;
 }
 
-.boolean-group>button.active:hover, .boolean-group>button.active:hover:active:focus, .boolean-group>button.active:active, .boolean-group>button.active:focus, .boolean-group>button.active:hover:active, .boolean-group>button.active:focus:active {
+.boolean-group>button.active:hover, .boolean-group>button.active:active, .boolean-group>button.active:focus, .boolean-group>button.active:hover:active, .boolean-group>button.active:focus:active {
     background-color: #4A90E2;
     color: white;
     opacity: 1;
     border: none;
 }
 
+button.btn:focus, button.btn:active:focus {
+    outline: 0 !important;
+}
+
+.array-delete-confirm {
+    position: absolute;
+    left: auto;
+    right: -75px;
+    top: 0;
+    background: #4a90e2;
+    padding: 8px;
+    border-radius: 6px;
+    display: none;
+    z-index: 2;
+}
+
+.array-delete-confirm:after {
+    right: 100%;
+    top: 50%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+    border-color: rgba(74, 144, 226, 0);
+    border-right-color: #4a90e2;
+    border-width: 6px;
+    margin-top: -6px;
+}
+
+.array-delete-confirm>span {
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.array-delete-confirm>span:first-child {
+    margin-left: 4px;
+    margin-right: 10px;
+}
+
+.array-delete-confirm>span:last-child {
+    margin-right: 2px;
+}

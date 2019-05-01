@@ -251,6 +251,7 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
     ret.before_controls = before_controls;
 
     ret.array_controls = document.createElement('div');
+    ret.array_controls.className = 'array-controls';
     row_container.appendChild(ret.array_controls);
 
     return ret;
@@ -496,10 +497,11 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
       self.rows[i].delete_button = this.theme.getArrayDeleteButton();
       self.rows[i].delete_button.className += ' delete';
       self.rows[i].delete_button.setAttribute('data-i',i);
-      self.rows[i].delete_button.addEventListener('click',function(e) {
+      self.rows[i].delete_button.children[1].children[0].addEventListener('click',function(e) {
         e.preventDefault();
         e.stopPropagation();
-        var i = this.getAttribute('data-i')*1;
+        this.parentNode.style.display = 'none';
+        var i = this.parentNode.parentNode.getAttribute('data-i')*1;
 
         var value = self.getValue();
 
