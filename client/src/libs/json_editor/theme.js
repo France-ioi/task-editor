@@ -37,14 +37,27 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
     el.className = 'form-control';
     input.addEventListener('click', function(e) {
       var wholeContainer = container.parentNode.parentNode.parentNode.parentNode.parentNode;
-      for (var child = 0; child < wholeContainer.children.length; child++) {
-        var el = wholeContainer.children[child].children[1].children[0].children[1].children[0];
-        if (el !== container) el.className = 'external-control';
+      if (wholeContainer.className.indexOf('array-row-holder') !== -1) {
+        for (var child = 0; child < wholeContainer.children.length; child++) {
+          var el = wholeContainer.children[child].children[1].children[0].children[1].children[0];
+          if (el !== container) {
+            el.className = 'external-control';
+            var arrayItem = el.parentNode.parentNode.parentNode.parentNode;
+            arrayItem.className = arrayItem.className.replace(/\s*not-round/g, '');
+          }
+        }
+        var arrayItem = container.parentNode.parentNode.parentNode.parentNode;
+        arrayItem.className += ' not-round';
       }
       container.className = 'external-control active-editor';
     });
     exitButton.addEventListener('click', function(e) {
       container.className = 'external-control';
+      var wholeContainer = container.parentNode.parentNode.parentNode.parentNode.parentNode;
+      if (wholeContainer.className.indexOf('array-row-holder') !== -1) {
+        var arrayItem = container.parentNode.parentNode.parentNode.parentNode;
+        arrayItem.className = arrayItem.className.replace(/\s*not-round/g, '');
+      }
     });
     container.appendChild(topContainer);
 		container.appendChild(el);
@@ -219,7 +232,7 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
       return el;
     }
     var el = this._super(text, icon, title);
-    if (text === 'Add ') {
+    if (text.startsWith('Add ')) {
       var icon = document.createElement('span');
       icon.className = 'add-button glyphicon glyphicon-plus';
       icon.setAttribute('aria-hidden', 'true');

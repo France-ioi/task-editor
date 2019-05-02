@@ -73,72 +73,95 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
     this.hide_move_buttons = this.options.disable_array_reorder || this.jsoneditor.options.disable_array_reorder;
     this.hide_add_button = this.options.disable_array_add || this.jsoneditor.options.disable_array_add;
   },
+  isCompressedArray: function() {
+    if (this.compressed !== undefined) return this.compressed;
+    var schema = this.getItemSchema(0);
+    schema = this.jsoneditor.expandRefs(schema);
+    this.compressed = (schema.type !== 'object');
+    return this.compressed;
+  },
+  isWideArray: function() {
+    if (this.wide !== undefined) return this.wide;
+    var schema = this.getItemSchema(0);
+    schema = this.jsoneditor.expandRefs(schema);
+    this.wide = (schema.type === 'string' && schema.format === 'html');
+    return this.wide;
+  },
   build: function() {
     var self = this;
 
     if(!this.options.compact) {
-      this.header = this.label = this.theme.getFormInputLabel(this.getTitle());
-      if(this.schema.description) {
-        this.description = this.theme.getFormInputDescription(this.schema.description);
-      }
-      this.error_holder = document.createElement('div');
+      if (this.isCompressedArray()) {
+        this.header = this.label = this.theme.getFormInputLabel(this.getTitle());
+        if(this.schema.description) {
+          this.description = this.theme.getFormInputDescription(this.schema.description);
+        }
+        this.error_holder = document.createElement('div');
 
-      this.panel = document.createElement('div');
-      if(false && this.schema.format === 'tabs') {
-        this.controls = this.theme.getButtonHolder();
-        this.tabs_holder = this.theme.getTabHolder();
-        this.row_holder = this.theme.getTabContentHolder(this.tabs_holder);
-        this.panel.appendChild(this.tabs_holder);
-        this.panel.appendChild(this.controls);
-        this.panel.appendChild(this.error_holder);
-
-        this.active_tab = null;
-      }
-      else {
+        this.panel = document.createElement('div');
         this.row_holder = document.createElement('div');
         this.row_holder.className = 'array-row-holder';
-        this.sorter = new Sortable(this.row_holder, {
-          handle: '.array-move-item',
-          animation: 200,
-          onUpdate: function (e) {
-            var rows = self.getValue();
-            var old = rows[e.oldIndex];
-            var oldRow = self.rows[e.oldIndex];
-            if (e.oldIndex < e.newIndex) {
-              for (var i = e.oldIndex; i < e.newIndex; i++) {
-                rows[i] = rows[i + 1];
-                self.rows[i] = self.rows[i + 1];
-                self.rows[i].delete_button.setAttribute('data-i', i);
-              }
-            } else {
-              for (var i = e.oldIndex; i > e.newIndex; i--) {
-                rows[i] = rows[i - 1];
-                self.rows[i] = self.rows[i - 1];
-                self.rows[i].delete_button.setAttribute('data-i', i);
-              }
-            }
-            rows[e.newIndex] = old;
-            self.rows[e.newIndex] = oldRow;
-            self.rows[e.newIndex].delete_button.setAttribute('data-i', e.newIndex);
-
-            self.setValue(rows);
-            self.active_tab = self.rows[e.newIndex].tab;
-            self.refreshTabs();
-
-            self.onChange(true);
-          },
-        });
         this.controls = this.theme.getButtonHolder();
         this.panel.appendChild(this.row_holder);
         this.panel.appendChild(this.controls);
         this.panel.appendChild(this.error_holder);
+        this.container.appendChild(this.theme.getFormControl(this.label, this.panel, this.description))
+        if (this.isWideArray()) {
+          this.container.lastChild.className += ' wide-array';
+        }
+      } else {
+        this.header = document.createElement('span');
+        this.header.textContent = this.getTitle();
+        this.title = this.theme.getHeader(this.header);
+        this.container.appendChild(this.title);
+        this.title_controls = this.theme.getHeaderButtonHolder();
+        this.title.appendChild(this.title_controls);
+        if(this.schema.description) {
+          this.description = this.theme.getDescription(this.schema.description);
+          this.container.appendChild(this.description);
+        }
+        this.error_holder = document.createElement('div');
+        this.container.appendChild(this.error_holder);
+        this.panel = this.theme.getIndentedPanel();
+        this.container.appendChild(this.panel);
+        this.row_holder = document.createElement('div');
+        this.panel.appendChild(this.row_holder);
+        this.controls = document.createElement('span');
+        this.controls.className = 'array-buttons';
+        this.title_controls.insertBefore(this.controls, this.title_controls.firstChild);
+        this.container.lastChild.className += ' object-array';
       }
-      this.container.appendChild(this.theme.getFormControl(this.label, this.panel, this.description))
-      var schema = this.getItemSchema(0);
-      schema = this.jsoneditor.expandRefs(schema);
-      if (schema.type === 'string' && schema.format === 'html') {
-        this.container.lastChild.className += ' wide-array';
-      }
+      this.sorter = new Sortable(this.row_holder, {
+        handle: '.array-move-item',
+        animation: 200,
+        onUpdate: function (e) {
+          var rows = self.getValue();
+          var old = rows[e.oldIndex];
+          var oldRow = self.rows[e.oldIndex];
+          if (e.oldIndex < e.newIndex) {
+            for (var i = e.oldIndex; i < e.newIndex; i++) {
+              rows[i] = rows[i + 1];
+              self.rows[i] = self.rows[i + 1];
+              self.rows[i].delete_button.setAttribute('data-i', i);
+            }
+          } else {
+            for (var i = e.oldIndex; i > e.newIndex; i--) {
+              rows[i] = rows[i - 1];
+              self.rows[i] = self.rows[i - 1];
+              self.rows[i].delete_button.setAttribute('data-i', i);
+            }
+          }
+          rows[e.newIndex] = old;
+          self.rows[e.newIndex] = oldRow;
+          self.rows[e.newIndex].delete_button.setAttribute('data-i', e.newIndex);
+
+          self.setValue(rows);
+          self.active_tab = self.rows[e.newIndex].tab;
+          self.refreshTabs();
+
+          self.onChange(true);
+        },
+      });
     }
     else {
         this.panel = this.theme.getIndentedPanel();
@@ -215,11 +238,7 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
     var schema = this.getItemSchema(i);
     schema = this.jsoneditor.expandRefs(schema);
     schema.title = item_info.title+' '+(i+1);
-
     var editor = this.jsoneditor.getEditorClass(schema);
-    if (editor === JSONEditor.defaults.editors.string) {
-      editor = JSONEditor.defaults.editors.array_string;
-    }
 
     var holder;
     if(this.tabs_holder) {
@@ -228,16 +247,24 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
     else if(item_info.child_editors) {
       holder = this.theme.getChildEditorHolder();
     }
-    else {
-      holder = this.theme.getArrayItemContainer();
+    else if(this.isCompressedArray()){
+      holder = document.createElement('div');
+    } else {
+      holder = this.theme.getIndentedPanel();
     }
 
     var row_container = document.createElement('div');
     row_container.className = 'array-row-container';
     this.row_holder.appendChild(row_container);
 
-    var before_controls = document.createElement('div');
-    before_controls.className = 'before-item-controls';
+    if (this.isCompressedArray()) {
+      var before_controls = document.createElement('div');
+      before_controls.className = 'before-item-controls';
+    } else {
+      var before_controls = document.createElement('span');
+      before_controls.className = 'before-object-array-controls';
+    }
+
     row_container.appendChild(before_controls);
     holder.className = 'array-item-holder';
     row_container.appendChild(holder);
@@ -255,9 +282,16 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
     ret.postBuild();
     ret.before_controls = before_controls;
 
-    ret.array_controls = document.createElement('div');
-    ret.array_controls.className = 'array-controls';
-    row_container.appendChild(ret.array_controls);
+    if (this.isCompressedArray()) {
+      ret.array_controls = document.createElement('div');
+      ret.array_controls.className = 'array-controls';
+      row_container.appendChild(ret.array_controls);
+    } else {
+      ret.array_controls = document.createElement('span');
+      ret.array_controls.className = 'object-array-controls';
+      ret.title_controls.insertBefore(ret.array_controls, ret.title_controls.firstChild);
+      holder.className += ' array-wide-item';
+    }
 
     return ret;
   },
@@ -463,8 +497,8 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
       else {
         this.add_row_button.style.display = '';
         controls_needed = true;
-      } 
-      
+      }
+
       if(!this.collapsed && controls_needed) {
         this.controls.style.display = 'inline-block';
       }
@@ -535,12 +569,12 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
 
         self.onChange(true);
       });
-      
+
       if(controls_holder) {
         controls_holder.appendChild(self.rows[i].delete_button);
       }
     }
-    
+
     if(!self.hide_move_buttons) {
       self.rows[i].move_button = this.theme.getArrayMoveButton();
       if(before_controls_holder) {
@@ -553,49 +587,15 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
   },
   addControls: function() {
     var self = this;
-    
-    //this.collapsed = false;
-    //this.toggle_button = this.getButton('','collapse',this.translate('button_collapse'));
-    //this.title_controls.appendChild(this.toggle_button);
+
     var row_holder_display = self.row_holder.style.display;
     var controls_display = self.controls.style.display;
-    //this.toggle_button.addEventListener('click',function(e) {
-      //e.preventDefault();
-      //e.stopPropagation();
-      //if(self.collapsed) {
-        //self.collapsed = false;
-        //if(self.panel) self.panel.style.display = '';
-        //self.row_holder.style.display = row_holder_display;
-        //if(self.tabs_holder) self.tabs_holder.style.display = '';
-        //self.controls.style.display = controls_display;
-        //self.setButtonText(this,'','collapse',self.translate('button_collapse'));
-      //}
-      //else {
-        //self.collapsed = true;
-        //self.row_holder.style.display = 'none';
-        //if(self.tabs_holder) self.tabs_holder.style.display = 'none';
-        //self.controls.style.display = 'none';
-        //if(self.panel) self.panel.style.display = 'none';
-        //self.setButtonText(this,'','expand',self.translate('button_expand'));
-      //}
-    //});
 
-     //If it should start collapsed
-    //if(this.options.collapsed) {
-      //$trigger(this.toggle_button,'click');
-    //}
-    
-    // Collapse button disabled
-    //if(this.schema.options && typeof this.schema.options.disable_collapse !== "undefined") {
-      //if(this.schema.options.disable_collapse) this.toggle_button.style.display = 'none';
-    //}
-    //else if(this.jsoneditor.options.disable_collapse) {
-      //this.toggle_button.style.display = 'none';
-    //}
-    
     // Add "new row" and "delete last" buttons below editor
-    this.add_row_button = this.getButton(this.getItemTitle(),'add',this.translate('button_add_row_title',['']));
-    
+    var itemName = this.getItemTitle();
+    if (itemName === 'item') itemName = '';
+    this.add_row_button = this.getButton(itemName, 'add',this.translate('button_add_row_title',[itemName]));
+
     this.add_row_button.addEventListener('click',function(e) {
       e.preventDefault();
       e.stopPropagation();
@@ -645,18 +645,43 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
     });
     self.controls.appendChild(this.remove_all_rows_button);
 
-    if(self.tabs) {
-      this.add_row_button.style.width = '100%';
-      this.add_row_button.style.textAlign = 'left';
-      this.add_row_button.style.marginBottom = '3px';
-      
-      this.delete_last_row_button.style.width = '100%';
-      this.delete_last_row_button.style.textAlign = 'left';
-      this.delete_last_row_button.style.marginBottom = '3px';
-      
-      this.remove_all_rows_button.style.width = '100%';
-      this.remove_all_rows_button.style.textAlign = 'left';
-      this.remove_all_rows_button.style.marginBottom = '3px';
+    if (!this.isCompressedArray()) {
+      this.collapsed = false;
+      this.toggle_button = this.getButton('','collapse',this.translate('button_collapse'));
+      this.title_controls.appendChild(this.toggle_button);
+      this.toggle_button.addEventListener('click',function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if(self.collapsed) {
+          self.collapsed = false;
+          if(self.panel) self.panel.style.display = '';
+          self.row_holder.style.display = row_holder_display;
+          if(self.tabs_holder) self.tabs_holder.style.display = '';
+          self.controls.style.display = controls_display;
+          self.setButtonText(this,'','collapse',self.translate('button_collapse'));
+        }
+        else {
+          self.collapsed = true;
+          self.row_holder.style.display = 'none';
+          if(self.tabs_holder) self.tabs_holder.style.display = 'none';
+          self.controls.style.display = 'none';
+          if(self.panel) self.panel.style.display = 'none';
+          self.setButtonText(this,'','expand',self.translate('button_expand'));
+        }
+      });
+
+      // If it should start collapsed
+      if(this.options.collapsed) {
+        $trigger(this.toggle_button,'click');
+      }
+
+      // Collapse button disabled
+      if(this.schema.options && typeof this.schema.options.disable_collapse !== "undefined") {
+        if(this.schema.options.disable_collapse) this.toggle_button.style.display = 'none';
+      }
+      else if(this.jsoneditor.options.disable_collapse) {
+        this.toggle_button.style.display = 'none';
+      }
     }
   },
   showValidationErrors: function(errors) {
