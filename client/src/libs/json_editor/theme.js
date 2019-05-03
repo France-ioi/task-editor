@@ -33,8 +33,7 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
     topContainer.appendChild(exitButton);
     topContainer.className = 'external-preview-bar';
     input.setAttribute('readonly', true);
-    var el = document.createElement('textarea');
-    el.className = 'form-control';
+    var el = this.getTextareaInput();
     input.addEventListener('click', function(e) {
       var wholeContainer = container.parentNode.parentNode.parentNode.parentNode.parentNode;
       if (wholeContainer.className.indexOf('array-row-holder') !== -1) {
@@ -77,6 +76,53 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
   getRangeInput: function(min, max, step) {
     // TODO: use better slider
     return this._super(min, max, step);
+  },
+  getIcon: function(name) {
+    var el = document.createElement('span');
+    el.className = 'glyphicon glyphicon-'+ name;
+    el.setAttribute('aria-hidden', 'true');
+    return el;
+  },
+  getFileView: function() {
+    var container = document.createElement('div');
+    container.className = 'file-container';
+    var nameContainer = document.createElement('div');
+    nameContainer.className = 'file-name-container';
+    var fileBar = document.createElement('div');
+    fileBar.className = 'file-bar';
+    fileBar.appendChild(nameContainer);
+    var exitButton = document.createElement('span');
+    exitButton.innerHTML = 'EXIT';
+    fileBar.appendChild(exitButton);
+    container.appendChild(fileBar);
+
+    var preview = document.createElement('div');
+    preview.className = 'file-preview';
+    container.appendChild(preview);
+    var filename = this.getFormInputField('text').parentNode;
+    var openIcon = this.getIcon('folder-open');
+    openIcon.className += ' open-new-file';
+    filename.appendChild(openIcon);
+    preview.appendChild(filename);
+    var filesize = document.createElement('div');
+    filesize.className = 'file-size';
+    var filesizeTitle = document.createElement('span');
+    filesizeTitle.innerHTML = 'File size';
+    var filesizeValue = document.createElement('span');
+    filesizeValue.innerHTML = 'Unknown';
+    filesize.appendChild(filesizeTitle);
+    filesize.appendChild(filesizeValue);
+    preview.appendChild(filesize);
+    var fileEditor = this.getTextareaInput();
+    fileEditor.className += ' file-editor';
+    preview.appendChild(fileEditor);
+    var imagePreview = document.createElement('div');
+    imagePreview.className = 'image-preview';
+    var image = document.createElement('img');
+    image.setAttribute('src', '/app/images/test.png');
+    imagePreview.appendChild(image);
+    preview.appendChild(imagePreview);
+    return container;
   },
   getFormInputField: function(type) {
     var el = this._super(type);
@@ -137,17 +183,12 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
   },
   getArrayDeleteButton: function() {
     var container = document.createElement('span');
-    var el = document.createElement('span');
-    el.className = 'array-delete-item glyphicon glyphicon-trash';
-    el.setAttribute('aria-hidden', 'true');
+    var el = this.getIcon('trash');
+    el.className += ' array-delete-item';
     var confirm = document.createElement('span');
     confirm.className = 'array-delete-confirm';
-    var okButton = document.createElement('span');
-    okButton.className = 'glyphicon glyphicon-ok';
-    okButton.setAttribute('aria-hidden', 'true');
-    var cancelButton = document.createElement('span');
-    cancelButton.className = 'glyphicon glyphicon-remove';
-    cancelButton.setAttribute('aria-hidden', 'true');
+    var okButton = this.getIcon('ok');
+    var cancelButton = this.getIcon('remove');
     el.addEventListener('click', function() {
       confirm.style.display = 'inline';
     });
@@ -161,9 +202,8 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
     return container;
   },
   getArrayMoveButton: function() {
-    var el = document.createElement('span');
-    el.className = 'array-move-item glyphicon glyphicon-option-vertical';
-    el.setAttribute('aria-hidden', 'true');
+    var el = this.getIcon('option-vertical');
+    el.className += ' array-move-item';
     return el;
   },
   getIndentedPanel: function() {
@@ -226,16 +266,14 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
   },
   getButton: function(text, icon, title) {
     if (text == 'Collapse') {
-      var el = document.createElement('span');
-      el.className = 'collapse-button glyphicon glyphicon-chevron-up';
-      el.setAttribute('aria-hidden', 'true');
+      var el = this.getIcon('chevron-up');
+      el.className += ' collapse-button';
       return el;
     }
     var el = this._super(text, icon, title);
     if (text.startsWith('Add ')) {
-      var icon = document.createElement('span');
-      icon.className = 'add-button glyphicon glyphicon-plus';
-      icon.setAttribute('aria-hidden', 'true');
+      var icon = this.getIcon('plus');
+      icon.className += ' add-button';
       el.insertBefore(icon, el.firstChild);
     }
     el.className += 'btn btn-default';

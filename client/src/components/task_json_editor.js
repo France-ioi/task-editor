@@ -60,7 +60,7 @@ class TaskJsonEditor extends React.Component {
             path: this.props.task.path,
             filename
         }).then((res) => {
-            cbs.success(res.content);
+            cbs.success(res);
         }).catch((err) => {
             cbs.failure(err.message);
         });

@@ -364,7 +364,7 @@ div[data-schematype="array"]>.header-container>h3 {
 }
 
 .form-control {
-    background-color: #F1F2F7 !important;
+    background-color: #f2f2f2 !important;
     display: inline-block;
     flex-grow: 1;
     flex-shrink: 1;
@@ -384,9 +384,9 @@ div[data-schematype="array"]>.header-container>h3 {
 }
 
 .input-label-container {
-    border-top-left-radius: 4px;
-    border-bottom-left-radius: 4px;
-    background-color: #F1F2F7;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    background-color: #f2f2f2;
     color: #c5c4c4;
     font-weight: bold;
     display: inline-block;
@@ -439,7 +439,7 @@ div[data-schematype="array"]>.header-container>h3 {
     display: inline-block;
 }
 
-.array-item-holder>.field-container>.form-right-group>.input-field-container>.form-control {
+.array-item-holder>.field-container>.form-right-group>.input-field-container>.form-control, .file-preview>.input-field-container>.form-control {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
 }
@@ -450,7 +450,7 @@ div[data-schematype="array"]>.header-container>h3 {
 
 .array-delete-item {
     display: inline-block;
-    background-color: #F1F2F7;
+    background-color: #f2f2f2;
     height: 34px;
     margin-top: -1px;
     vertical-align: top;
@@ -474,7 +474,7 @@ div[data-schematype="array"]>.header-container>h3 {
 
 .array-move-item {
     display: inline-block;
-    background-color: #F1F2F7;
+    background-color: #f2f2f2;
     height: 34px;
     margin-top: -1px;
     vertical-align: top;
@@ -545,7 +545,7 @@ div[data-schematype="array"]>.header-container>h3 {
 }
 
 .mce-edit-area, .mce-content-body {
-    background-color: #F1F2F7 !important;
+    background-color: #f2f2f2 !important;
 		color: #787878 !important;
 }
 
@@ -558,7 +558,7 @@ div[data-schematype="array"]>.header-container>h3 {
 }
 
 .external-preview-bar>span {
-    background-color: #F1F2F7;
+    background-color: #f2f2f2;
     padding: 8px;
     color: #4A90E2;
     font-weight: bold;
@@ -629,9 +629,9 @@ div[data-schematype="array"]>div>.form-right-group {
 .boolean-group>button {
     margin-left: -24px !important;
     flex-grow: 1;
-    background-color: #F1F2F7;
+    background-color: #e5e5e5;
     color: #c5c4c4;
-    box-shadow: inset 1px 1px 0 0 #F1F2F7;
+    box-shadow: inset 1px 1px 0 0 #e5e5e5;
     border: none;
 }
 
@@ -640,8 +640,8 @@ div[data-schematype="array"]>div>.form-right-group {
 }
 
 .boolean-group>button:hover, .boolean-group>button:hover:active, .boolean-group>button:active, .boolean-group>button:focus, .boolean-group>button:focus:active {
-    background-color: #F1F2F7;
-    color: #c5c4c4;
+    background-color: #e5e5e5;
+    color: #b8b8b8;
     opacity: 1;
     border: none;
 }
@@ -743,4 +743,83 @@ div[data-schematype="array"]>.header-container>.btn-group>.array-buttons {
 .object-array-controls>.delete>.array-delete-item {
     margin-right: 42px;
     background-color: white;
+}
+
+.file-container {
+    background-color: #f2f2f2;
+}
+
+.file-bar {
+    display: flex;
+}
+
+.file-bar>span {
+    color: #4A90E2;
+    font-weight: bold;
+    padding: 8px;
+    cursor: pointer;
+    display: none;
+}
+
+.file-name-container {
+    flex-grow: 1;
+    cursor: text;
+    padding: 8px 12px;
+    font-weight: bold;
+    font-size: 14px;
+    color: #787878;
+}
+
+.file-preview {
+    padding: 8px 16px;
+}
+
+.file-preview {
+    display: none;
+}
+
+.open-preview>.file-bar>span {
+    display: block;
+}
+
+.open-preview>.file-preview {
+    display: block;
+}
+
+.file-preview>.input-field-container>div, .file-preview>.input-field-container>input {
+    background-color: #e5e5e5 !important;
+}
+
+.open-new-file {
+    background-color: #4A90E2 !important;
+    color: white;
+    padding: 10px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.file-size {
+    color: #787878;
+    margin-top: 8px;
+    display: flex;
+    justify-content: space-between;
+}
+
+textarea.form-control.file-editor {
+    background-color: #e5e5e5 !important;
+    margin-top: 8px;
+    height: 200px;
+    resize: vertical;
+    display: none;
+}
+
+.image-preview {
+    margin-top: 8px;
+    text-align: center;
+    display: none;
+}
+
+.image-preview>img {
+    max-width: 100%;
+    max-height: 200px;
 }
