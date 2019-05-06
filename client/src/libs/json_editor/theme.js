@@ -91,6 +91,9 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
     var fileBar = document.createElement('div');
     fileBar.className = 'file-bar';
     fileBar.appendChild(nameContainer);
+    var thumbnail = document.createElement('img');
+    thumbnail.className = 'file-thumbnail';
+    fileBar.appendChild(thumbnail);
     var exitButton = document.createElement('span');
     exitButton.innerHTML = 'EXIT';
     fileBar.appendChild(exitButton);
@@ -119,10 +122,61 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
     var imagePreview = document.createElement('div');
     imagePreview.className = 'image-preview';
     var image = document.createElement('img');
-    image.setAttribute('src', '/app/images/test.png');
     imagePreview.appendChild(image);
     preview.appendChild(imagePreview);
+
+    container.appendChild(this.getFileUploader());
+
     return container;
+  },
+  getFileUploader: function() {
+    var uploader = document.createElement('div');
+    uploader.className = 'file-uploader';
+
+    var dropHere = document.createElement('div');
+
+    var dropHereIcon = this.getIcon('open');
+    var dropHereText = document.createElement('span');
+    dropHereText.innerHTML = 'DROP YOUR FILES HERE';
+    dropHere.appendChild(dropHereIcon);
+    dropHere.appendChild(dropHereText);
+    uploader.appendChild(dropHere);
+
+    var selectFile = this.getButton('OR SELECT FILES');
+    selectFile.className += ' round-btn';
+    var selectIcon = this.getIcon('folder-open');
+    selectFile.insertBefore(selectIcon, selectFile.firstChild);
+    var byEditor = this.getButton('OR BY EDITOR');
+    byEditor.className += ' round-btn';
+    var addIcon = this.getIcon('plus');
+    byEditor.insertBefore(addIcon, byEditor.firstChild);
+
+    uploader.appendChild(selectFile);
+    uploader.appendChild(byEditor);
+
+    var dragEvents = ['drag', 'dragstart', 'dragend', 'dragover', 'dragenter', 'dragleave', 'drop'];
+    for (var i = 0; i < dragEvents.length; i++) {
+      uploader.addEventListener(dragEvents[i], (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+      });
+    }
+
+    var dragInEvents = ['dragover', 'dragenter'];
+    for (var i = 0; i < dragInEvents.length; i++) {
+      uploader.addEventListener(dragInEvents[i], (e) => {
+        uploader.className += ' is-dragging';
+      });
+    }
+
+    var dragOutEvents = ['dragleave', 'dragend', 'drop'];
+    for (var i = 0; i < dragOutEvents.length; i++) {
+      uploader.addEventListener(dragOutEvents[i], (e) => {
+        uploader.className = uploader.className.replace(/\s*is-dragging/g,'');
+      });
+    }
+
+    return uploader;
   },
   getFormInputField: function(type) {
     var el = this._super(type);
@@ -342,7 +396,7 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
   markTabInactive: function(tab) {
     tab.className = tab.className.replace(/\s?active/g,'');
   },
-  getProgressBar: function() {
+  getProgressBar: function(title) {
     var min = 0, max = 100, start = 0;
 
     var container = document.createElement('div');
@@ -354,8 +408,17 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
     bar.setAttribute('aria-valuenow', start);
     bar.setAttribute('aria-valuemin', min);
     bar.setAttribute('aria-valuenax', max);
-    bar.innerHTML = start + "%";
     container.appendChild(bar);
+
+    var titleContainer = document.createElement('div');
+    titleContainer.innerHTML = title || '';
+    titleContainer.className = 'progress-title';
+    container.appendChild(titleContainer);
+
+    var percentage = document.createElement('div');
+    percentage.className = 'percentage';
+    percentage.innerHTML = start + '%';
+    container.appendChild(percentage);
 
     return container;
   },
@@ -366,7 +429,7 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
     var percentage = progress + "%";
     bar.setAttribute('aria-valuenow', progress);
     bar.style.width = percentage;
-    bar.innerHTML = percentage;
+    progressBar.lastChild.innerHTML = percentage;
   },
   updateProgressBarUnknown: function(progressBar) {
     if (!progressBar) return;
@@ -375,6 +438,6 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
     progressBar.className = 'progress progress-striped active';
     bar.removeAttribute('aria-valuenow');
     bar.style.width = '100%';
-    bar.innerHTML = '';
+    progressBar.lastChild.innerHTML = '';
   }
 });
