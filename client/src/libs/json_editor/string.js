@@ -154,10 +154,18 @@ JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
 
         this.input = this.theme.getExternalInput();
         var enablerInput = this.input.parentNode.firstChild.firstChild;
-        enablerInput.addEventListener('click', function() {
+        enablerInput.addEventListener('click', () => {
+          if (this.parent.activateItem) {
+            this.parent.activateItem(this);
+          } else this.input.parentNode.className = 'external-control active-item';
           setTimeout(() => self.afterInputReady(), 0);
         });
-        this.container.parentNode.className += ' array-wide-item';
+        var exitButton = this.input.parentNode.firstChild.lastChild;
+        exitButton.addEventListener('click', () => {
+          if (this.parent.deactivateItem) {
+            this.parent.deactivateItem(this);
+          } else this.input.parentNode.className = 'external-control';
+        });
       }
       // HTML5 Input type
       else {

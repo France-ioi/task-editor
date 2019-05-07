@@ -84,7 +84,9 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
     if (this.wide !== undefined) return this.wide;
     var schema = this.getItemSchema(0);
     schema = this.jsoneditor.expandRefs(schema);
-    this.wide = (schema.type === 'string' && schema.format === 'html');
+    this.wide =
+      (schema.type === 'string' && schema.format === 'html') ||
+      (schema.type === 'string' && schema.format === 'url');
     return this.wide;
   },
   build: function() {
@@ -256,6 +258,10 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
     var row_container = document.createElement('div');
     row_container.className = 'array-row-container';
     this.row_holder.appendChild(row_container);
+
+    if (this.isWideArray()) {
+      row_container.className += ' array-wide-item';
+    }
 
     if (this.isCompressedArray()) {
       var before_controls = document.createElement('div');
@@ -719,5 +725,17 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
     $each(this.rows, function(i,row) {
       row.showValidationErrors(other_errors);
     });
+  },
+  activateItem: function(item) {
+    for (var child = 0; child < this.rows.length; child++) {
+      var el = this.rows[child];
+      if (el !== item) {
+        el.container.parentNode.className = el.container.parentNode.className.replace(/\s*active-item/g, '');
+      }
+    }
+    item.container.parentNode.className += ' active-item';
+  },
+  deactivateItem: function(item) {
+    item.container.parentNode.className = item.container.parentNode.className.replace(/\s*active-item/g, '');
   }
 });

@@ -37,7 +37,8 @@ JSONEditor.defaults.editors.upload = JSONEditor.AbstractEditor.extend({
     this.container.appendChild(this.control);
   },
   addByEditor: function() {
-    this.file_view.className += ' open-preview';
+    if (this.parent.activateItem) this.parent.activateItem(this)
+    else this.file_view.className += ' active-item';
     this.file_view.className = this.file_view.className.replace(/\s*no-file/g, '');
     this.file_bar.firstChild.innerHTML = 'New File';
     this.file_preview.children[0].children[1].value = ''; // File Rename Field
@@ -153,7 +154,8 @@ JSONEditor.defaults.editors.upload = JSONEditor.AbstractEditor.extend({
     var cbs = {
       success: (file) => {
         this.old_filename = this.input.value;
-        this.file_view.className += ' open-preview';
+        if (this.parent.activateItem) this.parent.activateItem(this)
+        else this.file_view.className += ' active-item';
         this.file_preview.children[0].children[1].value = this.file_bar.firstChild.innerHTML; // File Rename Field
         this.file_preview.children[1].children[1].innerHTML = this.formatFileSize(file.content.length); // File Size
         this.file_preview.children[2].value = file.content; // File Editor
@@ -184,7 +186,8 @@ JSONEditor.defaults.editors.upload = JSONEditor.AbstractEditor.extend({
     if (e) e.stopPropagation();
 
     this.pane_shown = false;
-    this.file_view.className = this.file_view.className.replace(/\s*open-preview/g, '');
+    if (this.parent.deactivateItem) this.parent.deactivateItem(this);
+    else this.file_view.className = this.file_view.className.replace(/\s*active-item/g, '');
 
     if (this.value === '') {
       this.file_view.className += ' no-file';
