@@ -625,7 +625,7 @@ input[type="external_preview"] {
     flex-grow: 1;
 }
 
-.array-row-holder+.btn-group {
+.array-row-holder~* {
     margin-left: 8px;
 }
 
@@ -752,8 +752,13 @@ div[data-schematype="array"]>.header-container>.btn-group>.array-buttons {
     color: white;
 }
 
+.object-array-controls {
+    position: absolute;
+    right: 24px;
+    top: -8px;
+}
+
 .object-array-controls>.delete>.array-delete-item {
-    margin-right: 42px;
     background-color: white;
 }
 
@@ -863,6 +868,7 @@ textarea.form-control.file-editor {
 
 .file-error {
     margin-top: 10px;
+    margin-bottom: 0;
     border-radius: 15px;
     background-color: #ffe5e9;
     color: #FF001F;
@@ -910,6 +916,7 @@ input[type="file"].file-input {
     border-radius: 15px;
     background-color: #f2f2f2;
     box-shadow: none;
+    margin-bottom: 0;
     position: relative;
 }
 
@@ -994,4 +1001,15 @@ input[type="file"].file-input {
 
 .image-file-container:not(.active-item)>.before-item-controls>.array-move-item::before, .image-file-container:not(.active-item)>.array-controls>.delete>.array-delete-item::before {
     top: 28px;
+}
+
+.array-multiple-item>.before-object-array-controls {
+    top: 46px;
+}
+
+.floating.object-array-controls {
+    position: absolute;
+    right: 64px;
+    top: 40px;
+    z-index: 2;
 }

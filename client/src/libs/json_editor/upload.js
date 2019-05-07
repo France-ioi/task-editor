@@ -71,7 +71,9 @@ JSONEditor.defaults.editors.upload = JSONEditor.AbstractEditor.extend({
 
     if (this.theme.getProgressBar) {
       this.progressBar = this.theme.getProgressBar();
-      this.file_view.appendChild(this.progressBar);
+      if (this.parent.activateItem) {
+        this.parent.panel.insertBefore(this.progressBar, this.parent.controls);
+      } else this.file_view.appendChild(this.progressBar);
     }
 
     var file_change = this.file_preview.children[0].children[2];
@@ -83,7 +85,7 @@ JSONEditor.defaults.editors.upload = JSONEditor.AbstractEditor.extend({
         if(this.parent) this.parent.onChildEditorChange(this);
         else this.jsoneditor.onChange();
 
-        if (this.progressBar) this.file_view.removeChild(this.progressBar);
+        if (this.progressBar) this.progressBar.parentNode.removeChild(this.progressBar);
         this.file_input.removeAttribute('disabled');
         if (this.temporary_array_item) {
           this.parent.showItem(this);
@@ -92,7 +94,7 @@ JSONEditor.defaults.editors.upload = JSONEditor.AbstractEditor.extend({
       },
       failure: (error) => {
         this.setFileError(error);
-        if (this.progressBar) this.file_view.removeChild(this.progressBar);
+        if (this.progressBar) this.progressBar.parentNode.removeChild(this.progressBar);
         this.file_input.removeAttribute('disabled');
         if (this.temporary_array_item) this.parent.deleteItem(this);
       },
@@ -105,10 +107,13 @@ JSONEditor.defaults.editors.upload = JSONEditor.AbstractEditor.extend({
     });
   },
   setFileError: function(msg) {
+    if (this.file_error && this.parent.activateItem && !this.parent.file_error) this.file_error = null;
+    if (this.parent.file_error) this.file_error = this.parent.file_error;
     if(!msg) {
-        this.file_error && this.file_error.parentNode.removeChild(this.file_error);
-        this.file_error = null;
-        return;
+      this.file_error && this.file_error.parentNode.removeChild(this.file_error);
+      this.file_error = null;
+      this.parent.file_error = null;
+      return;
     }
     if(!this.file_error) {
       this.file_error = document.createElement('div');
@@ -117,9 +122,9 @@ JSONEditor.defaults.editors.upload = JSONEditor.AbstractEditor.extend({
       alert_icon.className = 'alert-icon';
       alert_icon.appendChild(this.theme.getIcon('bell'));
       this.file_error.appendChild(alert_icon);
-      this.error_content = document.createElement('div');
-      this.error_content.className = 'error-text';
-      this.file_error.appendChild(this.error_content);
+      var error_content = document.createElement('div');
+      error_content.className = 'error-text';
+      this.file_error.appendChild(error_content);
       var close_icon = document.createElement('div');
       close_icon.className = 'close-icon';
       close_icon.appendChild(this.theme.getIcon('remove'));
@@ -127,9 +132,12 @@ JSONEditor.defaults.editors.upload = JSONEditor.AbstractEditor.extend({
         this.setFileError(null);
       })
       this.file_error.appendChild(close_icon);
-      this.file_view.appendChild(this.file_error);
+      if (this.parent.activateItem) { // File Array
+        this.parent.panel.insertBefore(this.file_error, this.parent.controls);
+        this.parent.file_error = this.file_error;
+      } else this.file_view.appendChild(this.file_error);
     }
-    this.error_content.textContent = msg;
+    this.file_error.children[1].textContent = msg;
   },
   formatFileSize: function(size) {
     var unit = 'B';

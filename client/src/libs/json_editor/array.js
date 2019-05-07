@@ -73,11 +73,18 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
     this.hide_move_buttons = this.options.disable_array_reorder || this.jsoneditor.options.disable_array_reorder;
     this.hide_add_button = this.options.disable_array_add || this.jsoneditor.options.disable_array_add;
   },
+  isMultipleArray: function() {
+    if (this.multiple !== undefined) return this.multiple;
+    var schema = this.getItemSchema(0);
+    schema = this.jsoneditor.expandRefs(schema);
+    this.multiple = (typeof schema.type !== 'string') || (schema.type === 'any') || schema.oneOf || schema.anyOf;
+    return this.multiple;
+  },
   isCompressedArray: function() {
     if (this.compressed !== undefined) return this.compressed;
     var schema = this.getItemSchema(0);
     schema = this.jsoneditor.expandRefs(schema);
-    this.compressed = (schema.type !== 'object');
+    this.compressed = (schema.type !== 'object') && !this.isMultipleArray();
     return this.compressed;
   },
   isWideArray: function() {
@@ -125,10 +132,8 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
         this.container.appendChild(this.title);
         this.title_controls = this.theme.getHeaderButtonHolder();
         this.title.appendChild(this.title_controls);
-        if(this.schema.description) {
-          this.description = this.theme.getDescription(this.schema.description);
-          this.container.appendChild(this.description);
-        }
+        this.description = this.theme.getDescription(this.schema.description || '');
+        this.container.appendChild(this.description);
         this.error_holder = document.createElement('div');
         this.container.appendChild(this.error_holder);
         this.panel = this.theme.getIndentedPanel();
@@ -269,6 +274,9 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
     if (this.isWideArray()) {
       row_container.className += ' array-wide-item';
     }
+    if (this.isMultipleArray()) {
+      row_container.className += ' array-multiple-item';
+    }
 
     if (this.isCompressedArray()) {
       var before_controls = document.createElement('div');
@@ -302,7 +310,11 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
     } else {
       ret.array_controls = document.createElement('span');
       ret.array_controls.className = 'object-array-controls';
-      ret.title_controls.insertBefore(ret.array_controls, ret.title_controls.firstChild);
+      if (ret.title_controls) ret.title_controls.insertBefore(ret.array_controls, ret.title_controls.firstChild);
+      else {
+        ret.array_controls.className += ' floating';
+        ret.container.insertBefore(ret.array_controls, ret.container.firstChild);
+      }
       holder.className += ' array-wide-item';
     }
 

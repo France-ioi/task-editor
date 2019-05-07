@@ -376,10 +376,8 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
 
 
       // Description
-      if(this.schema.description) {
-        this.description = this.theme.getDescription(this.schema.description);
-        this.container.appendChild(this.description);
-      }
+      this.description = this.theme.getDescription(this.schema.description || '');
+      this.container.appendChild(this.description);
 
       // Validation error placeholder area
       this.error_holder = document.createElement('div');
