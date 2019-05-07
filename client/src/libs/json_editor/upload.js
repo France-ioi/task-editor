@@ -85,11 +85,16 @@ JSONEditor.defaults.editors.upload = JSONEditor.AbstractEditor.extend({
 
         if (this.progressBar) this.file_view.removeChild(this.progressBar);
         this.file_input.removeAttribute('disabled');
+        if (this.temporary_array_item) {
+          this.parent.showItem(this);
+          this.temporary_array_item = false;
+        }
       },
       failure: (error) => {
         this.setFileError(error);
         if (this.progressBar) this.file_view.removeChild(this.progressBar);
         this.file_input.removeAttribute('disabled');
+        if (this.temporary_array_item) this.parent.deleteItem(this);
       },
       updateProgress: (progress) => {
         if (this.progressBar) {
@@ -191,6 +196,7 @@ JSONEditor.defaults.editors.upload = JSONEditor.AbstractEditor.extend({
 
     if (this.value === '') {
       this.file_view.className += ' no-file';
+      if (this.temporary_array_item) this.parent.deleteItem(this);
     }
   },
   setModifyEnabled: function(enabled) {
@@ -217,6 +223,7 @@ JSONEditor.defaults.editors.upload = JSONEditor.AbstractEditor.extend({
           this.jsoneditor.onChange();
         }
         this.old_filename = new_filename;
+        if (this.temporary_array_item) this.temporary_array_item = false;
       },
       failure: (error) => {
         this.setModifyEnabled(false);
@@ -338,8 +345,10 @@ JSONEditor.defaults.editors.upload = JSONEditor.AbstractEditor.extend({
         this.showPane();
       }
       this.file_view.className = this.file_view.className.replace(/\s*image-file/g, '');
+      this.container.parentNode.className = this.container.parentNode.className.replace(/\s*image-file-container/g, '');
       if (this.isImage()) {
         this.file_view.className += ' image-file';
+        this.container.parentNode.className += ' image-file-container';
         this.file_bar.children[1].setAttribute('src', this.options.jsoneditor.options.task.getFileUrl(val));
       }
       this.onChange();

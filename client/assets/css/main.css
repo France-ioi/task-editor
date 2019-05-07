@@ -621,7 +621,7 @@ input[type="external_preview"] {
     display: flex !important;
 }
 
-.wide-array>.form-right-group>div>.btn-group>button {
+.wide-array>.form-right-group>div>.btn-group>* {
     flex-grow: 1;
 }
 
@@ -954,8 +954,8 @@ input[type="file"].file-input {
 .file-uploader .btn {
     display: block;
     margin-top: 10px;
-    margin-left: auto;
-    margin-right: auto;
+    margin-left: auto !important;
+    margin-right: auto !important;
     width: 192px;
 }
 
@@ -982,4 +982,16 @@ input[type="file"].file-input {
 .array-item-holder>.field-container>.form-right-group>.file-container>.file-preview {
     margin-left: -24px;
     width: calc(100% + 48px);
+}
+
+.file-array-uploader {
+    display: block;
+}
+
+.image-file-container:not(.active-item)>.before-item-controls>.array-move-item, .image-file-container:not(.active-item)>.array-controls>.delete>.array-delete-item {
+    height: 72px;
+}
+
+.image-file-container:not(.active-item)>.before-item-controls>.array-move-item::before, .image-file-container:not(.active-item)>.array-controls>.delete>.array-delete-item::before {
+    top: 28px;
 }

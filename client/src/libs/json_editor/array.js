@@ -89,6 +89,13 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
       (schema.type === 'string' && schema.format === 'url');
     return this.wide;
   },
+  isFileArray: function() {
+    if (this.file_array !== undefined) return this.file_array;
+    var schema = this.getItemSchema(0);
+    schema = this.jsoneditor.expandRefs(schema);
+    this.file_array = schema.type === 'string' && schema.format === 'url';
+    return this.file_array;
+  },
   build: function() {
     var self = this;
 
@@ -598,13 +605,7 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
     var controls_display = self.controls.style.display;
 
     // Add "new row" and "delete last" buttons below editor
-    var itemName = this.getItemTitle();
-    if (itemName === 'item') itemName = '';
-    this.add_row_button = this.getButton(itemName, 'add',this.translate('button_add_row_title',[itemName]));
-
-    this.add_row_button.addEventListener('click',function(e) {
-      e.preventDefault();
-      e.stopPropagation();
+    var addNewRow = () => {
       var i = self.rows.length;
       if(self.row_cache[i]) {
         self.rows[i] = self.row_cache[i];
@@ -620,7 +621,49 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
       self.refreshTabs();
       self.refreshValue();
       self.onChange(true);
-    });
+    }
+    if (this.isFileArray()) {
+      this.add_row_button = this.theme.getFileUploader();
+      this.add_row_button.className += ' file-array-uploader';
+      var file_input = this.theme.getFormInputField('file');
+      file_input.className = 'file-input';
+      this.add_row_button.appendChild(file_input);
+      this.add_row_button.children[1].addEventListener('click', () => {
+        file_input.click();
+      });
+      file_input.addEventListener('change', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if(file_input.files && file_input.files.length) {
+          addNewRow();
+          this.rows[this.rows.length - 1].container.parentNode.style.display = 'none';
+          this.rows[this.rows.length - 1].temporary_array_item = true;
+          this.rows[this.rows.length - 1].uploadFile(file_input.files[0]);
+        }
+      });
+      this.add_row_button.children[2].addEventListener('click', () => {
+        addNewRow();
+        this.rows[this.rows.length - 1].temporary_array_item = true;
+        this.rows[this.rows.length - 1].addByEditor();
+      });
+      this.add_row_button.addEventListener('drop', (e) => {
+        addNewRow();
+        this.rows[this.rows.length - 1].container.parentNode.style.display = 'none';
+        this.rows[this.rows.length - 1].temporary_array_item = true;
+        this.rows[this.rows.length - 1].dropFile(e);
+      });
+    } else {
+      var itemName = this.getItemTitle();
+      if (itemName === 'item') itemName = '';
+      this.add_row_button = this.getButton(itemName, 'add',this.translate('button_add_row_title',[itemName]));
+
+      this.add_row_button.addEventListener('click',function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        addNewRow();
+      });
+    }
     self.controls.appendChild(this.add_row_button);
 
     this.delete_last_row_button = this.getButton(this.translate('button_delete_last',[this.getItemTitle()]),'delete',this.translate('button_delete_last_title',[this.getItemTitle()]));
@@ -737,5 +780,11 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
   },
   deactivateItem: function(item) {
     item.container.parentNode.className = item.container.parentNode.className.replace(/\s*active-item/g, '');
+  },
+  deleteItem: function(item) {
+    item.delete_button.children[1].children[0].click();
+  },
+  showItem: function(item) {
+    item.container.parentNode.style.display = '';
   }
 });
