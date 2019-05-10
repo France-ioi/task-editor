@@ -84,7 +84,7 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
     if (this.compressed !== undefined) return this.compressed;
     var schema = this.getItemSchema(0);
     schema = this.jsoneditor.expandRefs(schema);
-    this.compressed = (schema.type !== 'object') && !this.isMultipleArray();
+    this.compressed = (schema.type !== 'object' || (schema.options && schema.options.table_row)) && !this.isMultipleArray();
     return this.compressed;
   },
   isWideArray: function() {
@@ -93,7 +93,8 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
     schema = this.jsoneditor.expandRefs(schema);
     this.wide =
       (schema.type === 'string' && schema.format === 'html') ||
-      (schema.type === 'string' && schema.format === 'url');
+      (schema.type === 'string' && schema.format === 'url') ||
+      (schema.type === 'object' && schema.options && schema.options.table_row);
     return this.wide;
   },
   isFileArray: function() {
@@ -102,6 +103,13 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
     schema = this.jsoneditor.expandRefs(schema);
     this.file_array = schema.type === 'string' && schema.format === 'url';
     return this.file_array;
+  },
+  isObjectTable: function() {
+    if (this.object_table !== undefined) return this.object_table;
+    var schema = this.getItemSchema(0);
+    schema = this.jsoneditor.expandRefs(schema);
+    this.object_table = schema.type === 'object' && schema.options && schema.options.table_row;
+    return this.object_table;
   },
   build: function() {
     var self = this;
@@ -148,6 +156,11 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
       this.sorter = new Sortable(this.row_holder, {
         handle: '.array-move-item',
         animation: 200,
+        onChange: function (e) {
+          if (e.newIndex === 0) {
+            self.row_holder.replaceChild(self.row_holder.children[1], self.row_holder.children[1]);
+          }
+        },
         onUpdate: function (e) {
           var rows = self.getValue();
           var old = rows[e.oldIndex];
@@ -276,6 +289,9 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
     }
     if (this.isMultipleArray()) {
       row_container.className += ' array-multiple-item';
+    }
+    if (this.isObjectTable()) {
+      row_container.className += ' array-object-table';
     }
 
     if (this.isCompressedArray()) {

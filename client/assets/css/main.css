@@ -497,13 +497,31 @@ div[data-schematype="array"]>.header-container>h3 {
     color: #D8D8D8;
 }
 
-.array-item-holder>.field-container {
+.array-item-holder>.field-container, .array-item-holder>td>.field-container {
     padding: 0;
     border: none;
 }
 
-.array-item-holder>.field-container>.form-left-group {
+.array-item-holder>.field-container>.form-left-group, .array-item-holder>td>.field-container>.form-left-group {
     display: none;
+}
+
+.array-row-container:first-child>.array-item-holder>td>.field-container, .array-row-container:first-child>.array-item-holder>td>.field-container>.form-left-group {
+    display: block;
+}
+
+.array-row-container:first-child>.array-item-holder>td>.field-container>.form-left-group {
+    width: 0;
+    margin-right: 0;
+    min-width: 100%;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.array-row-container:first-child>.array-item-holder>td>.field-container>.form-right-group {
+    width: 100%;
 }
 
 .array-row-holder {
@@ -517,7 +535,16 @@ div[data-schematype="array"]>.header-container>h3 {
 }
 
 .before-item-controls, .array-controls {
-    margin-top: -1px;
+    position: relative;
+    top: -1px;
+}
+
+.array-object-table:first-child>.before-item-controls, .array-object-table:first-child>.array-controls {
+    top: 22px;
+}
+
+.array-object-table>.before-item-controls>.array-move-item, .array-object-table>.array-controls>.delete>.array-delete-item {
+    background-color: white;
 }
 
 .json-editor-btn-add, .round-btn {
@@ -1012,4 +1039,21 @@ input[type="file"].file-input {
     right: 64px;
     top: 40px;
     z-index: 2;
+}
+
+.array-item-holder>td {
+    margin-left: 6px;
+    margin-right: 6px;
+}
+
+.array-object-table .control-label {
+    font-weight: normal;
+}
+
+.array-object-table .help-block {
+    display: none;
+}
+
+.array-item-holder .form-control {
+    border-radius: 0;
 }

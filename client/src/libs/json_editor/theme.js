@@ -154,7 +154,7 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
 
     return uploader;
   },
-  getFormInputField: function(type) {
+  getFormInputField: function(type, icon) {
     var el = this._super(type);
     if(type !== 'checkbox') {
       el.className += 'form-control';
@@ -166,6 +166,10 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
     labelContainer.className = 'input-label-container';
     var label = document.createElement('span');
     label.innerHTML = 'Aa';
+    if (icon === 'integer') {
+      label.innerHTML = '123';
+      label.style.left = '6px';
+    }
     labelContainer.appendChild(label);
     container.appendChild(labelContainer);
     container.appendChild(el);

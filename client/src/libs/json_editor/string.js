@@ -60,7 +60,7 @@ JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
   },
   build: function() {
     var self = this, i;
-    if(!this.options.compact) this.header = this.label = this.theme.getFormInputLabel(this.getTitle());
+    if (!this.options.compact) this.header = this.label = this.theme.getFormInputLabel(this.getTitle());
     if(this.schema.description) this.description = this.theme.getFormInputDescription(this.schema.description);
 
     this.format = this.schema.format;
@@ -73,6 +73,8 @@ JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
     if(this.options.format) {
       this.format = this.options.format;
     }
+
+    this.string_type = (this.schema.type === 'integer' || this.schema.type === 'number') ? 'integer' : 'text';
 
     // Specific format
     if(this.format) {
@@ -170,13 +172,13 @@ JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
       // HTML5 Input type
       else {
         this.input_type = this.format;
-        this.input = this.theme.getFormInputField(this.input_type);
+        this.input = this.theme.getFormInputField(this.input_type, this.string_type);
       }
     }
     // Normal text input
     else {
       this.input_type = 'text';
-      this.input = this.theme.getFormInputField(this.input_type);
+      this.input = this.theme.getFormInputField(this.input_type, this.string_type);
     }
 
     // minLength, maxLength, and pattern

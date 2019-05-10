@@ -221,7 +221,6 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
           schema: schema,
           path: self.path+'.'+key,
           parent: self,
-          compact: true,
           required: true
         });
         self.editors[key].preBuild();
@@ -295,8 +294,10 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
         if(self.editors[key].options.hidden) {
           holder.style.display = 'none';
         }
+
         if(self.editors[key].options.input_width) {
           holder.style.width = self.editors[key].options.input_width;
+          holder.firstChild && (holder.firstChild.style.width = self.editors[key].options.input_width);
         }
       });
     }
