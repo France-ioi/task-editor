@@ -60,6 +60,8 @@ JSONEditor.defaults.editors.multiple = JSONEditor.AbstractEditor.extend({
 
     $each(self.editors,function(type,editor) {
       if(!editor) return;
+      if (editor.getValue() === null) self.title_container && (self.title_container.style.borderBottom = '1px solid #e3e3e3');
+      else self.title_container && (self.title_container.style.borderBottom = 'none');
       if(self.type === type) {
         if(self.keep_values) editor.setValue(current_value,true);
         editor.container.style.display = '';
@@ -170,10 +172,10 @@ JSONEditor.defaults.editors.multiple = JSONEditor.AbstractEditor.extend({
     var container = this.container;
 
     this.header = this.label = this.theme.getFormInputLabel(this.getTitle());
-    this.container.appendChild(this.header);
-
     this.switcher = this.theme.getSwitcher(this.display_text);
-    container.appendChild(this.switcher);
+    this.title_container = this.theme.getMultiField(this.header, this.switcher);
+    this.container.appendChild(this.title_container);
+
     this.switcher.addEventListener('change',function(e) {
       e.preventDefault();
       e.stopPropagation();
@@ -183,9 +185,9 @@ JSONEditor.defaults.editors.multiple = JSONEditor.AbstractEditor.extend({
     });
 
     this.editor_holder = document.createElement('div');
+    this.editor_holder.className += ' no-border';
     container.appendChild(this.editor_holder);
-    
-      
+
     var validator_options = {};
     if(self.jsoneditor.options.custom_validators) {
       validator_options.custom_validators = self.jsoneditor.options.custom_validators;

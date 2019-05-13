@@ -167,6 +167,14 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
     container.appendChild(text);
     return container;
   },
+  getMultiField: function(label, sw) {
+    var container = document.createElement('div');
+    label.className += ' control-label';
+    container.className = 'multi-type-container';
+    container.appendChild(label);
+    container.appendChild(sw);
+    return container;
+  },
   getFormInputField: function(type, icon) {
     var el = this._super(type);
     if(type !== 'checkbox') {
