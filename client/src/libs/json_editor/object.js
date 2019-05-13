@@ -155,18 +155,42 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
     // Normal layout
     else {
       container = document.createElement('div');
-      $each(this.property_order, function(i,key) {
+      var required_fields = [], optional_fields = [], expert_fields = [];
+      $each(this.property_order, function(i, key) {
         var editor = self.editors[key];
-        if(editor.property_removed) return;
-        var row = self.theme.getGridRow();
-        container.appendChild(row);
+        if (self.isRequired(editor)) required_fields.push(key)
+        else if (self.isExpert(editor)) expert_fields.push(key)
+        else optional_fields.push(key)
+      });
+      $each([required_fields, optional_fields, expert_fields], function(i, fields) {
+        var inner_container = document.createElement('div');
+        container.appendChild(inner_container);
+        var fields_container = document.createElement('div');
+        inner_container.appendChild(fields_container);
+        $each(fields, function(f, key) {
+          var editor = self.editors[key];
+          if(editor.property_removed) return;
+          var row = self.theme.getGridRow();
+          fields_container.appendChild(row);
 
-        if(editor.options.hidden) editor.container.style.display = 'none';
-        else self.theme.setGridColumnSize(editor.container,12);
-        if (self.isRequired(editor)) {
-          editor.container.className += ' required-field';
+          if(editor.options.hidden) editor.container.style.display = 'none';
+          else self.theme.setGridColumnSize(editor.container,12);
+          if (fields === required_fields) {
+            editor.container.className += ' required-field';
+          } else if (fields === expert_fields) {
+            editor.container.className += ' expert-field';
+          }
+          row.appendChild(editor.container);
+        });
+        if (fields !== required_fields && fields.length) {
+          var section_control = self.theme.getFieldSectionControl(fields === optional_fields ? 'optional' : 'expert');
+          inner_container.appendChild(section_control);
+          section_control.addEventListener('click', function() {
+            if (fields_container.style.display === 'none') fields_container.style.display = 'block';
+            else fields_container.style.display = 'none';
+          });
+          if (fields === expert_fields) fields_container.style.display = 'none';
         }
-        row.appendChild(editor.container);
       });
     }
     this.row_container.innerHTML = '';
@@ -278,6 +302,7 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
     });
   },
   build: function() {
+    console.log('hey', this.format, this.options)
     var self = this;
 
     // If the object should be rendered as a table row
@@ -807,6 +832,10 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
     else if(this.jsoneditor.options.required_by_default) return true;
     else return false;
   },
+  isExpert: function(editor) {
+    if(Array.isArray(this.schema.expert_params)) return this.schema.expert_params.indexOf(editor.key) > -1;
+    else return false;
+  },
   setValue: function(value, initial) {
     var self = this;
     value = value || {};
@@ -822,7 +851,7 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
       }
       // Otherwise, remove value unless this is the initial set or it's required
       else if(!initial && !self.isRequired(editor)) {
-        self.removeObjectProperty(i);
+        // self.removeObjectProperty(i);
       }
       // Otherwise, set the value to the default
       else {

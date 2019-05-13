@@ -316,6 +316,10 @@ div[data-schematype="array"]>.header-container>h3 {
     border-left: 5px solid #FF001F;
 }
 
+.expert-field>.field-container, .expert-field>.header-container, .expert-field>.description-container {
+    border-left: 5px solid #F5A623;
+}
+
 .required-field>.field-container>.form-left-group>.control-label, .required-field>.header-container>h3 {
 		color: #FF001F !important;
 }
@@ -1056,4 +1060,41 @@ input[type="file"].file-input {
 
 .array-item-holder .form-control {
     border-radius: 0;
+}
+
+.section-control {
+    text-align: center;
+    border: 1px solid #e3e3e3;
+    background-color: white;
+    border-left: 5px solid #4A90E2;
+    color: #4A90E2;
+    padding: 16px 0;
+    margin-top: -1px;
+    margin-bottom: -1px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.section-control>.icon {
+    float: left;
+    position: relative;
+    left: -1px;
+    background-color: #4A90E2;
+    border-radius: 0 25px 25px 0;
+    color: white;
+    padding: 16px 20px;
+    margin-top: -16px;
+}
+.section-control>.icon>.glyphicon {
+    left: -4px;
+    top: 3px;
+}
+
+.section-control.expert {
+    border-left: 5px solid #F5A623;
+    color: #F5A623;
+}
+
+.section-control.expert>.icon {
+    background-color: #F5A623;
 }

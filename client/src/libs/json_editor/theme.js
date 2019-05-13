@@ -154,6 +154,19 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
 
     return uploader;
   },
+  getFieldSectionControl: function(section) {
+    var container = document.createElement('div');
+    container.className = 'section-control ' + section;
+    var iconContainer = document.createElement('div');
+    iconContainer.className = 'icon';
+    var icon = this.getIcon('eye-open');
+    iconContainer.appendChild(icon);
+    container.appendChild(iconContainer);
+    var text = document.createElement('span');
+    text.innerHTML = 'MORE ' + section.toUpperCase() + ' PARAMETERS';
+    container.appendChild(text);
+    return container;
+  },
   getFormInputField: function(type, icon) {
     var el = this._super(type);
     if(type !== 'checkbox') {
