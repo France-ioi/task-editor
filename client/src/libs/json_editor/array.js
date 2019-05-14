@@ -1,6 +1,12 @@
 import Sortable from 'sortablejs';
 import { $extend, $each, $isplainobject, $trigger, $triggerc } from './utils';
 
+JSONEditor.defaults.resolvers.unshift(function(schema) {
+  if(schema.type == 'array' && schema.format == 'table') {
+    return 'array';
+  }
+});
+
 JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
   getDefault: function() {
     return this.schema["default"] || [];
@@ -84,7 +90,7 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
     if (this.compressed !== undefined) return this.compressed;
     var schema = this.getItemSchema(0);
     schema = this.jsoneditor.expandRefs(schema);
-    this.compressed = (schema.type !== 'object' || (schema.options && schema.options.table_row)) && !this.isMultipleArray();
+    this.compressed = (schema.type !== 'object' || this.isObjectTable()) && !this.isMultipleArray();
     return this.compressed;
   },
   isWideArray: function() {
@@ -93,8 +99,7 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
     schema = this.jsoneditor.expandRefs(schema);
     this.wide =
       (schema.type === 'string' && schema.format === 'html') ||
-      (schema.type === 'string' && schema.format === 'url') ||
-      (schema.type === 'object' && schema.options && schema.options.table_row);
+      this.isFileArray() || this.isObjectTable();
     return this.wide;
   },
   isFileArray: function() {
@@ -108,7 +113,7 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
     if (this.object_table !== undefined) return this.object_table;
     var schema = this.getItemSchema(0);
     schema = this.jsoneditor.expandRefs(schema);
-    this.object_table = schema.type === 'object' && schema.options && schema.options.table_row;
+    this.object_table = schema.type === 'object' && schema.options && (schema.options.table_row || schema.options.layout === 'grid');
     return this.object_table;
   },
   build: function() {

@@ -323,7 +323,7 @@ div[data-schematype="array"]>.header-container>h3 {
     border-left: 5px solid #FF001F;
 }
 
-.expert-field>.field-container, .expert-field>.header-container, .expert-field>.description-container, .expert-field>.field-container {
+.advanced-field>.field-container, .advanced-field>.header-container, .advanced-field>.description-container, .advanced-field>.field-container {
     border-left: 5px solid #F5A623;
 }
 
@@ -1097,12 +1097,12 @@ input[type="file"].file-input {
     top: 3px;
 }
 
-.section-control.expert {
+.section-control.advanced {
     border-left: 5px solid #F5A623;
     color: #F5A623;
 }
 
-.section-control.expert>.icon {
+.section-control.advanced>.icon {
     background-color: #F5A623;
 }
 

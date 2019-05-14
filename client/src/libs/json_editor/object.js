@@ -155,14 +155,14 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
     // Normal layout
     else {
       container = document.createElement('div');
-      var required_fields = [], optional_fields = [], expert_fields = [];
+      var required_fields = [], optional_fields = [], advanced_fields = [];
       $each(this.property_order, function(i, key) {
         var editor = self.editors[key];
         if (self.isRequired(editor)) required_fields.push(key)
-        else if (self.isExpert(editor)) expert_fields.push(key)
+        else if (self.isExpert(editor)) advanced_fields.push(key)
         else optional_fields.push(key)
       });
-      $each([required_fields, optional_fields, expert_fields], function(i, fields) {
+      $each([required_fields, optional_fields, advanced_fields], function(i, fields) {
         var inner_container = document.createElement('div');
         container.appendChild(inner_container);
         var fields_container = document.createElement('div');
@@ -177,19 +177,19 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
           else self.theme.setGridColumnSize(editor.container,12);
           if (fields === required_fields) {
             editor.container.className += ' required-field';
-          } else if (fields === expert_fields) {
-            editor.container.className += ' expert-field';
+          } else if (fields === advanced_fields) {
+            editor.container.className += ' advanced-field';
           }
           row.appendChild(editor.container);
         });
         if (fields !== required_fields && fields.length) {
-          var section_control = self.theme.getFieldSectionControl(fields === optional_fields ? 'optional' : 'expert');
+          var section_control = self.theme.getFieldSectionControl(fields === optional_fields ? 'optional' : 'advanced');
           inner_container.appendChild(section_control);
           section_control.addEventListener('click', function() {
             if (fields_container.style.display === 'none') fields_container.style.display = 'block';
             else fields_container.style.display = 'none';
           });
-          if (fields === expert_fields) fields_container.style.display = 'none';
+          if (fields === advanced_fields) fields_container.style.display = 'none';
         }
       });
     }
@@ -230,6 +230,10 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
     var self = this;
 
     this.format = this.options.layout || this.options.object_layout || this.schema.format || this.jsoneditor.options.object_layout || 'normal';
+    if (this.format === 'grid') {
+      this.format = 'normal';
+      this.options.table_row = true;
+    }
 
     this.schema.properties = this.schema.properties || {};
 
@@ -302,7 +306,6 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
     });
   },
   build: function() {
-    console.log('hey', this.format, this.options)
     var self = this;
 
     // If the object should be rendered as a table row
@@ -318,6 +321,11 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
 
         if(self.editors[key].options.hidden) {
           holder.style.display = 'none';
+        }
+
+        if (self.editors[key].options.grid_columns && !self.editors[key].options.input_width) {
+          var allWidth = self.container.clientWidth - 25 * 2 - 12 * Object.keys(self.editors).length;
+          self.editors[key].options.input_width = parseInt(allWidth * self.editors[key].options.grid_columns / 12) + 'px';
         }
 
         if(self.editors[key].options.input_width) {
@@ -833,7 +841,7 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
     else return false;
   },
   isExpert: function(editor) {
-    if(Array.isArray(this.schema.expert_params)) return this.schema.expert_params.indexOf(editor.key) > -1;
+    if(Array.isArray(this.schema.advanced_params)) return this.schema.advanced_params.indexOf(editor.key) > -1;
     else return false;
   },
   setValue: function(value, initial) {
