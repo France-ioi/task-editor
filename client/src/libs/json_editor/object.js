@@ -348,12 +348,13 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
       this.container.style.position = 'relative';
 
       // Edit JSON modal
-      this.editjson_holder = this.theme.getModal();
+      this.editjson_holder = document.createElement('div');
+      this.editjson_holder.className = 'edit-json-holder';
       this.editjson_textarea = this.theme.getTextareaInput();
-      this.editjson_textarea.style.height = '170px';
-      this.editjson_textarea.style.width = '300px';
-      this.editjson_textarea.style.display = 'block';
+      this.editjson_actions = document.createElement('div');
+      this.editjson_actions.className = 'edit-json-actions';
       this.editjson_save = this.getButton('Save','save','Save');
+      this.editjson_save.className += ' round-btn inverted';
       this.editjson_save.addEventListener('click',function(e) {
         e.preventDefault();
         e.stopPropagation();
@@ -365,9 +366,11 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
         e.stopPropagation();
         self.hideEditJSON();
       });
+      this.editjson_cancel.className += ' round-btn inverted';
       this.editjson_holder.appendChild(this.editjson_textarea);
-      this.editjson_holder.appendChild(this.editjson_save);
-      this.editjson_holder.appendChild(this.editjson_cancel);
+      this.editjson_holder.appendChild(this.editjson_actions);
+      this.editjson_actions.appendChild(this.editjson_cancel);
+      this.editjson_actions.appendChild(this.editjson_save);
 
       // Manage Properties modal
       this.addproperty_holder = this.theme.getModal();
@@ -424,6 +427,7 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
       // Container for rows of child editors
       this.row_container = this.theme.getGridContainer();
       this.editor_holder.appendChild(this.row_container);
+      this.editor_holder.appendChild(this.editjson_holder);
 
       $each(this.editors, function(key,editor) {
         var holder = self.theme.getGridColumn();
@@ -475,14 +479,20 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
       }
 
       // Edit JSON Button
-      this.editjson_button = this.getButton('JSON','edit','Edit JSON');
-      this.editjson_button.addEventListener('click',function(e) {
+      this.editjson_button = this.theme.getBoolean(['EDITOR', 'JSON']);
+      this.editjson_button.className += ' edit-json';
+      this.editjson_button.firstChild.className += ' active';
+      this.editjson_button.firstChild.addEventListener('click',function(e) {
         e.preventDefault();
         e.stopPropagation();
-        self.toggleEditJSON();
+        self.hideEditJSON();
+      });
+      this.editjson_button.lastChild.addEventListener('click',function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        self.showEditJSON();
       });
       this.editjson_controls.appendChild(this.editjson_button);
-      this.editjson_controls.appendChild(this.editjson_holder);
 
       // Edit JSON Buttton disabled
       if(this.schema.options && typeof this.schema.options.disable_edit_json !== "undefined") {
@@ -521,12 +531,13 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
   },
   showEditJSON: function() {
     if(!this.editjson_holder) return;
+    if(this.editing_json) return;
     this.hideAddProperty();
 
-    // Position the form directly beneath the button
-    // TODO: edge detection
-    this.editjson_holder.style.left = this.editjson_button.offsetLeft+"px";
-    this.editjson_holder.style.top = this.editjson_button.offsetTop + this.editjson_button.offsetHeight+"px";
+    this.editjson_button.firstChild.className = this.editjson_button.firstChild.className.replace(/\s*active/g, '');
+    this.editjson_button.lastChild.className += ' active';
+
+    this.row_container.style.display = 'none';
 
     // Start the textarea with the current value
     this.editjson_textarea.value = JSON.stringify(this.getValue(),null,2);
@@ -534,7 +545,7 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
     // Disable the rest of the form while editing JSON
     this.disable();
 
-    this.editjson_holder.style.display = '';
+    this.editjson_holder.style.display = 'block';
     this.editjson_button.disabled = false;
     this.editing_json = true;
   },
@@ -542,7 +553,12 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
     if(!this.editjson_holder) return;
     if(!this.editing_json) return;
 
-    this.editjson_holder.style.display = 'none';
+    this.editjson_button.lastChild.className = this.editjson_button.firstChild.className.replace(/\s*active/g, '');
+    this.editjson_button.firstChild.className += ' active';
+
+    this.row_container.style.display = '';
+    this.editjson_holder.style.display = '';
+
     this.enable();
     this.editing_json = false;
   },
@@ -558,10 +574,6 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
       window.alert('invalid JSON');
       throw e;
     }
-  },
-  toggleEditJSON: function() {
-    if(this.editing_json) this.hideEditJSON();
-    else this.showEditJSON();
   },
   insertPropertyControlUsingPropertyOrder: function (property, control, container) {
     var propertyOrder;

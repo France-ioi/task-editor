@@ -268,8 +268,12 @@ div[data-schemaid="root"][data-schemapath="root"]>.header-container h3 {
     color: #4A4A4A;
 }
 
-div[data-schemaid="root"][data-schemapath="root"]>.header-container .btn-group {
+div[data-schemaid="root"][data-schemapath="root"]>.header-container .collapse-button {
     display: none;
+}
+
+div[data-schemaid="root"][data-schemapath="root"]>.header-container .edit-json {
+    display: flex;
 }
 
 div[data-schemaid="root"][data-schemapath="root"]>.description-container {
@@ -1118,4 +1122,48 @@ input[type="file"].file-input {
 .no-border>div>.header-container>.btn-group {
     margin-top: -36px;
     margin-right: 36px;
+}
+
+.edit-json {
+    margin-top: 30px;
+    display: none;
+}
+
+.edit-json>button {
+    width: 130px;
+}
+
+.edit-json-holder {
+    width: 100%;
+    height: 60vh;
+    display: none;
+}
+
+.edit-json-holder>textarea {
+    resize: vertical;
+    height: 100%;
+    width: 100%;
+    background-color: #f2f2f2 !important;
+    border: 1px solid #e3e3e3;
+}
+
+.edit-json-actions {
+    margin-top: 10px;
+    float: right;
+}
+
+.round-btn.inverted {
+    background-color: #4A90E2;
+    color: white;
+    border: 1px solid #4A90E2;
+}
+
+.round-btn.inverted:hover, .round-btn.inverted:active, .round-btn.inverted:focus, .round-btn.inverted:hover:active, .round-btn.inverted:focus:active {
+    color: white;
+    border: 1px solid #2275d3;
+    background-color: #2275d3;
+}
+
+.edit-json-actions>button {
+    margin-left: 8px;
 }
