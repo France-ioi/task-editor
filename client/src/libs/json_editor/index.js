@@ -1,6 +1,8 @@
 // multitext must be before string
-import './multitext'
 import './string'
+import './multitext'
+import './number'
+import './integer'
 import './array'
 import './boolean'
 import './object'

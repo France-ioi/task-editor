@@ -77,7 +77,7 @@ JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
     this.string_type = (this.schema.type === 'integer' || this.schema.type === 'number') ? 'integer' : 'text';
 
     // Specific format
-    if(this.format) {
+    if(this.format || this.schema.type === 'multitext') {
       // Text Area
       if(this.format === 'textarea') {
         this.input_type = 'textarea';
@@ -149,7 +149,7 @@ JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
           'vbscript',
           'xml',
           'yaml'
-        ].indexOf(this.format) >= 0
+        ].indexOf(this.format) >= 0 || this.schema.type === 'multitext'
       ) {
         this.input_type = this.format;
         this.source_code = true;
@@ -160,7 +160,7 @@ JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
           if (this.parent.activateItem) {
             this.parent.activateItem(this);
           } else this.input.parentNode.className = 'external-control active-item';
-          setTimeout(() => self.afterInputReady(), 0);
+          setTimeout(() => self.afterInputReady(true), 0);
         });
         var exitButton = this.input.parentNode.firstChild.lastChild;
         exitButton.addEventListener('click', () => {
@@ -294,13 +294,13 @@ JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
     // TODO: WYSIWYG and Markdown editors
     this._super();
   },
-  afterInputReady: function() {
+  afterInputReady: function(focus) {
     this.html_editor && this.html_editor.destroy();
     var self = this;
     if(this.options.wysiwyg && ['html','bbcode'].indexOf(this.input_type) >= 0) {
       this.html_editor = HTMLEditor({
         element: this.input,
-        autoFocus: this.input.id,
+        autoFocus: focus && this.input.id,
         path: this.jsoneditor.options.task.path,
         onChange: function(content, textContent) {
           self.setSummary(textContent);

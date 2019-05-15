@@ -181,6 +181,7 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
             editor.container.className += ' advanced-field';
           }
           row.appendChild(editor.container);
+          editor.afterInputReady && setTimeout(() => editor.afterInputReady(), 0)
         });
         if (fields !== required_fields && fields.length) {
           var section_control = self.theme.getFieldSectionControl(fields === optional_fields ? 'optional' : 'advanced');

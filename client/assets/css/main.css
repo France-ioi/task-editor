@@ -220,7 +220,7 @@ i.mce-i-markdown:before {
     line-height: 1;
  }
 
-.editor-toolbar.fullscreen {
+.editor-toolbar.fullscreen, .CodeMirror-fullscreen {
     z-index: 1040;
 }
 
@@ -384,8 +384,6 @@ div[data-schematype="array"]>.header-container>h3 {
     flex-grow: 1;
     flex-shrink: 1;
     border: none;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
     box-shadow: none;
     transition: none;
     outline: none;
@@ -396,6 +394,11 @@ div[data-schematype="array"]>.header-container>h3 {
 
 .input-field-container {
     display: flex;
+}
+
+.input-field-container>.form-control {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
 }
 
 .input-label-container {
@@ -590,9 +593,27 @@ div[data-schematype="array"]>.header-container>h3 {
     min-height: 0;
 }
 
-.mce-edit-area, .mce-content-body {
+.mce-edit-area, .mce-content-body, .mce-container, .mce-widget, .mce-btn, .editor-toolbar, .CodeMirror {
     background-color: #f2f2f2 !important;
 		color: #787878 !important;
+}
+
+.editor-toolbar, .CodeMirror {
+    border-color: #e3e3e3 !important;
+}
+
+.mce-btn.mce-active button, .mce-btn.mce-active:hover button, .mce-btn.mce-active i, .mce-btn.mce-active:hover i, .mce-tabs, .mce-tabs+.mce-container-body, .mce-tab, .mce-tab:active, .mce-tab:focus, .mce-tab:active:focus, .mce-textbox, .mce-tab.mce-active, i.mce-i-checkbox {
+    color: inherit;
+    background-color: inherit;
+}
+
+.mce-btn.mce-active .mce-caret, .mce-btn.mce-active:hover .mce-caret {
+    border-top-color: inherit;
+}
+
+.mce-menu-item.mce-disabled, .mce-menu-item.mce-disabled:hover {
+    background: inherit;
+    opacity: 0.6;
 }
 
 .external-preview-bar {
@@ -611,7 +632,7 @@ div[data-schematype="array"]>.header-container>h3 {
     cursor: pointer;
 }
 
-.array-item-holder>.field-container>.form-right-group>.external-control>.mce-container {
+.array-item-holder>.field-container>.form-right-group>.external-control>.mce-container, .array-item-holder>.field-container>.form-right-group>.external-control>.editor-toolbar, .array-item-holder>.field-container>.form-right-group>.external-control>.CodeMirror, .array-item-holder>.field-container>.form-right-group>.external-control>.editor-statusbar {
     display: none;
 }
 
@@ -619,13 +640,27 @@ div[data-schematype="array"]>.header-container>h3 {
     display: block;
 }
 
+.active-item>.array-item-holder>.field-container>.form-right-group>.external-control>.editor-toolbar, .active-item>.array-item-holder>.field-container>.form-right-group>.external-control>.CodeMirror, .active-item>.array-item-holder>.field-container>.form-right-group>.external-control>.editor-statusbar, .active-item>.editor-toolbar, .active-item>.CodeMirror, .active-item>.editor-statusbar {
+    display: block;
+}
+
 .mce-container {
     box-sizing: border-box;
 }
 
-.array-item-holder>.field-container>.form-right-group>.external-control>.mce-container {
+.array-item-holder>.field-container>.form-right-group>.external-control>.mce-container, .array-item-holder>.field-container>.form-right-group>.external-control>.editor-toolbar, .array-item-holder>.field-container>.form-right-group>.external-control>.CodeMirror, .array-item-holder>.field-container>.form-right-group>.external-control>.editor-statusbar {
     margin-left: -24px;
     width: calc(100% + 48px) !important;
+}
+
+.array-item-holder>.field-container>.form-right-group>.external-control>.mce-container.mce-fullscreen, .array-item-holder>.field-container>.form-right-group>.external-control>.editor-toolbar.fullscreen, .array-item-holder>.field-container>.form-right-group>.external-control>.CodeMirror-fullscreen {
+    margin-left: 0;
+    width: 100%;
+}
+
+.array-item-holder>.field-container>.form-right-group>.external-control>.editor-toolbar {
+    border-top: none;
+    border-radius: 0;
 }
 
 .external-preview-bar>span {
@@ -1069,7 +1104,7 @@ input[type="file"].file-input {
     display: none;
 }
 
-.array-item-holder .form-control {
+.array-item-holder>.field-container .form-control {
     border-radius: 0;
 }
 
@@ -1119,9 +1154,19 @@ input[type="file"].file-input {
     padding: 0;
 }
 
-.no-border>div>.header-container>.btn-group {
-    margin-top: -36px;
-    margin-right: 36px;
+.no-border>div {
+    position: relative;
+}
+
+.no-border>div>.header-container .collapse-button {
+    position: absolute;
+    right: 36px;
+    top: -36px;
+}
+
+.no-border>div>.header-container .array-buttons {
+    margin-top: -4px !important;
+    margin-right: 36px !important;
 }
 
 .edit-json {

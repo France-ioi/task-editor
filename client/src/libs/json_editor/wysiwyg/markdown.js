@@ -45,10 +45,13 @@ module.exports = function(params) {
     }
     instance = new EasyMDE({
         element: params.element,
-        toolbar: toolbar
+        toolbar: toolbar,
+        autofocus: !!params.autoFocus
     })
     instance.codemirror.on('blur', function() {
-        params.onChange && params.onChange(instance.value())
+        var value = instance.value();
+        var textValue = value.replace(/\n+/g, ' ');
+        params.onChange && params.onChange(instance.value(), textValue)
     })
 
 
@@ -60,7 +63,11 @@ module.exports = function(params) {
         },
 
         setContent: function(content) {
-            instance && instance.value(content)
+            if (instance) {
+              instance.value(content);
+              var textValue = content.replace(/\n+/g, ' ');
+              params.onChange && params.onChange(content, textValue);
+            }
         }
     }
 

@@ -99,6 +99,7 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
     schema = this.jsoneditor.expandRefs(schema);
     this.wide =
       (schema.type === 'string' && schema.format === 'html') ||
+      schema.type === 'multitext' ||
       this.isFileArray() || this.isObjectTable();
     return this.wide;
   },
@@ -676,9 +677,18 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
         }
       });
       this.add_row_button.children[2].addEventListener('click', () => {
-        addNewRow();
-        this.rows[this.rows.length - 1].temporary_array_item = true;
-        this.rows[this.rows.length - 1].addByEditor();
+        var found;
+        for (var i = 0; i < this.rows.length; i++) {
+          if (this.rows[i].temporary_array_item && this.rows[i].file_bar.firstChild.innerHTML === 'New File') {
+            found = i;
+          }
+        }
+        if (found === undefined) {
+          addNewRow();
+          found = this.rows.length - 1;
+          this.rows[found].temporary_array_item = true;
+        }
+        this.rows[found].addByEditor();
       });
       this.add_row_button.addEventListener('drop', (e) => {
         addNewRow();
