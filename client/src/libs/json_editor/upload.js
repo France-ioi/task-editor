@@ -46,6 +46,8 @@ JSONEditor.defaults.editors.upload = JSONEditor.AbstractEditor.extend({
     this.file_preview.children[2].value = ''; // File Editor
     this.pane_shown = true;
     this.file_preview.children[2].style.display = 'block';
+    this.new_file = true;
+    this.file_preview.children[2].disabled = true;
     this.file_preview.children[3].style.display = 'none';
     this.file_preview.children[0].children[1].focus();
   },
@@ -232,6 +234,10 @@ JSONEditor.defaults.editors.upload = JSONEditor.AbstractEditor.extend({
         }
         this.old_filename = new_filename;
         if (this.temporary_array_item) this.temporary_array_item = false;
+        if (this.new_file) {
+          this.new_file = false;
+          this.file_preview.children[2].disabled = false;
+        }
       },
       failure: (error) => {
         this.setModifyEnabled(false);

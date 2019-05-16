@@ -163,7 +163,7 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
     iconContainer.appendChild(icon);
     container.appendChild(iconContainer);
     var text = document.createElement('span');
-    text.innerHTML = 'MORE ' + section.toUpperCase() + ' PARAMETERS';
+    text.innerHTML = 'HIDE ' + section.toUpperCase() + ' PARAMETERS';
     container.appendChild(text);
     return container;
   },
@@ -192,6 +192,9 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
       label.style.left = '6px';
     }
     labelContainer.appendChild(label);
+    labelContainer.addEventListener('click', function() {
+      el.focus();
+    });
     container.appendChild(labelContainer);
     container.appendChild(el);
     return el;

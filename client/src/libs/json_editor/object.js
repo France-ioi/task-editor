@@ -159,7 +159,7 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
       $each(this.property_order, function(i, key) {
         var editor = self.editors[key];
         if (self.isRequired(editor)) required_fields.push(key)
-        else if (self.isExpert(editor)) advanced_fields.push(key)
+        else if (self.isAdvanced(editor)) advanced_fields.push(key)
         else optional_fields.push(key)
       });
       $each([required_fields, optional_fields, advanced_fields], function(i, fields) {
@@ -185,12 +185,20 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
         });
         if (fields !== required_fields && fields.length) {
           var section_control = self.theme.getFieldSectionControl(fields === optional_fields ? 'optional' : 'advanced');
-          inner_container.appendChild(section_control);
+          inner_container.insertBefore(section_control, inner_container.firstChild);
           section_control.addEventListener('click', function() {
-            if (fields_container.style.display === 'none') fields_container.style.display = 'block';
-            else fields_container.style.display = 'none';
+            if (fields_container.style.display === 'none') {
+              fields_container.style.display = 'block';
+              section_control.lastChild.innerHTML = 'HIDE' + section_control.lastChild.innerHTML.substr(4);
+            } else {
+              fields_container.style.display = 'none';
+              section_control.lastChild.innerHTML = 'SHOW' + section_control.lastChild.innerHTML.substr(4);
+            }
           });
-          if (fields === advanced_fields) fields_container.style.display = 'none';
+          if (fields === advanced_fields) {
+            fields_container.style.display = 'none';
+            section_control.lastChild.innerHTML = 'SHOW' + section_control.lastChild.innerHTML.substr(4);
+          }
         }
       });
     }
@@ -853,8 +861,8 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
     else if(this.jsoneditor.options.required_by_default) return true;
     else return false;
   },
-  isExpert: function(editor) {
-    if(Array.isArray(this.schema.advanced_params)) return this.schema.advanced_params.indexOf(editor.key) > -1;
+  isAdvanced: function(editor) {
+    if(Array.isArray(this.schema.advanced)) return this.schema.advanced.indexOf(editor.key) > -1;
     else return false;
   },
   setValue: function(value, initial) {

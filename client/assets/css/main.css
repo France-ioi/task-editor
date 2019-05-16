@@ -81,6 +81,9 @@ body, html {
     height: 100%;
     margin: 0;
     padding: 0;
+}
+
+body, html, #reactbody, td, th, * {
     font-family: "Titillium Web", sans-serif;
 }
 
@@ -371,6 +374,7 @@ div[data-schematype="array"]>.header-container>h3 {
 }
 
 .form-right-group {
+    min-width: 0;
     display: inline-block;
     flex-grow: 1;
     flex-shrink: 1;
@@ -379,6 +383,7 @@ div[data-schematype="array"]>.header-container>h3 {
 }
 
 .form-control {
+    min-width: 0;
     background-color: #f2f2f2 !important;
     display: inline-block;
     flex-grow: 1;
@@ -879,6 +884,10 @@ div[data-schematype="array"]>.header-container>.btn-group>.array-buttons {
 .file-name-container {
     flex-grow: 1;
     padding: 8px 12px;
+    width: 0;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
     font-weight: bold;
     font-size: 14px;
     color: #787878;
@@ -1170,7 +1179,7 @@ input[type="file"].file-input {
 }
 
 .edit-json {
-    margin-top: 30px;
+    margin-top: 12px;
     display: none;
 }
 
