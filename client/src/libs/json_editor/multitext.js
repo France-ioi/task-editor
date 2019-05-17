@@ -15,8 +15,8 @@ window.JSONEditor.defaults.editors.multitext = JSONEditor.defaults.editors.strin
             autoFocus: focus && (this.input.id || true),
             path: this.jsoneditor.options.task.path,
             multitext: true,
-            onChange: function(content, textContent) {
-                self.setSummary(textContent);
+            onChange: function(content) {
+                self.input.parentNode.children[1].innerHTML = converter.makeHtml(content);
                 self.input.value = content;
                 self.value = self.input.value;
                 self.is_dirty = true;

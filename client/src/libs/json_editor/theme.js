@@ -26,15 +26,19 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
 	  var container = document.createElement('div');
     container.className = 'external-control';
     var topContainer = document.createElement('div');
-    var input = this.getFormInputField('external_preview');
+    var wysiwygTitle = document.createElement('div');
+    wysiwygTitle.className = 'wysiwyg-title';
+    wysiwygTitle.innerHTML = 'WYSIWYG Editor';
     var exitButton = document.createElement('span');
     exitButton.innerHTML = 'EXIT';
-		topContainer.appendChild(input);
+		topContainer.appendChild(wysiwygTitle);
     topContainer.appendChild(exitButton);
     topContainer.className = 'external-preview-bar';
-    input.setAttribute('readonly', true);
     var el = this.getTextareaInput();
     container.appendChild(topContainer);
+    var preview = document.createElement('div');
+    preview.className = 'wysiwyg-preview';
+    container.appendChild(preview);
 		container.appendChild(el);
     return el;
   },
@@ -240,7 +244,10 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
     return el;
   },
   getArrayDeleteButton: function() {
+    var iconContainer = document.createElement('span');
+    iconContainer.className = 'array-icon delete';
     var container = document.createElement('span');
+    container.className = 'array-delete-container';
     var el = this.getIcon('trash');
     el.className += ' array-delete-item';
     var confirm = document.createElement('span');
@@ -257,12 +264,16 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
     confirm.appendChild(cancelButton);
     container.appendChild(el);
     container.appendChild(confirm);
-    return container;
+    iconContainer.appendChild(container);
+    return iconContainer;
   },
   getArrayMoveButton: function() {
+    var iconContainer = document.createElement('span');
+    iconContainer.className = 'array-icon move';
     var el = this.getIcon('option-vertical');
     el.className += ' array-move-item';
-    return el;
+    iconContainer.appendChild(el);
+    return iconContainer;
   },
   getIndentedPanel: function() {
     var el = document.createElement('div');

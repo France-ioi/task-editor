@@ -581,13 +581,12 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
     // Buttons to delete row, move row up, and move row down
     if(!self.hide_delete_buttons) {
       self.rows[i].delete_button = this.theme.getArrayDeleteButton();
-      self.rows[i].delete_button.className += ' delete';
       self.rows[i].delete_button.setAttribute('data-i',i);
-      self.rows[i].delete_button.children[1].children[0].addEventListener('click',function(e) {
+      self.rows[i].delete_button.children[0].children[1].children[0].addEventListener('click',function(e) {
         e.preventDefault();
         e.stopPropagation();
         this.parentNode.style.display = 'none';
-        var i = this.parentNode.parentNode.getAttribute('data-i')*1;
+        var i = this.parentNode.parentNode.parentNode.getAttribute('data-i')*1;
 
         var value = self.getValue();
 
@@ -825,7 +824,7 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
     item.container.parentNode.className = item.container.parentNode.className.replace(/\s*active-item/g, '');
   },
   deleteItem: function(item) {
-    item.delete_button.children[1].children[0].click();
+    item.delete_button.children[0].children[1].children[0].click();
   },
   showItem: function(item) {
     item.container.parentNode.style.display = '';

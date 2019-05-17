@@ -49,9 +49,7 @@ module.exports = function(params) {
         autofocus: !!params.autoFocus
     })
     instance.codemirror.on('blur', function() {
-        var value = instance.value();
-        var textValue = value.replace(/\n+/g, ' ');
-        params.onChange && params.onChange(instance.value(), textValue)
+        params.onChange && params.onChange(instance.value())
     })
 
 
@@ -65,8 +63,7 @@ module.exports = function(params) {
         setContent: function(content) {
             if (instance) {
               instance.value(content);
-              var textValue = content.replace(/\n+/g, ' ');
-              params.onChange && params.onChange(content, textValue);
+              params.onChange && params.onChange(content);
             }
         }
     }

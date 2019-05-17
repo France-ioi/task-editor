@@ -473,16 +473,12 @@ div[data-schematype="array"]>.header-container>h3 {
 
 .array-delete-item {
     display: inline-block;
-    background-color: #f2f2f2;
     height: 34px;
-    margin-top: -1px;
     vertical-align: top;
-    border-top-right-radius: 15px;
-    border-bottom-right-radius: 15px;
     width: 24px;
 }
 
-.active-item>div>.delete>.array-delete-item {
+.active-item>.array-controls>.array-icon.delete {
     border-bottom-right-radius: 0;
     border-top-right-radius: 5px;
 }
@@ -497,16 +493,12 @@ div[data-schematype="array"]>.header-container>h3 {
 
 .array-move-item {
     display: inline-block;
-    background-color: #f2f2f2;
     height: 34px;
-    margin-top: -1px;
     vertical-align: top;
-    border-top-left-radius: 15px;
-    border-bottom-left-radius: 15px;
     width: 24px;
 }
 
-.active-item>div>.array-move-item {
+.active-item>.before-item-controls>.array-icon.move {
     border-bottom-left-radius: 0;
     border-top-left-radius: 5px;
 }
@@ -557,17 +549,15 @@ div[data-schematype="array"]>.header-container>h3 {
     margin-left: 8px;
 }
 
-.before-item-controls, .array-controls {
+.array-object-table:first-child .array-icon {
     position: relative;
-    top: -1px;
-}
-
-.array-object-table:first-child>.before-item-controls, .array-object-table:first-child>.array-controls {
     top: 22px;
 }
 
-.array-object-table>.before-item-controls>.array-move-item, .array-object-table>.array-controls>.delete>.array-delete-item {
+.array-object-table>div>.array-icon {
     background-color: white;
+    height: 36px !important;
+    margin-top: -1px;
 }
 
 .json-editor-btn-add, .round-btn {
@@ -625,8 +615,16 @@ div[data-schematype="array"]>.header-container>h3 {
     display: none;
 }
 
-.array-item-holder>.field-container>.form-right-group>.external-control>.external-preview-bar {
+.active-item>.array-item-holder>.field-container>.form-right-group>.external-control>.external-preview-bar {
     display: flex;
+}
+
+.array-item-holder>.field-container>.form-right-group>.external-control>.wysiwyg-preview {
+    display: block;
+}
+
+.active-item>.array-item-holder>.field-container>.form-right-group>.external-control>.wysiwyg-preview {
+    display: none;
 }
 
 .external-preview-bar>span {
@@ -821,7 +819,7 @@ div[data-schematype="array"]>.header-container>.btn-group>.array-buttons {
     padding: 0 4px;
 }
 
-.before-object-array-controls>span {
+.before-object-array-controls>.array-icon {
     background-color: transparent;
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
@@ -830,7 +828,7 @@ div[data-schematype="array"]>.header-container>.btn-group>.array-buttons {
     margin-top: 0;
 }
 
-.before-object-array-controls>span::before {
+.before-object-array-controls .glyphicon::before {
     color: white;
 }
 
@@ -840,7 +838,7 @@ div[data-schematype="array"]>.header-container>.btn-group>.array-buttons {
     top: -8px;
 }
 
-.object-array-controls>.delete>.array-delete-item {
+.object-array-controls .array-icon {
     background-color: white;
 }
 
@@ -856,7 +854,9 @@ div[data-schematype="array"]>.header-container>.btn-group>.array-buttons {
 }
 
 .file-thumbnail {
-    height: 64px;
+    max-height: 64px;
+    max-width: 64px;
+    object-fit: cover;
     margin: 4px 12px;
     display: none;
 }
@@ -883,7 +883,7 @@ div[data-schematype="array"]>.header-container>.btn-group>.array-buttons {
 
 .file-name-container {
     flex-grow: 1;
-    padding: 8px 12px;
+    padding: 9px 12px;
     width: 0;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -1081,14 +1081,6 @@ input[type="file"].file-input {
     display: block;
 }
 
-.image-file-container:not(.active-item)>.before-item-controls>.array-move-item, .image-file-container:not(.active-item)>.array-controls>.delete>.array-delete-item {
-    height: 72px;
-}
-
-.image-file-container:not(.active-item)>.before-item-controls>.array-move-item::before, .image-file-container:not(.active-item)>.array-controls>.delete>.array-delete-item::before {
-    top: 28px;
-}
-
 .array-multiple-item>.before-object-array-controls {
     top: 12px;
 }
@@ -1220,4 +1212,59 @@ input[type="file"].file-input {
 
 .edit-json-actions>button {
     margin-left: 8px;
+}
+
+.wysiwyg-preview {
+    display: none;
+    background-color: #f2f2f2;
+    color: #787878;
+    cursor: text;
+    padding: 4px;
+    padding-top: 8px;
+    min-height: 35px;
+    max-height: 58px;
+    word-break: break-all;
+    overflow: hidden;
+}
+
+.wysiwyg-title {
+    flex-grow: 1;
+    background-color: #f2f2f2;
+    color: #787878;
+    padding: 9px;
+    font-weight: bold;
+}
+
+.array-icon {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    background-color: #f2f2f2;
+    margin-top: -1px;
+    height: calc(100% + 1px);
+}
+
+.array-wide-item>div>.array-icon {
+    height: calc(100% + 2px);
+}
+
+.active-item>.before-item-controls>.array-icon, .active-item>.array-controls>.array-icon {
+    height: 36px;
+    margin-top: -1px;
+}
+
+.array-delete-container {
+    position: relative;
+}
+
+
+.array-icon.delete {
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+
+.array-icon.move {
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
 }

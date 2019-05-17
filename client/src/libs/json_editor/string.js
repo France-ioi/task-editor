@@ -155,7 +155,7 @@ JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
         this.source_code = true;
 
         this.input = this.theme.getExternalInput();
-        var enablerInput = this.input.parentNode.firstChild.firstChild;
+        var enablerInput = this.input.parentNode.children[1];
         enablerInput.addEventListener('click', () => {
           if (this.parent.activateItem) {
             this.parent.activateItem(this);
@@ -302,8 +302,8 @@ JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
         element: this.input,
         autoFocus: focus && this.input.id,
         path: this.jsoneditor.options.task.path,
-        onChange: function(content, textContent) {
-          self.setSummary(textContent);
+        onChange: function(content) {
+          self.input.parentNode.children[1].innerHTML = content;
           self.input.value = content;
           self.value = self.input.value;
           self.is_dirty = true;
@@ -367,14 +367,6 @@ JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
     }
     else {
       this.theme.removeInputError(this.input);
-    }
-  },
-  setSummary: function(content) {
-    if (this.input.parentNode && this.input.parentNode.firstChild) {
-      const summaryInput = this.input.parentNode.firstChild.firstChild;
-      if (summaryInput.nodeName === 'INPUT') {
-        summaryInput.value = content;
-      }
     }
   }
 });

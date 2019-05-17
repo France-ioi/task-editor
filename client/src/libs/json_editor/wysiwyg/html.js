@@ -38,7 +38,7 @@ module.exports = function(params) {
         setup: function(editor) {
             instance = editor;
             editor.on('init blur', function() {
-                params.onChange && params.onChange(editor.getContent(), editor.getContent({format : 'text'}));
+                params.onChange && params.onChange(editor.getContent());
             });
             editor.on('blur', function() {
                 params.onBlur && params.onBlur();
@@ -70,7 +70,10 @@ module.exports = function(params) {
 
 
         setContent: function(content) {
-            instance && instance.setContent(content)
+            if (instance) {
+              instance.setContent(content)
+              params.onChange && params.onChange(instance.getContent());
+            }
         }
 
     }
