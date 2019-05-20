@@ -132,7 +132,9 @@
           { "title": "Question multiple choice",
             "$ref": "#/definitions/question_multiple" },
           { "title": "Question with input",
-            "$ref": "#/definitions/question_input" }
+            "$ref": "#/definitions/question_input" },
+          { "title": "Fill in the gaps",
+            "$ref": "#/definitions/question_fill_gaps" }
         ]
       },
       "generator": [
@@ -347,6 +349,52 @@
           }
         }
       }
+    },
+
+    "question_fill_gaps": {
+      "title": "Fill in the gaps",
+      "type": "object",
+      "required": ["text", "answers", "non_answers"],
+      "id": "question_fill_gaps",
+      "properties": {
+        "text": {
+          "title": "Question text",
+          "description": "Use <span class=\"glyphicon glyphicon-unchecked\"></span> button to specify words place in text.",
+          "type": "string",
+          "format": "html",
+          "options": {
+            "wysiwyg": true
+          }
+        },
+        "answers": {
+          "title": "Correct words",
+          "type": "array",
+          "format": "tabs",
+          "items": {
+            "headerTemplate": "Word #{{i}}",
+            "type": "string"
+          }
+        },
+        "non_answers": {
+          "title": "Incorrect words",
+          "type": "array",
+          "format": "tabs",
+          "items": {
+            "headerTemplate": "Word #{{i}}",
+            "type": "string"
+          }
+        },
+        "solution": {
+          "title": "Question solution",
+          "type": "string",
+          "format": "html",
+          "options": {
+            "wysiwyg": true
+          }
+        }
+      }
     }
+
+
   }
 }

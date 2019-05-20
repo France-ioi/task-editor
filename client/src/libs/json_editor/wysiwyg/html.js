@@ -20,6 +20,16 @@ function createImagesListHandler(path) {
 }
 
 
+tinymce.PluginManager.add('placeholder', function(editor, url) {
+    editor.addButton('placeholder', {
+        icon: 'placeholder',
+        onclick: function() {
+            editor.insertContent('<span class="placeholder noneditable">&nbsp;</span>');
+        }
+    });
+});
+
+
 
 module.exports = function(params) {
 
@@ -27,12 +37,14 @@ module.exports = function(params) {
 
     window.tinymce.init({
         target: params.element,
-        plugins: 'image link codesample fullscreen lists textcolor colorpicker table code',
+        plugins: 'image link codesample fullscreen lists textcolor colorpicker table code noneditable placeholder',
         menubar: 'edit format',
-        toolbar: 'view_mode image link codesample forecolor backcolor table numlist bullist | fullscreen code '  + (params.multitext ? 'markdown' : ''),
+        toolbar: 'view_mode image link codesample forecolor backcolor table numlist bullist placeholder | fullscreen code '  + (params.multitext ? 'markdown' : ''),
         branding: false,
         skin: false,
         codesample_content_css: 'assets/prism.css',
+        content_css: 'assets/tinymce_content.css',
+        noneditable_noneditable_class: "noneditable",
         setup: function(editor) {
             instance = editor;
             editor.on('blur', function() {

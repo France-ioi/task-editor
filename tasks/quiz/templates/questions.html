@@ -4,6 +4,8 @@
             type = 'input'
         } else if('correct_answer' in data[i]) {
             type = 'single'
+        } else if('non_answers' in data[i]) {
+            type = 'fill_gaps'
         }
     %>
     <question type="<%- type %>">
@@ -11,6 +13,11 @@
 
         <% if(type == 'input') { %>
             <answer format="<%- data[i].format %>" validator="<%- data[i].validator %>"></answer>
+        <% } else if(type == 'fill_gaps') { %>
+            <% var words = this.helpers.shuffle(data[i].answers.concat(data[i].non_answers || [])); %>
+            <% for(var j=0; j<words.length; j++) { %>
+                <answer><%- words[j] %></answer>
+            <% } %>
         <% } else { for(var j=0; j<data[i].answers.length; j++) { %>
             <answer><%- data[i].answers[j].text %></answer>
         <% }} %>

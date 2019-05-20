@@ -135,7 +135,18 @@ i.mce-i-markdown:before {
     font-style: normal;
     font-weight: 400;
     line-height: 1;
- }
+}
+
+i.mce-i-placeholder:before {
+    content: "\e157";
+    position: relative;
+    top: 1px;
+    display: inline-block;
+    font-family: 'Glyphicons Halflings';
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1;
+}
 
 .editor-toolbar.fullscreen {
     z-index: 1040;
