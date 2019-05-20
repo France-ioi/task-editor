@@ -46,6 +46,7 @@ JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
             this.html_editor = HTMLEditor({
                 element: this.input,
                 path: this.jsoneditor.options.task.path,
+                options: this.options,
                 onChange: function(content) {
                     self.input.value = content;
                     self.value = self.input.value;

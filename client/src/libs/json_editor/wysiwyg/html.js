@@ -39,7 +39,11 @@ module.exports = function(params) {
         target: params.element,
         plugins: 'image link codesample fullscreen lists textcolor colorpicker table code noneditable placeholder',
         menubar: 'edit format',
-        toolbar: 'view_mode image link codesample forecolor backcolor table numlist bullist placeholder | fullscreen code '  + (params.multitext ? 'markdown' : ''),
+        toolbar:
+            'view_mode image link codesample forecolor backcolor table numlist bullist ' +
+            (params.options.placeholder ? 'placeholder' : '') +
+            ' | fullscreen code ' +
+            (params.multitext ? 'markdown' : ''),
         branding: false,
         skin: false,
         codesample_content_css: 'assets/prism.css',

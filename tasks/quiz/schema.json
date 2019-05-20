@@ -359,11 +359,12 @@
       "properties": {
         "text": {
           "title": "Question text",
-          "description": "Use <span class=\"glyphicon glyphicon-unchecked\"></span> button to specify words place in text.",
+          "description": "Use <span class=\"glyphicon glyphicon-unchecked\"></span> button to insert placeholders.",
           "type": "string",
           "format": "html",
           "options": {
-            "wysiwyg": true
+            "wysiwyg": true,
+            "placeholder": true
           }
         },
         "answers": {

@@ -14,6 +14,7 @@ window.JSONEditor.defaults.editors.multitext = JSONEditor.defaults.editors.strin
             element: this.input,
             path: this.jsoneditor.options.task.path,
             multitext: true,
+            options: this.options,
             onChange: function(content) {
                 self.input.value = content;
                 self.value = self.input.value;
