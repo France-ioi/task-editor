@@ -354,11 +354,19 @@
     "question_fill_gaps": {
       "title": "Fill in the gaps",
       "type": "object",
-      "required": ["text", "answers", "non_answers"],
+      "required": ["text", "answers", "non_answers", "fill_gaps_text"],
       "id": "question_fill_gaps",
       "properties": {
         "text": {
           "title": "Question text",
+          "type": "string",
+          "format": "html",
+          "options": {
+            "wysiwyg": true
+          }
+        },
+        "fill_gaps_text": {
+          "title": "Fill in the gaps text",
           "description": "Use <span class=\"glyphicon glyphicon-unchecked\"></span> button to insert placeholders.",
           "type": "string",
           "format": "html",

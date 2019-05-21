@@ -1,10 +1,11 @@
 <% for(var i=0; i<data.length; i++) { %>
-    <% var type = 'multiple';
+    <%
+        var type = 'multiple';
         if('format' in data[i]) {
             type = 'input'
         } else if('correct_answer' in data[i]) {
             type = 'single'
-        } else if('non_answers' in data[i]) {
+        } else if('fill_gaps_text' in data[i]) {
             type = 'fill_gaps'
         }
     %>
@@ -18,6 +19,7 @@
             <% for(var j=0; j<words.length; j++) { %>
                 <answer><%- words[j] %></answer>
             <% } %>
+            <div class="fill-gaps-text"><%- data[i].fill_gaps_text %></div>
         <% } else { for(var j=0; j<data[i].answers.length; j++) { %>
             <answer><%- data[i].answers[j].text %></answer>
         <% }} %>

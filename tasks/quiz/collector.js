@@ -18,7 +18,7 @@ module.exports = function(questions) {
         } else if('correct_answer' in question) {
             // single select
             res.push(parseInt(question.correct_answer, 10))
-        } else if('non_answers' in question) {
+        } else if('fill_gaps_text' in question) {
             // fill gaps
             res.push(question.answers)
         } else {
