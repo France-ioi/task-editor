@@ -20,7 +20,10 @@ module.exports = function(questions) {
             res.push(parseInt(question.correct_answer, 10))
         } else if('fill_gaps_text' in question) {
             // fill gaps
-            res.push(question.answers)
+            res.push({
+                strict: true,
+                value: question.answers
+            })
         } else {
             // multiple select
             var arr = [];
