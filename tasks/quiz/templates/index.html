@@ -4,31 +4,16 @@
         <meta charset="utf-8">
         <title></title>
         <script>
-            window.stringsLanguage = 'en';
+            var stringsLanguage = 'en';
             var quiz_settings;
             var task_data_info = %%TASK_DATA_INFO%%;
+            var quiz_question_types;
         </script>
         <script class="remove" type="text/javascript" src="%%TASK_PATH%%/_common/modules/pemFioi/importModules-1.4-mobileFirst.js" id="import-modules"></script>
+        <script class="remove" type="text/javascript" src="%%TASK_PATH%%/_common/modules/pemFioi/quiz/loader.js"></script>
         <script class="remove" type="text/javascript">
             var json;
-            var modulesPath = '%%TASK_PATH%%/_common/modules/';
-            var modules = [
-                'jquery-1.7.1',
-                'JSON-js',
-                'raphael-2.2.1',
-                'jschannel',
-                'platform-pr',
-                'installationAPI.01',
-                'miniPlatform',
-                'quiz_styles',
-                'quiz_ui',
-                'quiz_task',
-                'quiz_grader'
-            ];
-            task_data_info.markdown && modules.push('showdown');
-            quiz_settings.mathjax && modules.push('mathjax');
-            (task_data_info.markdown || quiz_settings.mathjax) && modules.push('post_processor');
-            importModules(modules);
+            loadQuizModules('%%TASK_PATH%%/_common/modules/');
         </script>
         <script class="remove" type="text/javascript" src="grader_data.js"></script>
     </head>

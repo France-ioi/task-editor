@@ -1,1 +1,1 @@
-window.QuizGrader.data;
+window.Quiz.grader.data;

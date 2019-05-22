@@ -154,13 +154,25 @@
         },
         {
           "input": {
-            "collector": "collector.js",
+            "collector": "collectors/grader.js",
             "keepArray": true
           },
           "output": {
             "inject": {
               "template": "grader_data.js",
-              "selector": "$window.QuizGrader.data"
+              "selector": "$window.Quiz.grader.data"
+            }
+          }
+        },
+        {
+          "input": {
+            "collector": "collectors/question_types.js",
+            "keepArray": true
+          },
+          "output": {
+            "inject": {
+              "template": "index.html",
+              "selector": "$quiz_question_types"
             }
           }
         }
