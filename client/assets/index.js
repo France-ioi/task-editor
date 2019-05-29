@@ -3,4 +3,7 @@ require('tinymce/themes/modern/theme');
 require('tinymce/skins/lightgray/skin.min.css');
 require('tinymce/skins/lightgray/content.min.css');
 require('easymde/dist/easymde.min.css');
+require('jquery-ui-dist/jquery-ui.css');
+require('jquery-ui-dist/jquery-ui.theme.css');
 require('./css/main.css');
+require('./css/task_editor_grid.css');

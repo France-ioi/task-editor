@@ -20,6 +20,8 @@ module.exports = function(env) {
         './node_modules/tinymce/plugins/codesample/plugin.js',
         './node_modules/tinymce/plugins/code/plugin.js',
         './node_modules/tinymce/plugins/noneditable/plugin.js',
+        'jquery',
+        'jquery-ui-dist/jquery-ui.js',
         'easymde',
         'react',
         'react-bootstrap',
@@ -36,14 +38,12 @@ module.exports = function(env) {
         new webpack.optimize.CommonsChunkPlugin({
             name: 'vendor',
             filename: 'vendor.js'
-        })
-        /*,
+        }),
         new webpack.ProvidePlugin({
-            //$: "jquery",
-            //jQuery: "jquery",
+            $: "jquery",
+            jQuery: "jquery",
             "window.jQuery": "jquery"
         })
-        */
     ];
 
     var production = process.env.NODE_ENV === 'production';

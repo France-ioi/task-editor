@@ -1,0 +1,87 @@
+.te-grid-wrapper {
+    margin-left: 5px;
+    margin-top: 0em;
+    display: block;
+    width: 40px;
+    height: 40px;
+    box-sizing: content-box;
+    background-clip: padding-box !important;
+}
+
+.te-grid-wrapper ul {
+    list-style: none;
+    display: inline-block;
+}
+
+.te-grid-wrapper ul.dot,
+.te-grid-wrapper li.dot {
+    width: 30px;
+    height: 30px;
+}
+
+.te-grid-wrapper .dot {
+    background: #ccc;
+    border-radius: 50%;
+    cursor: pointer;
+    -webkit-transition: all 1.5s ease;
+    -moz-transition: all 1.5s ease;
+    -o-transition: all 1.5s ease;
+    transition: all 1.5s ease;
+    background-clip: padding-box !important;
+    border: 5px solid transparent;
+    background-size: 30px 30px !important;
+    box-sizing: content-box;
+}
+
+.te-grid-wrapper .item-type.dot {
+    float: left;
+    list-style: none;
+}
+
+.te-grid-wrapper .dot-image {
+    borderRadius: '0px' !important;
+    width: 100% !important;
+    height: 100% !important;
+    background-clip: padding-box !important;
+    background-size: cover !important;
+}
+
+.te-grid-wrapper .dots-container > ul {
+    padding: 0px;
+    margin: 0px;
+}
+
+
+
+.te-grid-item-types {
+    min-height: 55px;
+}
+
+.te-grid-item-types .item-type {
+    margin: 6px;
+}
+
+.te-grid-item-types > img {
+    width: 40px;
+    height: 40px;
+    background: black;
+}
+
+.te-grid-item-types .item-type.active {
+    background: cadetblue !important;
+}
+
+
+.te-grid-init-item {
+    height: 40px;
+    background: black;
+    margin: 6px;
+    width: 40px;
+    overflow: hidden;
+    float: left;
+}
+
+.te-grid-init-item img.init-item {
+    height: 100%;
+    margin: 0;
+}
