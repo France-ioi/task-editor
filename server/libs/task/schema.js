@@ -1,11 +1,10 @@
-var path = require('path');
+var path = require('path')
 var util = require('util')
+var schema_loader = require('../schema_loader.js')
 
 module.exports = function(src_path) {
 
-    var filename = 'schema.json';
-    var tree = require(path.resolve(src_path, filename));
-
+    var tree = schema_loader.load(src_path);
 
     // expand tree using $ref
     // only #/defintinions path supported for now
