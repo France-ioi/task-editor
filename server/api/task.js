@@ -5,7 +5,7 @@ var config = require('../config')
 var svn = require('../libs/svn')
 var shell = require('shelljs')
 var tree = require('../libs/tree')
-
+var schema_loader = require('../libs/schema_loader')
 
 function taskDataFile(task_subpath) {
     return path.join(config.path, task_subpath, config.task.data_file);
@@ -13,25 +13,15 @@ function taskDataFile(task_subpath) {
 
 
 function loadSchema(task_type, callback) {
-    var file = 'schema.json';
-    var json_path = path.resolve('../tasks/', task_type, file);
-    fs.readFile(
-        json_path,
-        { encoding: 'utf-8' },
-        (err, content) => {
-            if(err) return callback(
-                new Error('Task schema not found: ' + task_type + '. Update task editor to latest version.')
-            );
-            try {
-                var schema = JSON.parse(content);
-            } catch(e) {
-                return callback(
-                    new Error('Error reading schema ' + task_type + '/' + file + '. ' + e.message)
-                );
-            }
-            callback(null, schema)
-        }
-    )
+    var task_path = path.resolve('../tasks/', task_type);
+    try {
+        var schema = schema_loader.load(task_path);
+    } catch(e) {
+        return callback(
+            new Error('Error reading schema ' + task_type + '/' + file + '. ' + e.message)
+        );
+    }
+    callback(null, schema);
 }
 
 
