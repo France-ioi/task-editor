@@ -10,6 +10,7 @@ module.exports = function(env) {
         'json-editor',
         'tinymce',
         './node_modules/tinymce/plugins/textcolor/plugin.js',
+        './node_modules/tinymce/plugins/autoresize/plugin.js',
         './node_modules/tinymce/plugins/colorpicker/plugin.js',
         './node_modules/tinymce/plugins/table/plugin.js',
         './node_modules/tinymce/plugins/bbcode/plugin.js',

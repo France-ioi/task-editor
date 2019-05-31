@@ -28,13 +28,16 @@ module.exports = function(params) {
     window.tinymce.init({
         target: params.element,
         auto_focus: params.autoFocus,
-        plugins: 'image link codesample fullscreen lists textcolor colorpicker table code',
+        plugins: 'autoresize image link codesample fullscreen lists textcolor colorpicker table code',
         menubar: 'edit format',
         toolbar: 'view_mode image link codesample forecolor backcolor table numlist bullist | fullscreen code '  + (params.multitext ? 'markdown' : ''),
         branding: false,
         skin: false,
         codesample_content_css: 'assets/prism.css',
         content_css: 'assets/tinymce_custom.css',
+        autoresize_min_height: 100,
+        autoresize_max_height: 400,
+        autoresize_bottom_margin: 4,
         setup: function(editor) {
             instance = editor;
             editor.on('init blur', function() {

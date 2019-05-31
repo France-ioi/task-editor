@@ -46,6 +46,7 @@ module.exports = function(params) {
     instance = new EasyMDE({
         element: params.element,
         toolbar: toolbar,
+        minHeight: '100px',
         autofocus: !!params.autoFocus
     })
     instance.codemirror.on('blur', function() {

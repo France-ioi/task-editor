@@ -1,4 +1,4 @@
 .mce-edit-area, .mce-content-body {
-    background-color: #f2f2f2 !important;
+    background-color: rgba(0, 0, 0, 0.02) !important;
 		color: #787878 !important;
 }

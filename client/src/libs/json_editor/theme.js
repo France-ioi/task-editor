@@ -57,6 +57,16 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
     // TODO: use better slider
     return this._super(min, max, step);
   },
+  getErrorMessage: function(text) {
+    var el = document.createElement('p');
+    el.style = el.style || {};
+    el.style.color = 'red';
+    el.style.fontWeight = 'bold';
+    el.style.fontStyle = 'normal';
+    el.style.marginTop = '4px';
+    el.appendChild(document.createTextNode(text));
+    return el;
+  },
   getIcon: function(name) {
     var el = document.createElement('span');
     el.className = 'glyphicon glyphicon-'+ name;
@@ -169,6 +179,8 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
     var text = document.createElement('span');
     text.innerHTML = 'HIDE ' + section.toUpperCase() + ' PARAMETERS';
     container.appendChild(text);
+    var collapse = this.getIcon('chevron-up');
+    container.appendChild(collapse);
     return container;
   },
   getMultiField: function(label, sw) {

@@ -166,6 +166,7 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
         var inner_container = document.createElement('div');
         container.appendChild(inner_container);
         var fields_container = document.createElement('div');
+        fields_container.className = 'section-fields-container';
         inner_container.appendChild(fields_container);
         $each(fields, function(f, key) {
           var editor = self.editors[key];
@@ -186,18 +187,32 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
         if (fields !== required_fields && fields.length) {
           var section_control = self.theme.getFieldSectionControl(fields === optional_fields ? 'optional' : 'advanced');
           inner_container.insertBefore(section_control, inner_container.firstChild);
+          fields_container.collapsed = false;
           section_control.addEventListener('click', function() {
-            if (fields_container.style.display === 'none') {
-              fields_container.style.display = 'block';
-              section_control.lastChild.innerHTML = 'HIDE' + section_control.lastChild.innerHTML.substr(4);
+            if (fields_container.collapsed) {
+              fields_container.collapsed = false;
+              fields_container.style.maxHeight = fields_container.scrollHeight + 'px';
+              setTimeout(() => { fields_container.style.maxHeight = null; fields_container.style.overflow = null }, 200);
+              section_control.children[1].innerHTML = 'HIDE' + section_control.children[1].innerHTML.substr(4);
+              section_control.lastChild.className = section_control.lastChild.className.replace(/chevron-down/g, 'chevron-up');
             } else {
-              fields_container.style.display = 'none';
-              section_control.lastChild.innerHTML = 'SHOW' + section_control.lastChild.innerHTML.substr(4);
+              fields_container.collapsed = true;
+              fields_container.style.maxHeight = fields_container.scrollHeight + 'px';
+              window.requestAnimationFrame(() => {
+                window.requestAnimationFrame(() => {
+                  fields_container.style.overflow = 'hidden'; fields_container.style.maxHeight = '0'
+                });
+              });
+              section_control.children[1].innerHTML = 'SHOW' + section_control.children[1].innerHTML.substr(4);
+              section_control.lastChild.className = section_control.lastChild.className.replace(/chevron-up/g, 'chevron-down');
             }
           });
           if (fields === advanced_fields) {
-            fields_container.style.display = 'none';
-            section_control.lastChild.innerHTML = 'SHOW' + section_control.lastChild.innerHTML.substr(4);
+            fields_container.collapsed = true;
+            fields_container.style.maxHeight = '0';
+            fields_container.style.overflow = 'hidden';
+            section_control.children[1].innerHTML = 'SHOW' + section_control.children[1].innerHTML.substr(4);
+            section_control.lastChild.className = section_control.lastChild.className.replace(/chevron-up/g, 'chevron-down');
           }
         }
       });
@@ -333,8 +348,7 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
         }
 
         if (self.editors[key].options.grid_columns && !self.editors[key].options.input_width) {
-          var allWidth = self.container.clientWidth - 25 * 2 - 12 * Object.keys(self.editors).length;
-          self.editors[key].options.input_width = parseInt(allWidth * self.editors[key].options.grid_columns / 12) + 'px';
+          holder.style.flex = self.editors[key].options.grid_columns;
         }
 
         if(self.editors[key].options.input_width) {
@@ -427,7 +441,7 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
 
       // Validation error placeholder area
       this.error_holder = document.createElement('div');
-      this.container.appendChild(this.error_holder);
+      this.description.appendChild(this.error_holder);
 
       // Container for child editor area
       this.editor_holder = this.theme.getIndentedPanel();
@@ -463,19 +477,39 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
         e.preventDefault();
         e.stopPropagation();
         if(self.collapsed) {
-          self.editor_holder.style.display = '';
+          self.editor_holder.style.maxHeight = self.editor_holder.scrollHeight + 'px';
+          setTimeout(() => { self.editor_holder.style.maxHeight = null; self.editor_holder.style.overflow = null }, 200);
           self.collapsed = false;
           self.setButtonText(self.toggle_button,'','collapse',self.translate('button_collapse'));
         }
         else {
-          self.editor_holder.style.display = 'none';
+          self.editor_holder.style.maxHeight = self.editor_holder.scrollHeight + 'px';
+          window.requestAnimationFrame(() => {
+            window.requestAnimationFrame(() => {
+              self.editor_holder.style.overflow = 'hidden'; self.editor_holder.style.maxHeight = '0';
+            });
+          });
           self.collapsed = true;
           self.setButtonText(self.toggle_button,'','expand',self.translate('button_expand'));
         }
       });
+      this.title.addEventListener('click', () => {
+        this.toggle_button.click();
+      });
+      this.description.addEventListener('click', () => {
+        this.toggle_button.click();
+      });
+
+      // Check if has advanced parent
+      this.is_advanced_descendant = false;
+      var check_node = this;
+      while (check_node) {
+        this.is_advanced_descendant = this.is_advanced_descendant || (check_node.parent && check_node.parent.isAdvanced && check_node.parent.isAdvanced(check_node))
+        check_node = check_node.parent;
+      }
 
       // If it should start collapsed
-      if(this.options.collapsed) {
+      if(this.options.collapsed || this.is_advanced_descendant) {
         $trigger(this.toggle_button,'click');
       }
 

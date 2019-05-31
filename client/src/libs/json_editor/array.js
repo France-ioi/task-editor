@@ -149,14 +149,17 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
         this.description = this.theme.getDescription(this.schema.description || '');
         this.container.appendChild(this.description);
         this.error_holder = document.createElement('div');
-        this.container.appendChild(this.error_holder);
+        this.description.appendChild(this.error_holder);
         this.panel = this.theme.getIndentedPanel();
         this.container.appendChild(this.panel);
         this.row_holder = document.createElement('div');
         this.panel.appendChild(this.row_holder);
         this.controls = document.createElement('span');
         this.controls.className = 'array-buttons';
-        this.title_controls.insertBefore(this.controls, this.title_controls.firstChild);
+        this.control_bar = document.createElement('div');
+        this.control_bar.appendChild(this.controls);
+        this.control_bar.className = 'array-control-bar';
+        this.panel.appendChild(this.control_bar)
         this.container.lastChild.className += ' object-array';
       }
       this.sorter = new Sortable(this.row_holder, {
@@ -197,12 +200,12 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
       });
     }
     else {
-        this.panel = this.theme.getIndentedPanel();
-        this.container.appendChild(this.panel);
-        this.controls = this.theme.getButtonHolder();
-        this.panel.appendChild(this.controls);
-        this.row_holder = document.createElement('div');
-        this.panel.appendChild(this.row_holder);
+      this.panel = this.theme.getIndentedPanel();
+      this.container.appendChild(this.panel);
+      this.controls = this.theme.getButtonHolder();
+      this.panel.appendChild(this.controls);
+      this.row_holder = document.createElement('div');
+      this.panel.appendChild(this.row_holder);
     }
 
     // Add controls
@@ -700,10 +703,16 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
       if (itemName === 'item') itemName = '';
       this.add_row_button = this.getButton(itemName, 'add',this.translate('button_add_row_title',[itemName]));
 
-      this.add_row_button.addEventListener('click',function(e) {
+      this.add_row_button.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
         addNewRow();
+        if (this.isCompressedArray() && this.isWideArray() && !this.isObjectTable()) {
+          this.activateItem(this.rows[this.rows.length - 1]);
+          setTimeout(() => this.rows[this.rows.length - 1].afterInputReady(true), 0);
+        } else {
+          this.rows[this.rows.length - 1].input && this.rows[this.rows.length - 1].input.focus();
+        }
       });
     }
     self.controls.appendChild(this.add_row_button);
@@ -745,18 +754,20 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
         e.stopPropagation();
         if(self.collapsed) {
           self.collapsed = false;
-          if(self.panel) self.panel.style.display = '';
-          self.row_holder.style.display = row_holder_display;
+          self.panel.style.maxHeight = self.panel.scrollHeight + 'px';
+          setTimeout(() => { self.panel.style.maxHeight = null; self.panel.style.overflow = null }, 200);
           if(self.tabs_holder) self.tabs_holder.style.display = '';
-          self.controls.style.display = controls_display;
           self.setButtonText(this,'','collapse',self.translate('button_collapse'));
         }
         else {
           self.collapsed = true;
-          self.row_holder.style.display = 'none';
+          self.panel.style.maxHeight = self.panel.scrollHeight + 'px';
+          window.requestAnimationFrame(() => {
+            window.requestAnimationFrame(() => {
+              self.panel.style.overflow = 'hidden'; self.panel.style.maxHeight = '0';
+            });
+          });
           if(self.tabs_holder) self.tabs_holder.style.display = 'none';
-          self.controls.style.display = 'none';
-          if(self.panel) self.panel.style.display = 'none';
           self.setButtonText(this,'','expand',self.translate('button_expand'));
         }
       });
@@ -764,6 +775,11 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
       // If it should start collapsed
       if(this.options.collapsed) {
         $trigger(this.toggle_button,'click');
+      }
+
+      if (!this.isCompressedArray()) {
+        this.title.addEventListener('click', () => this.toggle_button.click())
+        this.description.addEventListener('click', () => this.toggle_button.click())
       }
 
       // Collapse button disabled
@@ -828,5 +844,11 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
   },
   showItem: function(item) {
     item.container.parentNode.style.display = '';
+  },
+  afterInputReady: function(focus) {
+    for (var child = 0; child < this.rows.length; child++) {
+      var el = this.rows[child];
+      el.afterInputReady && el.afterInputReady(focus)
+    }
   }
 });

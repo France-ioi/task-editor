@@ -93,7 +93,7 @@ class TaskJsonEditor extends React.Component {
 
     render() {
         return (
-            <div ref={(el) => { this.element = el; }}></div>
+            <div className='json-editor-container' ref={(el) => { this.element = el; }}></div>
         );
     }
 

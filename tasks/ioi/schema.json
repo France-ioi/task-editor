@@ -1,7 +1,7 @@
 {
     "title": "Task",
     "type": "object",
-    "description": "This editor allows you to edit the various aspects of a task. All the data in this editor is organized as a JSON object, whose properties represent each task part. Some properties are optional, and are hidden by default in the editor; to display them, click \"Object properties\" on each tree item to add these optional properties.",
+    "description": "This editor allows you to edit the various aspects of a task. All the data in this editor is organized as a JSON object, whose properties represent each task part.",
     "definitions": {
         "simpleFile": {"type": "string",
             "format": "url",
@@ -336,7 +336,6 @@
         "type": "array",
         "items": {
             "type": "object",
-            "description": "Click \"Object Properties\" to add an expected output file as well.",
             "properties": {
                 "input": {
                     "type": "string",
@@ -372,7 +371,7 @@
       },
       "taskSettings": {
         "title": "taskSettings.json",
-        "description": "Optional taskSettings.json file for the task. Please refer to the documentation at https://france-ioi.github.io/taskgrader/tasksettings/ . Click \"Object Properties\" to add desired items (such as \"checker\").",
+        "description": "Optional taskSettings.json file for the task. Please refer to the documentation at <a href=\"https://france-ioi.github.io/taskgrader/tasksettings/\" target=\"_blank\">here</a>.",
         "type": "object",
         "generator": [{
             "input": {
@@ -516,5 +515,6 @@
             }
     },
 
-    "required": ["PEMTaskMetaData", "FIOITaskMetaData", "title", "task", "solution", "hints", "testFiles", "taskSettings"]
+    "required": ["PEMTaskMetaData", "FIOITaskMetaData", "title", "task", "solution", "testFiles", "taskSettings"],
+    "advanced": ["files"]
 }

@@ -181,6 +181,10 @@ JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
       this.input = this.theme.getFormInputField(this.input_type, this.string_type);
     }
 
+    this.input.addEventListener('input', () => {
+      this.input.setAttribute('size', this.input.value.length || 1);
+    });
+
     // minLength, maxLength, and pattern
     if(typeof this.schema.maxLength !== "undefined") this.input.setAttribute('maxlength',this.schema.maxLength);
     if(typeof this.schema.pattern !== "undefined") this.input.setAttribute('pattern',this.schema.pattern);
@@ -315,6 +319,7 @@ JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
   },
   refreshValue: function() {
     this.value = this.input.value;
+    this.input.setAttribute('size', this.input.value.length || 1);
     if(typeof this.value !== "string") this.value = '';
     this.serialized = this.value;
   },
