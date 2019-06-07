@@ -6,4 +6,5 @@ require('easymde/dist/easymde.min.css');
 require('jquery-ui-dist/jquery-ui.css');
 require('jquery-ui-dist/jquery-ui.theme.css');
 require('./css/main.css');
-require('./css/task_editor_grid.css');
+require('./css/json-editor/grid.css');
+require('./css/json-editor/sortable_list.css');

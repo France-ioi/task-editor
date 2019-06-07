@@ -39,7 +39,7 @@
 }
 
 .te-grid-wrapper .dot-image {
-    borderRadius: '0px' !important;
+    border-radius: '0px' !important;
     width: 100% !important;
     height: 100% !important;
     background-clip: padding-box !important;
@@ -58,30 +58,23 @@
 }
 
 .te-grid-item-types .item-type {
+    cursor: pointer;
     margin: 6px;
-}
-
-.te-grid-item-types > img {
     width: 40px;
     height: 40px;
-    background: black;
+    background: #FFF;
+    display: inline-block;
 }
 
 .te-grid-item-types .item-type.active {
-    background: cadetblue !important;
+    width: 44px;
+    height: 44px;
+    margin: 4px !important;
+    border: 2px solid cadetblue;
 }
 
 
-.te-grid-init-item {
-    height: 40px;
-    background: black;
-    margin: 6px;
-    width: 40px;
+.te-grid-item-types .init-item {
     overflow: hidden;
     float: left;
-}
-
-.te-grid-init-item img.init-item {
-    height: 100%;
-    margin: 0;
 }

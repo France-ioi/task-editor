@@ -13,7 +13,7 @@ function taskDataFile(task_subpath) {
 
 
 function loadSchema(task_type, callback) {
-    var task_path = path.resolve('../tasks/', task_type);
+    var task_path = path.resolve('../tasks/types/', task_type);
     try {
         var schema = schema_loader.load(task_path);
     } catch(e) {

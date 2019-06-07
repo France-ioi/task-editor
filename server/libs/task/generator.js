@@ -6,7 +6,7 @@ var clone = require('clone')
 module.exports = {
 
     output: (params, callback) => {
-        var src_path = path.resolve(__dirname, '../../../tasks/' + params.type);
+        var src_path = path.resolve(__dirname, '../../../tasks/types/' + params.type);
 
         var schema = require('./schema')(src_path);
         var data = require('./data')(params.data);

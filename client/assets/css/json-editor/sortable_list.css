@@ -1,0 +1,11 @@
+.sortable-list {
+    min-height: 20px;
+    background: #fff;
+}
+
+
+.sortable-list .list-group-item {
+    cursor: move;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}

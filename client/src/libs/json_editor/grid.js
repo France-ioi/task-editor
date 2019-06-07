@@ -13,7 +13,7 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
         // window.console.log("inside prebuild:");
         // window.console.log(this.value);
         this.field_size = 40;
-        this.defaule_value = 1;
+        this.default_value = 1;
     },
 
     postBuild: function () {
@@ -31,14 +31,14 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
             });
             if (self.contextBackground != null) {
                 $("#" + self.id + "-resizable").css({
-                    background: self.contextBackground
+                    background: self.contextBackground || '#FFF'
                 });
             }
         });
         // this.refreshValue();
         // window.console.log("inside postbuild:");
         // window.console.log(this.value);
-        this.setValue({'tiles': [[this.defaule_value]], 'initItems': [], 'images': []}, true);
+        this.setValue({'tiles': [[this.default_value]], 'initItems': [], 'images': []}, true);
     },
 
     setupWatchListeners: function () {
@@ -46,21 +46,23 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
     },
     onWatchedFieldChange: function () {
         this._super();
-        var self = this;
-
         // load itemtypes according to context, getContextParams is available from BLOCKLY_API_URL
-        if (typeof getContextParams === "function") {
-            if (getContextParams()[this.watched_values.sceneContext] != undefined) {
-                // window.console.log(getContextParams()[this.watched_values.sceneContext].itemTypes);
-                this.itemTypes = getContextParams()[this.watched_values.sceneContext].itemTypes;
-                this.updateItemTypes(this.itemTypes);
-                self.contextBackground = getContextParams()[this.watched_values.sceneContext].backgroundColor;
-                $('.ui-resizable').css({
-                    background: self.contextBackground
-                });
-                this.configureItemTypesListeners();
-            }
-        }
+        if (typeof getContextParams !== "function" || getContextParams()[this.watched_values.sceneContext] === undefined) return;
+
+        // window.console.log(getContextParams()[this.watched_values.sceneContext].itemTypes);
+        this.itemTypes = getContextParams()[this.watched_values.sceneContext].itemTypes;
+        this.updateItemTypes(this.itemTypes);
+
+        var el = $('#' + this.id + '-resizable');
+        this.resizeGrid({ width: el.width(), height: el.height() });
+
+        this.contextBackground = getContextParams()[this.watched_values.sceneContext].backgroundColor;
+        $('#' + this.id + '-resizable').css({
+            background: this.contextBackground || 'transparent'
+        });
+        this.configureItemTypesListeners();
+
+        this.onChange(true);
     },
 
     updateItemTypes: function (itemTypes) {
@@ -69,12 +71,6 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
         // window.console.log(itemTypes);
         var itemTypesContainer = '#' + self.id + '-item-types-container';
         $(itemTypesContainer).empty();
-        var $newItemType = $("<li>", {
-            id: self.id + "-itemType1",
-            "item-type-id": self.defaule_value,
-            class: self.id + "-item-type item-type dot"
-        });
-        $(itemTypesContainer).append($newItemType);
         if (itemTypes != null && self.value != null) {
             self.value.images = [{'src': blockly_images_path + "icon.png"}];
         }
@@ -89,47 +85,51 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
             var itemTypeId = itemTypes[itemType].num;
             if (itemTypeId == undefined) {
                 for (var state = 0; state <= Math.max(itemTypes[itemType].nbStates / 2 - 1, 0); state++) {
-                    var $characterWrapper = $('<div>', {
-                        class: "te-grid-init-item"
-                    });
-                    var $newItemType = $("<img>", {
-                        id: "itemtype-character",
-                        src: blockly_images_path + itemTypes[itemType].img,
-                        alt: itemTypes[itemType].img,
+                    var offset = -1 * this.field_size * 2 * state;
+                    var $newItemType = $('<div>', {
+                        class: 'init-item item-type ' + self.id + '-item-type',
+                        css: {
+                            'background-image': 'url(' + blockly_images_path + itemTypes[itemType].img + ')',
+                            'background-position': offset + 'px 0',
+                            'background-size': 'auto 100%'
+                        },
                         type: itemType,
-                        class: "init-item item-type " + self.id + "-item-type",
                         dir: state
                     });
-                    var offset = -1 * this.field_size * 2 * (state);
-                    $newItemType.css({
-                        'margin-left': offset
-                    });
-                    $characterWrapper.append($newItemType);
-                    $(itemTypesContainer).append($characterWrapper);
+                    $(itemTypesContainer).append($newItemType);
                 }
             } else {
-                if (itemTypes[itemType].color != undefined) {
-                    $newItemType.css.color = itemTypes[itemType].color;
-                    // window.console.log($newItemType.css);
+                if (itemTypes[itemType].color) {
+                    var css = {
+                        'background-color': itemTypes[itemType].color
+                    };
+                } else {
+                    var css = {
+                        'background-image': 'url(' + blockly_images_path + itemTypes[itemType].img + ')',
+                        'background-size': '100% 100%'
+                    };
                 }
-                var $newItemType = $("<img>", {
-                    id: "itemType" + itemTypeId,
-                    src: blockly_images_path + itemTypes[itemType].img,
-                    alt: itemTypes[itemType].img,
-                    "item-type-id": itemTypeId,
-                    class: "item-type " + self.id + "-item-type",
+                var $newItemType = $('<div>', {
+                    id: 'itemType' + self.id + '-' + itemTypeId,
+                    'item-type-id': itemTypeId,
+                    class: 'item-type ' + self.id + '-item-type',
+                    css: css
                 });
-                if (itemTypes[itemType].color != undefined) {
-                    $newItemType.css.color = itemTypes[itemType].color;
-                    // window.console.log($newItemType.css);
-                }
                 $(itemTypesContainer).append($newItemType);
             }
         }
+        var $newItemType = $('<div>', {
+            class: 'item-type del ' + self.id + '-item-type',
+            css: {
+                'background-image': 'url(' + blockly_images_path + 'delete-64.png)',
+                'background-size': '100% 100%'
+            }
+        });
+        $(itemTypesContainer).append($newItemType);
     },
 
-    build: function () {
 
+    build: function () {
         this.id = this.path.replace(/\./g, "-");
         var self = this;
         this.header = document.createElement('span');
@@ -219,20 +219,17 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
         if (this.value != null) {
             for (var row = 0; row < this.value.tiles.length; row++) {
                 for (var column = 0; column < this.value.tiles[0].length; column++) {
-                    if (this.value.tiles[row][column] == this.defaule_value) {
+                    if (this.value.tiles[row][column] == this.default_value) {
                         continue
                     }
-                    var itemTypeSelector = '#itemType' + this.value.tiles[row][column];
-                    // console.log("selector:");
-                    // console.log($(itemTypeSelector).attr('src'));
-                    var src = $(itemTypeSelector).attr('src');
-                    // console.log("dot:");
+                    var itemTypeSelector = '#itemType' + this.id + '-' + this.value.tiles[row][column];
+                    var el = $(itemTypeSelector);
+                    var src = el.css('background-image');
+                    var color = el.css('background-color');
                     var dotsContainerId = this.id + '-dots-container';
                     var itemSelector = '#' + dotsContainerId + ' > ul[data-column=' + column + '] > li[data-row=' + row + ']'
-                    // console.log(itemSelector);
-                    // console.log($(itemSelector));
                     $(itemSelector).css({
-                        background: 'url(' + src + ")",
+                        background: src && src !== 'none' ? src : color,
                         borderRadius: '0px'
                     });
                 }
@@ -240,7 +237,7 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
             for (var i = 0; i < this.value.initItems.length; i++) {
                 var currentItem = {'dir': '', 'src': '', 'type': ''}
                 currentItem.type = this.value.initItems[i].type;
-                currentItem.src = blockly_images_path + this.itemTypes[currentItem.type].img;
+                currentItem.src = 'url(' + blockly_images_path + this.itemTypes[currentItem.type].img + ')';
                 currentItem.dir = this.value.initItems[i].dir;
                 var dotsContainerId = this.id + '-dots-container';
                 var column = this.value.initItems[i].col;
@@ -263,7 +260,7 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
         var columnNumber = this.value.tiles[0].length;
         if (rowNumber != this.input_row.value) {
             // add rows until we have as many as needed
-            while (this.value.tiles.push(new Array(columnNumber).fill(this.defaule_value)) < this.input_row.value) {
+            while (this.value.tiles.push(new Array(columnNumber).fill(this.default_value)) < this.input_row.value) {
             }
             // remove rows until we have as many as needed
             while (this.value.tiles.length > this.input_row.value) {
@@ -273,7 +270,7 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
         if (columnNumber != this.input_column.value) {
             while (this.value.tiles[0].length < this.input_column.value) {
                 for (var row = 0; row < this.value.tiles.length; row++) {
-                    this.value.tiles[row].push(this.defaule_value);
+                    this.value.tiles[row].push(this.default_value);
                 }
             }
             while (this.value.tiles[0].length > this.input_column.value) {
@@ -282,6 +279,7 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
                 }
             }
         }
+
         var self = this;
         var resizableId = '#' + this.id + '-resizable';
         window.jQuery(resizableId).height(self.value.tiles.length * self.field_size + 'px');
@@ -312,29 +310,26 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
 
     configureItemTypesListeners: function () {
         var self = this;
-
         var itemTypeClass = '.' + self.id + '-item-type';
-
         $(itemTypeClass).click(function () {
-            if (self.current_item == undefined) {
-                self.current_item = {src: "", num: "", type: null, dir: null};
-            }
-            // window.console.log("item type")
-            // window.console.log(this.className);
-            // window.console.log(this);
-            // window.console.log(this.src);
-            // window.console.log($(this).attr("src"));
-            // window.console.log($(this).attr("item-type-id"));
-            self.current_item.src = $(this).attr("src");
-            self.current_item.num = $(this).attr("item-type-id");
-            if ($(this).hasClass('init-item')) {
-                self.current_item.type = $(this).attr('type');
-                self.current_item.dir = parseInt($(this).attr('dir'));
+            if ($(this).hasClass('del')) {
+                self.current_item = 'del';
             } else {
-                self.current_item.type = null;
-                self.current_item.dir = null;
+                self.current_item = { src: '', color: '', num: '', type: null, dir: null };
+
+                //self.current_item.src = $(this).attr("src");
+                self.current_item.src = $(this).css('background-image');
+                self.current_item.color = $(this).css('background-color');
+                self.current_item.num = $(this).attr('item-type-id');
+                if ($(this).hasClass('init-item')) {
+                    self.current_item.type = $(this).attr('type');
+                    self.current_item.dir = parseInt($(this).attr('dir'), 10);
+                } else {
+                    self.current_item.type = null;
+                    self.current_item.dir = null;
+                }
             }
-            $(itemTypeClass + '.active').toggleClass("active");
+            $(itemTypeClass + '.active').toggleClass('active');
             $(this).toggleClass("active");
         });
     },
@@ -347,7 +342,7 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
             type: currentItem.type
         });
         $characterImage.css({
-            background: 'url(' + currentItem.src + ")",
+            background: currentItem.src,
             'background-position-x': offset
         })
         $dot.css({
@@ -367,46 +362,50 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
     addClickListeners: function () {
         var self = this;
 
-        $("." + self.id + '-dot').on("mousedown mouseover", function (e) {
-            if (e.buttons == 1 && self.current_item != undefined) {
-                var rowIndex = $(this).attr('data-row');
-                var columnIndex = $(this).parent().attr('data-column');
+        $("." + self.id + '-dot').on("click", function (e) {
+            if (!self.current_item) return;
 
-                if (self.current_item.type != null) {
-                    self.setUpInitItemImage(self.current_item, $(this));
-                    for (var i = self.value.initItems.length - 1; i >= 0; --i) {
-                        if (self.value.initItems[i].type == self.current_item.type) {
-                            self.value.initItems.splice(i, 1);
-                        }
+            var rowIndex = $(this).attr('data-row');
+            var columnIndex = $(this).parent().attr('data-column');
+
+            if (self.current_item === 'del') {
+                $(this).css({
+                    background: ''
+                });
+                self.value.tiles[rowIndex][columnIndex] = 0;
+            } else if (self.current_item.type != null) {
+                self.setUpInitItemImage(self.current_item, $(this));
+                for (var i = self.value.initItems.length - 1; i >= 0; --i) {
+                    if (self.value.initItems[i].type == self.current_item.type) {
+                        self.value.initItems.splice(i, 1);
                     }
-                    self.value.initItems.push({
-                        row: parseInt(rowIndex),
-                        col: parseInt(columnIndex),
-                        dir: parseInt(self.current_item.dir),
-                        type: self.current_item.type
-                    });
-                } else if (self.current_item.num == self.defaule_value) {
-                    $(this).css({
-                        background: '',
-                        borderRadius: ''
-                    });
-                    $(this).empty();
-                    for (var i = self.value.initItems.length - 1; i >= 0; --i) {
-                        if (self.value.initItems[i].row == rowIndex && self.value.initItems[i].col == columnIndex) {
-                            self.value.initItems.splice(i, 1);
-                        }
-                    }
-                    self.value.tiles[rowIndex][columnIndex] = self.defaule_value;
-                } else {
-                    $(this).css({
-                        background: 'url(' + self.current_item.src + ")",
-                        borderRadius: '0px'
-                    });
-                    self.value.tiles[rowIndex][columnIndex] = parseInt(self.current_item.num);
                 }
-                console.log(self.value);
-                self.onChange(true);
+                self.value.initItems.push({
+                    row: parseInt(rowIndex, 10),
+                    col: parseInt(columnIndex, 10),
+                    dir: parseInt(self.current_item.dir, 10),
+                    type: self.current_item.type
+                });
+            } else if (self.current_item.num == self.default_value) {
+                $(this).css({
+                    background: '',
+                    borderRadius: ''
+                });
+                for (var i = self.value.initItems.length - 1; i >= 0; --i) {
+                    if (self.value.initItems[i].row == rowIndex && self.value.initItems[i].col == columnIndex) {
+                        self.value.initItems.splice(i, 1);
+                    }
+                }
+                self.value.tiles[rowIndex][columnIndex] = self.default_value;
+            } else {
+                var background = self.current_item.src && self.current_item.src != 'none' ? self.current_item.src : self.current_item.color;
+                $(this).css({
+                    background: background,
+                    borderRadius: '0px'
+                });
+                self.value.tiles[rowIndex][columnIndex] = parseInt(self.current_item.num, 10);
             }
+            self.onChange(true);
         });
     }
 
