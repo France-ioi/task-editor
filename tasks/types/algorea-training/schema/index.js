@@ -160,6 +160,32 @@ module.exports = {
                     selector: '$thresholds'
                 }
             }
+        },
+        {
+            input: {
+                collector: 'collectors/image_files.js',
+                keepArray: true
+            },
+            output: {
+                render: {
+                    template: 'images.html'
+                },
+                inject: {
+                    template: 'index.html',
+                    selector: '#images-preload'
+                }
+            }
+        },
+        {
+            input: {
+                collector: 'collectors/image_urls.js',
+                keepArray: true
+            },
+            output: {
+                download: {
+                    // overwrite: false,
+                }
+            }
         }
     ]
 };

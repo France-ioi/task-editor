@@ -29,9 +29,7 @@
 <body onresize="task.displayedSubTask.updateScale()">
 <div id="task">
     <h1 id = "taskTitle"></h1>
-    {{#images}}
-    <img src="{{{src}}}" style="display:none" />
-    {{/images}}
+    <div id="images-preload"></div>
 
     <div id="tabsContainer"></div>
     <div id="taskContent" style="text-align:left;position:relative">

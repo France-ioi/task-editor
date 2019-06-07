@@ -1,4 +1,4 @@
-var blockly_images_path = '/assets/algorea-training/'
+var blockly_images_url = window.__CONFIG__.blockly.images_url;
 
 JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
 
@@ -72,12 +72,12 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
         var itemTypesContainer = '#' + self.id + '-item-types-container';
         $(itemTypesContainer).empty();
         if (itemTypes != null && self.value != null) {
-            self.value.images = [{'src': blockly_images_path + "icon.png"}];
+            self.value.images = [{'src': blockly_images_url + "icon.png"}];
         }
         for (var itemType in itemTypes) {
             if (itemTypes[itemType].img != null && self.value != null) {
                 // self.value.images.push(itemTypes[itemType].img);
-                self.value.images.push({'src': blockly_images_path + itemTypes[itemType].img});
+                self.value.images.push({'src': blockly_images_url + itemTypes[itemType].img});
             }
             // window.console.log(itemTypes[itemType]);
             // window.console.log("num:");
@@ -89,7 +89,7 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
                     var $newItemType = $('<div>', {
                         class: 'init-item item-type ' + self.id + '-item-type',
                         css: {
-                            'background-image': 'url(' + blockly_images_path + itemTypes[itemType].img + ')',
+                            'background-image': 'url(' + blockly_images_url + itemTypes[itemType].img + ')',
                             'background-position': offset + 'px 0',
                             'background-size': 'auto 100%'
                         },
@@ -105,7 +105,7 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
                     };
                 } else {
                     var css = {
-                        'background-image': 'url(' + blockly_images_path + itemTypes[itemType].img + ')',
+                        'background-image': 'url(' + blockly_images_url + itemTypes[itemType].img + ')',
                         'background-size': '100% 100%'
                     };
                 }
@@ -121,7 +121,7 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
         var $newItemType = $('<div>', {
             class: 'item-type del ' + self.id + '-item-type',
             css: {
-                'background-image': 'url(' + blockly_images_path + 'delete-64.png)',
+                'background-image': 'url(' + blockly_images_url + 'delete-64.png)',
                 'background-size': '100% 100%'
             }
         });
@@ -237,7 +237,7 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
             for (var i = 0; i < this.value.initItems.length; i++) {
                 var currentItem = {'dir': '', 'src': '', 'type': ''}
                 currentItem.type = this.value.initItems[i].type;
-                currentItem.src = 'url(' + blockly_images_path + this.itemTypes[currentItem.type].img + ')';
+                currentItem.src = 'url(' + blockly_images_url + this.itemTypes[currentItem.type].img + ')';
                 currentItem.dir = this.value.initItems[i].dir;
                 var dotsContainerId = this.id + '-dots-container';
                 var column = this.value.initItems[i].col;
