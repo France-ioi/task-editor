@@ -70,13 +70,17 @@ JSONEditor.defaults.editors['sortable_list'] = JSONEditor.AbstractEditor.extend(
         };
         var el = $('\
             <div class="row">\
-                <div class="col-xs-6">\
+                <div class="col-xs-6 sortable-list-col">\
                     Available items\
-                    <ul class="list-group sortable-list" id="' + this.lists.src.id + '"></ul>\
+                    <div class="sortable-list">\
+                        <ul class="list-group" id="' + this.lists.src.id + '"></ul>\
+                    </div>\
                 </div>\
                 <div class="col-xs-6">\
                     Selected items\
-                    <ul class="list-group sortable-list" id="' + this.lists.dst.id + '"></ul>\
+                    <div class="sortable-list">\
+                        <ul class="list-group" id="' + this.lists.dst.id + '"></ul>\
+                    </div>\
                 </div>\
             </div>\
         ');
