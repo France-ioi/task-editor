@@ -850,5 +850,17 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
       var el = this.rows[child];
       el.afterInputReady && el.afterInputReady(focus)
     }
-  }
+  },
+  enableTranslation: function() {
+    for (var child = 0; child < this.rows.length; child++) {
+      var el = this.rows[child];
+      el.enableTranslation && el.enableTranslation()
+    }
+  },
+  disableTranslation: function() {
+    for (var child = 0; child < this.rows.length; child++) {
+      var el = this.rows[child];
+      el.disableTranslation && el.disableTranslation()
+    }
+  },
 });

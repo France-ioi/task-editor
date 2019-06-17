@@ -6,7 +6,8 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
     return el;
   },
   setGridColumnSize: function(el,size) {
-    el.className = 'col-md-'+size;
+    el.className = el.className.replace(/\s*col-md-\d+/g, '');
+    el.className += ' col-md-' + size;
   },
   afterInputReady: function(input) {
     if(input.controlgroup) return;
@@ -313,10 +314,14 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
     confirm.className = 'array-delete-confirm';
     var okButton = this.getIcon('ok');
     var cancelButton = this.getIcon('remove');
-    el.addEventListener('click', function() {
+    el.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
       confirm.style.display = 'inline';
     });
-    cancelButton.addEventListener('click', function() {
+    cancelButton.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
       confirm.style.display = 'none';
     });
     confirm.appendChild(okButton);

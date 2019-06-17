@@ -53,6 +53,29 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
       }
     }
   },
+  enableTranslation: function() {
+    $each(this.editors, (key, editor) => {
+      if (key in this.translate_editors) {
+        this.theme.setGridColumnSize(editor.container, 6);
+        editor.container.className += ' original-field';
+        this.translate_editors[key].setValue(editor.getValue());
+      }
+      if (editor.enableTranslation) editor.enableTranslation();
+    });
+    this.sections['optional'] && this.sections['optional'].lastChild.collapsed && this.sections['optional'].firstChild.click();
+    this.sections['advanced'] && this.sections['advanced'].lastChild.collapsed && this.sections['advanced'].firstChild.click();
+  },
+  disableTranslation: function() {
+    $each(this.editors, (key, editor) => {
+      if (key in this.translate_editors) {
+        this.theme.setGridColumnSize(editor.container, 12);
+        editor.container.className = editor.container.className.replace(/\s*original-field/g, '');
+      }
+      if (editor.disableTranslation) editor.disableTranslation();
+    });
+    this.sections['optional'] && this.sections['optional'].lastChild.collapsed && this.sections['optional'].firstChild.click();
+    this.sections['advanced'] && !this.sections['advanced'].lastChild.collapsed && this.sections['advanced'].firstChild.click();
+  },
   layoutEditors: function() {
     var self = this, i, j;
 
@@ -170,22 +193,34 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
         inner_container.appendChild(fields_container);
         $each(fields, function(f, key) {
           var editor = self.editors[key];
+          var translate_editor = self.translate_editors[key];
           if(editor.property_removed) return;
           var row = self.theme.getGridRow();
           fields_container.appendChild(row);
 
           if(editor.options.hidden) editor.container.style.display = 'none';
           else self.theme.setGridColumnSize(editor.container,12);
+          if (translate_editor) {
+            self.theme.setGridColumnSize(translate_editor.container, 6);
+            translate_editor.container.className += ' translate-field';
+          }
           if (fields === required_fields) {
             editor.container.className += ' required-field';
+            translate_editor && (translate_editor.container.className += ' required-field');
           } else if (fields === advanced_fields) {
             editor.container.className += ' advanced-field';
+            translate_editor && (translate_editor.container.className += ' advanced-field');
           }
           row.appendChild(editor.container);
+          if (translate_editor) row.appendChild(translate_editor.container);
           editor.afterInputReady && setTimeout(() => editor.afterInputReady(), 0)
+          translate_editor && translate_editor.afterInputReady && setTimeout(() => translate_editor.afterInputReady(), 0)
         });
         if (fields !== required_fields && fields.length) {
-          var section_control = self.theme.getFieldSectionControl(fields === optional_fields ? 'optional' : 'advanced');
+          var section_type = fields === optional_fields ? 'optional' : 'advanced';
+          var section_control = self.theme.getFieldSectionControl(section_type);
+          self.sections[section_type] = inner_container;
+
           inner_container.insertBefore(section_control, inner_container.firstChild);
           fields_container.collapsed = false;
           section_control.addEventListener('click', function() {
@@ -250,6 +285,8 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
     this._super();
 
     this.editors = {};
+    this.translate_editors = {};
+    this.sections = {};
     this.cached_editors = {};
     var self = this;
 
@@ -314,6 +351,19 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
         if(self.editors[key]) {
           self.minwidth = Math.max(self.minwidth,(self.editors[key].options.grid_columns || self.editors[key].getNumColumns()));
           self.maxwidth += (self.editors[key].options.grid_columns || self.editors[key].getNumColumns());
+        }
+      });
+
+      $each(this.schema.properties, (key, schema) => {
+        var editor = this.jsoneditor.getEditorClass(schema);
+        if ((editor !== JSONEditor.defaults.editors.object || (schema.options && schema.options.table_row)) && (editor !== JSONEditor.defaults.editors.array || this.editors[key].isCompressedArray())) {
+          this.translate_editors[key] = this.jsoneditor.createEditor(editor, {
+            jsoneditor: this.jsoneditor,
+            schema: schema,
+            path: this.path + '.' + key,
+            parent: this
+          });
+          this.translate_editors[key].preBuild();
         }
       });
     }
@@ -482,6 +532,15 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
         editor.setContainer(holder);
         editor.build();
         editor.postBuild();
+
+        if (key in self.translate_editors) {
+          var translate_holder = self.theme.getGridColumn();
+          self.row_container.appendChild(translate_holder);
+
+          self.translate_editors[key].setContainer(translate_holder);
+          self.translate_editors[key].build();
+          self.translate_editors[key].postBuild();
+        }
       });
 
       // Control buttons
@@ -559,6 +618,7 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
       this.editjson_button.lastChild.addEventListener('click',function(e) {
         e.preventDefault();
         e.stopPropagation();
+        if (self.translate_mode) self.translate_button.click();
         self.showEditJSON();
       });
       this.editjson_controls.appendChild(this.editjson_button);
@@ -579,6 +639,10 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
       this.translate_button.addEventListener('click', () => {
         this.translate_mode = !this.translate_mode;
         this.translation_holder.style.display = this.translate_mode ? 'block' : null;
+        this.container.className = this.container.className.replace(/\s*translating/g, '');
+        if (this.translate_mode) this.container.className += ' translating';
+        if (this.translate_mode) this.enableTranslation();
+        else this.disableTranslation();
         this.translate_button.lastChild.innerHTML = (this.translate_mode ? 'Exit Translation' : 'Translate');
         this.translate_button.className = this.translate_button.className.replace(/\s*inverted/g, '');
         if (this.translate_mode) this.translate_button.className += ' inverted';

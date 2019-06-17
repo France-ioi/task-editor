@@ -1418,3 +1418,45 @@ input[type="file"].file-input {
 .translate-item:hover {
     background-color: #e9e9ed;
 }
+
+.translating .indented-panel {
+    margin-left: 0;
+}
+
+.translate-field {
+    display: none;
+}
+
+.translating .translate-field {
+    display: block;
+}
+
+.translating .section-control {
+    display: none;
+}
+
+.original-field.col-md-6 {
+    padding-right: 0;
+}
+
+.translate-field.col-md-6 {
+    padding-left: 0;
+}
+
+.translate-field .control-label, .translate-field p.help-block {
+    visibility: hidden;
+}
+
+.translate-field>.field-container {
+    border-left: none;
+}
+
+.translate-field>.field-container, .original-field>.field-container {
+    display: block;
+}
+
+.translate-field>.field-container>.form-left-group, .translate-field>.field-container>.form-right-group, .original-field>.field-container>.form-left-group, .original-field>.field-container>.form-right-group{
+    display: block;
+    min-width: 0;
+    max-width: 100%;
+}
