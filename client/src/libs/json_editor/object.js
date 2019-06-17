@@ -194,7 +194,7 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
               fields_container.style.maxHeight = fields_container.scrollHeight + 'px';
               setTimeout(() => { fields_container.style.maxHeight = null; fields_container.style.overflow = null }, 200);
               section_control.children[1].innerHTML = 'HIDE' + section_control.children[1].innerHTML.substr(4);
-              section_control.lastChild.className = section_control.lastChild.className.replace(/chevron-down/g, 'chevron-up');
+              section_control.lastChild.className = section_control.lastChild.className.replace(/menu-down/g, 'menu-up');
             } else {
               fields_container.collapsed = true;
               fields_container.style.maxHeight = fields_container.scrollHeight + 'px';
@@ -204,7 +204,7 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
                 });
               });
               section_control.children[1].innerHTML = 'SHOW' + section_control.children[1].innerHTML.substr(4);
-              section_control.lastChild.className = section_control.lastChild.className.replace(/chevron-up/g, 'chevron-down');
+              section_control.lastChild.className = section_control.lastChild.className.replace(/menu-up/g, 'menu-down');
             }
           });
           if (fields === advanced_fields) {
@@ -212,7 +212,7 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
             fields_container.style.maxHeight = '0';
             fields_container.style.overflow = 'hidden';
             section_control.children[1].innerHTML = 'SHOW' + section_control.children[1].innerHTML.substr(4);
-            section_control.lastChild.className = section_control.lastChild.className.replace(/chevron-up/g, 'chevron-down');
+            section_control.lastChild.className = section_control.lastChild.className.replace(/menu-up/g, 'menu-down');
           }
         }
       });
@@ -439,6 +439,29 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
       this.description = this.theme.getDescription(this.schema.description || '');
       this.container.appendChild(this.description);
 
+      // Translation
+      this.translation_holder = this.theme.getTranslationHolder();
+      if (this.schema.languages) {
+        this.translation_holder.firstChild.lastChild.textContent = this.schema.languages.list[this.schema.languages.original];
+        this.translate_to = null;
+        for (const key in this.schema.languages.list)
+          if (this.schema.languages.list.hasOwnProperty(key) && key !== this.schema.languages.original) {
+            const lang_code = key;
+            const lang_str = this.schema.languages.list[key];
+            if (!this.translate_to) {
+              this.translate_to = lang_code;
+              this.translation_holder.lastChild.children[2].textContent = lang_str;
+            }
+            const translateItem = this.theme.getTranslationItem(lang_str);
+            translateItem.addEventListener('click', () => {
+              this.translate_to = lang_code;
+              this.translation_holder.lastChild.children[2].textContent = lang_str;
+            });
+            this.translation_holder.lastChild.lastChild.appendChild(translateItem);
+          }
+      }
+      this.container.appendChild(this.translation_holder);
+
       // Validation error placeholder area
       this.error_holder = document.createElement('div');
       this.description.appendChild(this.error_holder);
@@ -464,10 +487,13 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
       // Control buttons
       this.title_controls = this.theme.getHeaderButtonHolder();
       this.editjson_controls = this.theme.getHeaderButtonHolder();
+      this.translate_controls = this.theme.getHeaderButtonHolder();
+      this.translate_controls.className += ' translate-controls';
       this.addproperty_controls = this.theme.getHeaderButtonHolder();
       this.title.appendChild(this.title_controls);
       this.title.appendChild(this.editjson_controls);
       this.title.appendChild(this.addproperty_controls);
+      this.description.appendChild(this.translate_controls);
 
       // Show/Hide button
       this.collapsed = false;
@@ -494,10 +520,10 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
         }
       });
       this.title.addEventListener('click', () => {
-        this.toggle_button.click();
+        if (this.parent) this.toggle_button.click();
       });
       this.description.addEventListener('click', () => {
-        this.toggle_button.click();
+        if (this.parent) this.toggle_button.click();
       });
 
       // Check if has advanced parent
@@ -543,6 +569,23 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
       }
       else if(this.jsoneditor.options.disable_edit_json) {
         this.editjson_button.style.display = 'none';
+      }
+
+      // Translate Button
+      this.translate_button = this.getButton('Translate');
+      this.translate_button.className += ' round-btn';
+      this.translate_button.insertBefore(this.theme.getIcon('transfer'), this.translate_button.firstChild);
+      this.translate_mode = false;
+      this.translate_button.addEventListener('click', () => {
+        this.translate_mode = !this.translate_mode;
+        this.translation_holder.style.display = this.translate_mode ? 'block' : null;
+        this.translate_button.lastChild.innerHTML = (this.translate_mode ? 'Exit Translation' : 'Translate');
+        this.translate_button.className = this.translate_button.className.replace(/\s*inverted/g, '');
+        if (this.translate_mode) this.translate_button.className += ' inverted';
+      });
+
+      if ('languages' in this.schema) {
+        this.translate_controls.appendChild(this.translate_button);
       }
 
       // Object Properties Button

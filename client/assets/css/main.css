@@ -301,6 +301,10 @@ div[data-schemaid="root"][data-schemapath="root"]>.header-container .edit-json {
     display: flex;
 }
 
+div[data-schemaid="root"][data-schemapath="root"]>.description-container .translate-controls {
+    display: block;
+}
+
 div[data-schemaid="root"][data-schemapath="root"]>.description-container {
     border: none;
     padding: 8px 2px;
@@ -319,7 +323,7 @@ div[data-schemaid="root"][data-schemapath="root"]>.description-container {
     margin-bottom: 0;
 }
 
-.indented-panel, .section-fields-container {
+.indented-panel, .section-fields-container, .translate-list {
     transition: max-height 0.2s ease-out;
 }
 
@@ -1330,4 +1334,87 @@ input[type="file"].file-input {
 .array-icon.move {
     border-top-left-radius: 15px;
     border-bottom-left-radius: 15px;
+}
+
+.translate-controls {
+    margin-top: -24px;
+    display: none;
+}
+
+.translate-controls>button {
+    width: 236px;
+}
+
+.translate-controls>button>.glyphicon {
+    margin-top: 3px;
+}
+
+.translation-holder {
+    width: 100%;
+    display: none;
+}
+
+.translation-holder>div {
+    width: 50%;
+    display: inline-block;
+    color: #787878;
+    padding: 10px 16px 20px 16px;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.translation-holder>.original-language {
+    border-right: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.translation-holder>div>.title {
+    font-style: italic;
+}
+
+.translation-holder>div>.language {
+    font-weight: 300;
+    font-size: 22px;
+    margin-top: 4px;
+    color: #4A90E2;
+}
+
+.translation-holder>.translation-language>.language {
+    color: #4A4A4A;
+}
+
+.translation-language {
+    cursor: pointer;
+    position: relative;
+}
+
+.translation-menu {
+    float: right;
+    color: #4A90E2;
+    border-radius: 100%;
+    border: 1px solid #4A90E2;
+    padding: 7px;
+    width: 30px;
+    height: 30px;
+}
+
+.translate-list {
+    position: absolute;
+    z-index: 2;
+    top: 80px;
+    margin-left: -16px;
+    width: 100%;
+    max-height: 0;
+    overflow: hidden;
+}
+
+.translate-item {
+    padding: 16px;
+    width: 100%;
+    background-color: #f1f2f7;
+    color: #4A4A4A;
+    font-weight: 300;
+    font-size: 22px;
+}
+
+.translate-item:hover {
+    background-color: #e9e9ed;
 }

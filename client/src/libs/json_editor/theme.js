@@ -22,8 +22,55 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
     el.className = 'form-control';
     return el;
   },
+  getTranslationHolder: function() {
+    var translation_holder = document.createElement('div');
+    translation_holder.className = 'translation-holder';
+    var original_holder = document.createElement('div');
+    original_holder.className = 'original-language';
+    var translate_holder = document.createElement('div');
+    translate_holder.className = 'translation-language';
+    translation_holder.appendChild(original_holder);
+    translation_holder.appendChild(translate_holder);
+    var original_title = document.createElement('div');
+    original_title.className = 'title';
+    original_title.textContent = 'Original Language';
+    var original_language = document.createElement('div');
+    original_language.className = 'language';
+    original_language.textContent = 'PlaceHolder';
+    original_holder.appendChild(original_title);
+    original_holder.appendChild(original_language);
+    var translate_title = document.createElement('div');
+    translate_title.className = 'title';
+    translate_title.textContent = 'Translation';
+    var translate_menu = document.createElement('span');
+    translate_menu.className = 'translation-menu';
+    translate_menu.appendChild(this.getIcon('menu-down'));
+    var translate_language = document.createElement('div');
+    translate_language.className = 'language';
+    translate_language.textContent = 'PlaceHolder';
+    var translate_list = document.createElement('div');
+    translate_list.className = 'translate-list';
+    translate_holder.addEventListener('click', () => {
+      if (translate_list.style.maxHeight) {
+        translate_list.style.maxHeight = null;
+      } else {
+        translate_list.style.maxHeight = translate_list.scrollHeight + 'px';
+      }
+    });
+    translate_holder.appendChild(translate_title);
+    translate_holder.appendChild(translate_menu);
+    translate_holder.appendChild(translate_language);
+    translate_holder.appendChild(translate_list);
+    return translation_holder;
+  },
+  getTranslationItem: function(language) {
+    var translate_item = document.createElement('div');
+    translate_item.className = 'translate-item';
+    translate_item.textContent = language;
+    return translate_item;
+  },
   getExternalInput: function() {
-	  var container = document.createElement('div');
+    var container = document.createElement('div');
     container.className = 'external-control';
     var topContainer = document.createElement('div');
     var wysiwygTitle = document.createElement('div');
@@ -179,7 +226,7 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
     var text = document.createElement('span');
     text.innerHTML = 'HIDE ' + section.toUpperCase() + ' PARAMETERS';
     container.appendChild(text);
-    var collapse = this.getIcon('chevron-up');
+    var collapse = this.getIcon('menu-up');
     container.appendChild(collapse);
     return container;
   },
@@ -347,7 +394,7 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
   },
   getButton: function(text, icon, title) {
     if (text == 'Collapse') {
-      var el = this.getIcon('chevron-up');
+      var el = this.getIcon('menu-up');
       el.className += ' collapse-button';
       return el;
     }
@@ -363,7 +410,7 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
   setButtonText: function(button, text, icon, title) {
     if (button.nodeName == 'SPAN') {
       var updown = (text == 'Collapse') ? 'up' : 'down'
-      button.className = 'collapse-button glyphicon glyphicon-chevron-' + updown;
+      button.className = 'collapse-button glyphicon glyphicon-menu-' + updown;
       return;
     }
     while (button.firstChild) {
