@@ -59,6 +59,10 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
         this.theme.setGridColumnSize(editor.container, 6);
         editor.container.className += ' original-field';
         this.translate_editors[key].setValue(editor.getValue());
+        if (editor.setTranslateMode) {
+          editor.setTranslateMode(true, false);
+          this.translate_editors[key].setTranslateMode(true, true);
+        } else editor.disable();
       }
       if (editor.enableTranslation) editor.enableTranslation();
     });
@@ -70,6 +74,9 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
       if (key in this.translate_editors) {
         this.theme.setGridColumnSize(editor.container, 12);
         editor.container.className = editor.container.className.replace(/\s*original-field/g, '');
+        if (editor.setTranslateMode) {
+          editor.setTranslateMode(false, false);
+        } else editor.enable();
       }
       if (editor.disableTranslation) editor.disableTranslation();
     });
@@ -354,6 +361,8 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
         }
       });
 
+      if (this.jsoneditor.translate_editors === undefined) this.jsoneditor.translate_editors = {}
+      if (this.jsoneditor.original_editors === undefined) this.jsoneditor.original_editors = {}
       $each(this.schema.properties, (key, schema) => {
         var editor = this.jsoneditor.getEditorClass(schema);
         if ((editor !== JSONEditor.defaults.editors.object || (schema.options && schema.options.table_row)) && (editor !== JSONEditor.defaults.editors.array || this.editors[key].isCompressedArray())) {
@@ -364,6 +373,8 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
             parent: this
           });
           this.translate_editors[key].preBuild();
+          this.jsoneditor.original_editors[this.path + '.' + key] = this.editors[key];
+          this.jsoneditor.translate_editors[this.path + '.' + key] = this.translate_editors[key];
         }
       });
     }
@@ -381,6 +392,8 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
   },
   build: function() {
     var self = this;
+
+    this.container.className += ' not-translating';
 
     // If the object should be rendered as a table row
     if(this.options.table_row) {
@@ -639,8 +652,10 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
       this.translate_button.addEventListener('click', () => {
         this.translate_mode = !this.translate_mode;
         this.translation_holder.style.display = this.translate_mode ? 'block' : null;
+        this.container.className = this.container.className.replace(/\s*not-translating/g, '');
         this.container.className = this.container.className.replace(/\s*translating/g, '');
         if (this.translate_mode) this.container.className += ' translating';
+        else this.container.className += ' not-translating';
         if (this.translate_mode) this.enableTranslation();
         else this.disableTranslation();
         this.translate_button.lastChild.innerHTML = (this.translate_mode ? 'Exit Translation' : 'Translate');

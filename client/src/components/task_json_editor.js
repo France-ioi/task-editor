@@ -7,7 +7,6 @@ class TaskJsonEditor extends React.Component {
 
     componentDidMount() {
         const self = this;
-        JSONEditor.plugins.selectize.enable = true;
         this.editor = new JSONEditor(this.element, {
             theme: 'taskeditor',
             schema: this.props.task.schema,

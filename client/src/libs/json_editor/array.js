@@ -312,6 +312,13 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
     }
 
     row_container.appendChild(before_controls);
+
+    var index = document.createElement('div');
+    index.className = 'array-index';
+    index.textContent = (i + 1);
+    row_container.appendChild(index);
+    if (i % 2 === 1) row_container.className += ' even-row';
+
     holder.className = 'array-item-holder';
     row_container.appendChild(holder);
 
@@ -831,13 +838,22 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
     for (var child = 0; child < this.rows.length; child++) {
       var el = this.rows[child];
       if (el !== item) {
-        el.container.parentNode.className = el.container.parentNode.className.replace(/\s*active-item/g, '');
+        this.deactivateItem(el);
       }
     }
     item.container.parentNode.className += ' active-item';
   },
   deactivateItem: function(item) {
     item.container.parentNode.className = item.container.parentNode.className.replace(/\s*active-item/g, '');
+    var original_pair = this.getOriginalPair(item);
+    if (original_pair && original_pair !== item) {
+      original_pair.container.style.height = null;
+      original_pair.container.className = original_pair.container.className.replace(/\s*pair-open/g, '');
+    }
+  },
+  getOriginalPair: function(item) {
+    var idx = this.rows.indexOf(item);
+    return this.jsoneditor.original_editors[this.path] && this.jsoneditor.original_editors[this.path].rows[idx];
   },
   deleteItem: function(item) {
     item.delete_button.children[0].children[1].children[0].click();

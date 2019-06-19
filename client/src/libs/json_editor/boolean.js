@@ -11,6 +11,7 @@ JSONEditor.defaults.editors.boolean = JSONEditor.AbstractEditor.extend({
     this.input.children[0].className = this.input.children[0].className.replace(/\s*active/g, '');
     this.input.children[1].className = this.input.children[1].className.replace(/\s*active/g, '');
     this.input.children[this.value ? 1 : 0].className += ' active';
+    this.readOnlyView.innerHTML = this.value === true ? 'YES' : (this.value === false ? 'NO' : '[None]');
     this.onChange();
   },
   register: function() {
@@ -52,6 +53,10 @@ JSONEditor.defaults.editors.boolean = JSONEditor.AbstractEditor.extend({
     });
 
     this.container.appendChild(this.control);
+    this.readOnlyView = document.createElement('div');
+    this.readOnlyView.className = 'boolean readonly-view';
+    this.control.lastChild.className += ' hide-on-translate-original';
+    this.control.appendChild(this.readOnlyView);
   },
   enable: function() {
     if(!this.always_disabled) {

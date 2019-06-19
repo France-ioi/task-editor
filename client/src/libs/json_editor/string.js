@@ -159,14 +159,28 @@ JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
         enablerInput.addEventListener('click', () => {
           if (this.parent.activateItem) {
             this.parent.activateItem(this);
-          } else this.input.parentNode.className = 'external-control active-item';
+          } else {
+            this.input.parentNode.className = 'external-control active-item';
+          }
+          var original_pair = this.getOriginalPair();
+          if (original_pair && original_pair !== this) {
+            setTimeout(() => original_pair.container.style.height = this.container.scrollHeight - 1 + 'px');
+            original_pair.container.className += ' pair-open';
+          }
           setTimeout(() => self.afterInputReady(true), 0);
         });
         var exitButton = this.input.parentNode.firstChild.lastChild;
         exitButton.addEventListener('click', () => {
           if (this.parent.deactivateItem) {
             this.parent.deactivateItem(this);
-          } else this.input.parentNode.className = 'external-control';
+          } else {
+            this.input.parentNode.className = 'external-control';
+          }
+          var original_pair = this.getOriginalPair();
+          if (original_pair && original_pair !== this) {
+            original_pair.container.style.height = null;
+            original_pair.container.className = original_pair.container.className.replace(/\s*pair-open/g, '');
+          }
         });
       }
       // HTML5 Input type
@@ -268,6 +282,13 @@ JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
     this.control = this.theme.getFormControl(this.label, this.input, this.description);
     this.container.appendChild(this.control);
 
+    this.readOnlyView = document.createElement('div');
+    this.readOnlyView.className = 'readonly-view';
+    if (this.options.wysiwyg) this.readOnlyView.className += ' wysiwyg';
+    else this.readOnlyView.className += ' string';
+    this.control.lastChild.className += ' hide-on-translate-original';
+    this.control.appendChild(this.readOnlyView);
+
     // Any special formatting that needs to happen after the input is added to the dom
     window.requestAnimationFrame(function() {
       // Skip in case the input is only a temporary editor,
@@ -311,6 +332,7 @@ JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
           self.input.value = content;
           self.value = self.input.value;
           self.is_dirty = true;
+          self.refreshValue();
           self.onChange(true);
         }
       })
@@ -320,8 +342,16 @@ JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
   refreshValue: function() {
     this.value = this.input.value;
     this.input.setAttribute('size', this.input.value.length || 1);
+    this.readOnlyView.innerHTML = this.value || '[None]';
     if(typeof this.value !== "string") this.value = '';
     this.serialized = this.value;
+    var original_pair = this.getOriginalPair();
+    const setHeight = () => {
+      if (this.container.scrollHeight && original_pair.container.className.search(/\s*pair-open/g) > -1) {
+        original_pair.container.style.height = this.container.scrollHeight - 1 + 'px';
+      }
+    }
+    this.html_editor && original_pair && original_pair !== this && this.parent.activateItem && setTimeout(setHeight, 0) && setTimeout(setHeight, 25) && setTimeout(setHeight, 50) && setTimeout(setHeight, 100);
   },
   destroy: function() {
     this.html_editor && this.html_editor.destroy();
@@ -373,5 +403,8 @@ JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
     else {
       this.theme.removeInputError(this.input);
     }
+  },
+  getOriginalPair: function() {
+    return this.jsoneditor.original_editors[this.path] || (this.parent.getOriginalPair && this.parent.getOriginalPair(this));
   }
 });

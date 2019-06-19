@@ -1,5 +1,6 @@
 // multitext must be before string
 import './string'
+import './select'
 import './multitext'
 import './number'
 import './integer'

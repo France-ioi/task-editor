@@ -40,7 +40,7 @@ module.exports = function(params) {
         autoresize_bottom_margin: 4,
         setup: function(editor) {
             instance = editor;
-            editor.on('init blur', function() {
+            editor.on('init blur keydown cut paste setcontent', function() {
                 params.onChange && params.onChange(editor.getContent());
             });
             editor.on('blur', function() {
