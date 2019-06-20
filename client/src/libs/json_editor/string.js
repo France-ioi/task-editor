@@ -14,7 +14,6 @@ JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
   },
   setValue: function(value,initial,from_template) {
     var self = this;
-
     if(this.template && !from_template) {
       return;
     }
@@ -23,6 +22,7 @@ JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
     else if(typeof value === "object") value = JSON.stringify(value);
     else if(typeof value !== "string") value = ""+value;
 
+    this.setEqualHeigths();
     if(value === this.serialized) return;
 
     // Sanitize value before setting it
@@ -162,11 +162,7 @@ JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
           } else {
             this.input.parentNode.className = 'external-control active-item';
           }
-          var original_pair = this.getOriginalPair();
-          if (original_pair && original_pair !== this) {
-            setTimeout(() => original_pair.container.style.height = this.container.scrollHeight - 1 + 'px');
-            original_pair.container.className += ' pair-open';
-          }
+          this.setEqualHeigths();
           setTimeout(() => self.afterInputReady(true), 0);
         });
         var exitButton = this.input.parentNode.firstChild.lastChild;
@@ -176,11 +172,8 @@ JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
           } else {
             this.input.parentNode.className = 'external-control';
           }
-          var original_pair = this.getOriginalPair();
-          if (original_pair && original_pair !== this) {
-            original_pair.container.style.height = null;
-            original_pair.container.className = original_pair.container.className.replace(/\s*pair-open/g, '');
-          }
+          var translate_pair = this.getOtherTranslatePair();
+          this.setEqualHeigths();
         });
       }
       // HTML5 Input type
@@ -284,6 +277,18 @@ JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
 
     this.readOnlyView = document.createElement('div');
     this.readOnlyView.className = 'readonly-view';
+    if (this.options.wysiwyg) {
+      this.readOnlyView.collapsed = true;
+      this.readOnlyView.addEventListener('click', () => {
+        this.readOnlyView.collapsed = !this.readOnlyView.collapsed;
+        if (this.readOnlyView.collapsed) {
+          this.readOnlyView.style.height = null;
+        } else {
+          this.readOnlyView.style.height = 'auto';
+        }
+        this.setEqualHeigths();
+      });
+    }
     if (this.options.wysiwyg) this.readOnlyView.className += ' wysiwyg';
     else this.readOnlyView.className += ' string';
     this.control.lastChild.className += ' hide-on-translate-original';
@@ -334,6 +339,9 @@ JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
           self.is_dirty = true;
           self.refreshValue();
           self.onChange(true);
+        },
+        onResize: function() {
+          self.setEqualHeigths();
         }
       })
     }
@@ -345,13 +353,7 @@ JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
     this.readOnlyView.innerHTML = this.value || '[None]';
     if(typeof this.value !== "string") this.value = '';
     this.serialized = this.value;
-    var original_pair = this.getOriginalPair();
-    const setHeight = () => {
-      if (this.container.scrollHeight && original_pair.container.className.search(/\s*pair-open/g) > -1) {
-        original_pair.container.style.height = this.container.scrollHeight - 1 + 'px';
-      }
-    }
-    this.html_editor && original_pair && original_pair !== this && this.parent.activateItem && setTimeout(setHeight, 0) && setTimeout(setHeight, 25) && setTimeout(setHeight, 50) && setTimeout(setHeight, 100);
+    (this.html_editor || this.schema.type === 'multitext') && this.setEqualHeigths();
   },
   destroy: function() {
     this.html_editor && this.html_editor.destroy();
@@ -404,7 +406,30 @@ JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
       this.theme.removeInputError(this.input);
     }
   },
-  getOriginalPair: function() {
-    return this.jsoneditor.original_editors[this.path] || (this.parent.getOriginalPair && this.parent.getOriginalPair(this));
+  getOtherTranslatePair: function() {
+    var original = this.jsoneditor.original_editors[this.path];
+    var translate = this.jsoneditor.translate_editors[this.path];
+    var my_pair = original === this ? translate : original;
+    return my_pair || (this.parent.getOtherTranslatePair && this.parent.getOtherTranslatePair(this));
+  },
+  setEqualHeigths: function() {
+    var translate_pair = this.getOtherTranslatePair();
+    if (translate_pair && translate_pair.container) {
+      translate_pair.container.className = translate_pair.container.className.replace(/\s*equal-translate-pair/g, '');
+      this.container.className = this.container.className.replace(/\s*equal-translate-pair/g, '');
+      translate_pair.container.className += ' equal-translate-pair';
+      this.container.className += ' equal-translate-pair';
+
+      const setHeight = () => {
+        this.container.style.height = null;
+        translate_pair.container.style.height = null;
+        var maxHeight = Math.max(this.container.offsetHeight, translate_pair.container.offsetHeight);
+        if (maxHeight) {
+          this.container.style.height = maxHeight + 'px';
+          translate_pair.container.style.height = maxHeight + 'px';
+        }
+      }
+      setTimeout(setHeight, 0) && setTimeout(setHeight, 25) && setTimeout(setHeight, 50) && setTimeout(setHeight, 100);
+    }
   }
 });

@@ -845,15 +845,13 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
   },
   deactivateItem: function(item) {
     item.container.parentNode.className = item.container.parentNode.className.replace(/\s*active-item/g, '');
-    var original_pair = this.getOriginalPair(item);
-    if (original_pair && original_pair !== item) {
-      original_pair.container.style.height = null;
-      original_pair.container.className = original_pair.container.className.replace(/\s*pair-open/g, '');
-    }
+    item.setEqualHeigths && item.setEqualHeigths();
   },
-  getOriginalPair: function(item) {
+  getOtherTranslatePair: function(item) {
     var idx = this.rows.indexOf(item);
-    return this.jsoneditor.original_editors[this.path] && this.jsoneditor.original_editors[this.path].rows[idx];
+    var original = this.jsoneditor.original_editors[this.path] && this.jsoneditor.original_editors[this.path].rows[idx];
+    var translate = this.jsoneditor.translate_editors[this.path] && this.jsoneditor.translate_editors[this.path].rows[idx];
+    return original === item ? translate : original;
   },
   deleteItem: function(item) {
     item.delete_button.children[0].children[1].children[0].click();

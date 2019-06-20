@@ -52,6 +52,12 @@ module.exports = function(params) {
     instance.codemirror.on('blur', function() {
         params.onChange && params.onChange(instance.value())
     })
+    instance.codemirror.on('change', function() {
+        params.onChange && params.onChange(instance.value())
+    })
+    instance.codemirror.on('refresh', function() {
+        params.onResize && params.onResize()
+    })
 
 
     return {

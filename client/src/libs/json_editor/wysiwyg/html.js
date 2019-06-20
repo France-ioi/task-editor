@@ -46,6 +46,9 @@ module.exports = function(params) {
             editor.on('blur', function() {
                 params.onBlur && params.onBlur();
             });
+            editor.on('resizeeditor', function() {
+                params.onResize && params.onResize();
+            });
             if(params.multitext) {
                 editor.addButton('markdown', {
                     title: 'Switch to markdown editor',

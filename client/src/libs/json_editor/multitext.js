@@ -20,7 +20,11 @@ window.JSONEditor.defaults.editors.multitext = JSONEditor.defaults.editors.strin
                 self.input.value = content;
                 self.value = self.input.value;
                 self.is_dirty = true;
+                self.refreshValue();
                 self.onChange(true);
+            },
+            onResize: function() {
+                self.setEqualHeigths();
             },
             onTypeChange: function(type, content) {
                 self.input.value = content;

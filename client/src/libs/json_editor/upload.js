@@ -163,7 +163,7 @@ JSONEditor.defaults.editors.upload = JSONEditor.AbstractEditor.extend({
     var mime = Mime.lookup(file_name);
     return mime && mime.startsWith('image')
   },
-  showPane: function() {
+  showPane: function(initial_call = true) {
     this.setFileError(null);
 
     var cbs = {
@@ -183,21 +183,25 @@ JSONEditor.defaults.editors.upload = JSONEditor.AbstractEditor.extend({
         if (this.isImage()) {
           this.file_preview.children[3].style.display = 'block';
           this.file_preview.children[3].firstChild.setAttribute('src', this.options.jsoneditor.options.task.getFileUrl(this.input.value));
+          this.file_preview.children[3].firstChild.addEventListener('load', () => this.setEqualHeigths());
         } else {
           this.file_preview.children[3].style.display = 'none';
         }
+        this.setEqualHeigths();
       },
       failure: (error) => {
         this.setFileError(error);
-        this.file_preview.style.display = '';
       }
     }
     this.jsoneditor.options.task.getContent(
       this.input.value,
       cbs
     );
+
+    var translate_pair = this.getOtherTranslatePair();
+    initial_call && translate_pair && translate_pair.showPane(false);
   },
-  hidePane: function(e) {
+  hidePane: function(e, initial_call = true) {
     if (e) e.stopPropagation();
 
     this.pane_shown = false;
@@ -208,6 +212,10 @@ JSONEditor.defaults.editors.upload = JSONEditor.AbstractEditor.extend({
       this.file_view.className += ' no-file';
       if (this.temporary_array_item) this.parent.deleteItem(this);
     }
+
+    var translate_pair = this.getOtherTranslatePair();
+    initial_call && translate_pair && translate_pair.hidePane(null, false);
+    this.setEqualHeigths();
   },
   setModifyEnabled: function(enabled) {
     var file_name = this.file_preview.children[0].children[1];
@@ -300,48 +308,15 @@ JSONEditor.defaults.editors.upload = JSONEditor.AbstractEditor.extend({
       cbs
     );
   },
-  refreshPreview: function() {
-    if(this.last_preview === this.preview_value) return;
-    this.last_preview = this.preview_value;
-
-    this.preview.innerHTML = '';
-
-    if(!this.preview_value) return;
-
-    var self = this;
-
-    var mime = this.preview_value.match(/^data:([^;,]+)[;,]/);
-    if(mime) mime = mime[1];
-    if(!mime) mime = 'unknown';
-
-    var file = this.uploader.files[0];
-
-    this.preview.innerHTML = '<strong>Type:</strong> '+mime+', <strong>Size:</strong> '+file.size+' bytes';
-    if(mime.substr(0,5)==="image") {
-      this.preview.innerHTML += '<br>';
-      var img = document.createElement('img');
-      img.style.maxWidth = '100%';
-      img.style.maxHeight = '100px';
-      img.src = this.preview_value;
-      this.preview.appendChild(img);
-    }
-
-    this.preview.innerHTML += '<br>';
-    var uploadButton = this.getButton('Upload', 'upload', 'Upload');
-    this.preview.appendChild(uploadButton);
-    uploadButton.addEventListener('click',function(event) {
-      event.preventDefault();
-
-      uploadButton.setAttribute("disabled", "disabled");
-    });
-  },
   enable: function() {
-    this.file_view.disabled = true;
+    this.file_preview.children[0].children[1].disabled = false;
+    this.file_preview.children[2].disabled = false;
     if(this.uploader) this.uploader.disabled = false;
     this._super();
   },
   disable: function() {
-    this.file_view.disabled = false;
+    this.file_preview.children[0].children[1].disabled = true;
+    this.file_preview.children[2].disabled = true;
     if(this.uploader) this.uploader.disabled = true;
     this._super();
   },
@@ -364,9 +339,11 @@ JSONEditor.defaults.editors.upload = JSONEditor.AbstractEditor.extend({
         this.file_view.className += ' image-file';
         this.container.parentNode.className += ' image-file-container';
         this.file_bar.children[1].setAttribute('src', this.options.jsoneditor.options.task.getFileUrl(val));
+        this.file_bar.children[1].addEventListener('load', () => this.setEqualHeigths());
       }
       this.onChange();
     }
+    this.setEqualHeigths();
   },
   destroy: function() {
     if(this.preview && this.preview.parentNode) this.preview.parentNode.removeChild(this.preview);
@@ -392,5 +369,31 @@ JSONEditor.defaults.editors.upload = JSONEditor.AbstractEditor.extend({
       link.textContent = filename;
     });
     return link;
+  },
+  getOtherTranslatePair: function() {
+    var original = this.jsoneditor.original_editors[this.path];
+    var translate = this.jsoneditor.translate_editors[this.path];
+    var my_pair = original === this ? translate : original;
+    return my_pair || (this.parent.getOtherTranslatePair && this.parent.getOtherTranslatePair(this));
+  },
+  setEqualHeigths: function() {
+    var translate_pair = this.getOtherTranslatePair();
+    if (translate_pair && translate_pair.container) {
+      translate_pair.container.className = translate_pair.container.className.replace(/\s*equal-translate-pair/g, '');
+      this.container.className = this.container.className.replace(/\s*equal-translate-pair/g, '');
+      translate_pair.container.className += ' equal-translate-pair';
+      this.container.className += ' equal-translate-pair';
+
+      const setHeight = () => {
+        this.container.style.height = null;
+        translate_pair.container.style.height = null;
+        var maxHeight = Math.max(this.container.offsetHeight, translate_pair.container.offsetHeight);
+        if (maxHeight) {
+          this.container.style.height = maxHeight + 'px';
+          translate_pair.container.style.height = maxHeight + 'px';
+        }
+      }
+      setTimeout(setHeight, 0);
+    }
   }
 });
