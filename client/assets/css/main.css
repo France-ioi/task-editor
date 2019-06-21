@@ -1265,13 +1265,13 @@ input[type="file"].file-input {
     float: right;
 }
 
-.round-btn.inverted {
+.round-btn.inverted, .round-btn.inverted:active, .round-btn.inverted:focus, .round-btn.inverted:focus:active {
     background-color: #4A90E2;
     color: white;
     border: 1px solid #4A90E2;
 }
 
-.round-btn.inverted:hover, .round-btn.inverted:active, .round-btn.inverted:focus, .round-btn.inverted:hover:active, .round-btn.inverted:focus:active {
+.round-btn.inverted:hover, .round-btn.inverted:hover:active, .round-btn.inverted:hover:focus:active {
     color: white;
     border: 1px solid #2275d3;
     background-color: #2275d3;
@@ -1647,3 +1647,5 @@ p:last-child {
 .translating div[data-schematype="array"]>.field-container>.form-right-group, .translating .array-item-holder>.field-container>.form-right-group, .array-item-holder>td>.field-container>.form-right-group  {
     margin-top: 0;
 }
+
+

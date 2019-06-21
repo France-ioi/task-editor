@@ -82,6 +82,15 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
     });
     this.sections['optional'] && this.sections['optional'].lastChild.collapsed && this.sections['optional'].firstChild.click();
     this.sections['advanced'] && !this.sections['advanced'].lastChild.collapsed && this.sections['advanced'].firstChild.click();
+    if (!this.parent) console.log(this.translate_to, this.getTranslation());
+  },
+  getTranslation: function() {
+    var translation = {};
+    $each(this.editors, (key, editor) => {
+      if (key in this.translate_editors) translation[key] = this.translate_editors[key].getValue();
+      else if (editor.getTranslation) translation[key] = editor.getTranslation();
+    });
+    return translation;
   },
   layoutEditors: function() {
     var self = this, i, j;

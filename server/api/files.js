@@ -23,6 +23,9 @@ module.exports = {
             return res.status(400).send('File not uploaded');
         }
         var filename = [req.body.json_path, req.files.file.name].join('.');
+        if (req.body.language && req.body.language.length > 0) {
+          filename = [req.body.json_path, req.body.language, req.files.file.name].join('.');
+        }
         req.files.file.mv(
             taskFilePath(req.body.path, filename),
             (err) => {
@@ -41,7 +44,7 @@ module.exports = {
             (err, content) => {
                 if(err) return res.status(400).send(err.message);
                 res.json({
-                    content: content.toString('utf8'),
+                    content: content.toString('base64'),
                     binary: is_binary_file(content)
                 });
             }
@@ -55,9 +58,10 @@ module.exports = {
                 taskFilePath(req.body.path, req.body.old_filename)
             );
         }
+        var buf = Buffer.from(req.body.content, 'base64');
         fs.writeFile(
             taskFilePath(req.body.path, req.body.new_filename),
-            req.body.content,
+            buf,
             (err) => {
                 if(err) return res.status(400).send(err.message);
                 res.json({});

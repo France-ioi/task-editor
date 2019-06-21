@@ -39,11 +39,12 @@ class TaskJsonEditor extends React.Component {
     }
 
 
-    editorUpload = (type, file, cbs) => {
+    editorUpload = (type, file, language, cbs) => {
         cbs.updateProgress();
         files_api.upload({
             path: this.props.task.path,
             json_path: type,
+            language,
             file
         }).then((res) => {
             cbs.success(res.filename);
