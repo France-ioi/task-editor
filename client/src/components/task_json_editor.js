@@ -17,6 +17,7 @@ class TaskJsonEditor extends React.Component {
             disable_array_delete_all_rows: true,
 //            disable_array_reorder: true,
             startval: this.props.task.data,
+            translations: this.props.task.translations,
             upload: this.editorUpload,
             keep_oneof_values: false,
             task: {
@@ -34,7 +35,7 @@ class TaskJsonEditor extends React.Component {
             }
         });
         this.editor.on('change', () => {
-            this.props.onChange(this.editor.getValue());
+            this.props.onChange(this.editor.getValue(), this.editor.root.getTranslations());
         });
     }
 
@@ -78,11 +79,6 @@ class TaskJsonEditor extends React.Component {
         }).catch((err) => {
             cbs.failure(err.message);
         });
-    }
-
-
-    taskDataUpdate = () => {
-        this.props.onChange(this.editor.getValue());
     }
 
 

@@ -58,11 +58,7 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
       if (key in this.translate_editors) {
         this.theme.setGridColumnSize(editor.container, 6);
         editor.container.className += ' original-field';
-        this.translate_editors[key].setValue(editor.getValue());
-        if (editor.setTranslateMode) {
-          editor.setTranslateMode(true, false);
-          this.translate_editors[key].setTranslateMode(true, true);
-        } else editor.disable();
+        editor.disable();
       }
       if (editor.enableTranslation) editor.enableTranslation();
     });
@@ -74,23 +70,32 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
       if (key in this.translate_editors) {
         this.theme.setGridColumnSize(editor.container, 12);
         editor.container.className = editor.container.className.replace(/\s*original-field/g, '');
-        if (editor.setTranslateMode) {
-          editor.setTranslateMode(false, false);
-        } else editor.enable();
+        editor.enable();
       }
       if (editor.disableTranslation) editor.disableTranslation();
     });
     this.sections['optional'] && this.sections['optional'].lastChild.collapsed && this.sections['optional'].firstChild.click();
     this.sections['advanced'] && !this.sections['advanced'].lastChild.collapsed && this.sections['advanced'].firstChild.click();
-    if (!this.parent) console.log(this.translate_to, this.getTranslation());
+    if (!this.parent) this.jsoneditor.options.translations = this.getTranslations();
   },
-  getTranslation: function() {
+  getCurrentTranslation: function() {
     var translation = {};
     $each(this.editors, (key, editor) => {
       if (key in this.translate_editors) translation[key] = this.translate_editors[key].getValue();
-      else if (editor.getTranslation) translation[key] = editor.getTranslation();
+      else if (editor.getCurrentTranslation) translation[key] = editor.getCurrentTranslation();
     });
     return translation;
+  },
+  setCurrentTranslation: function(obj) {
+    $each(this.editors, (key, editor) => {
+      if (key in this.translate_editors) this.translate_editors[key].setValue(obj[key] || this.editors[key].getValue());
+      else if (editor.setCurrentTranslation) editor.setCurrentTranslation(obj[key] || editor.getValue());
+    });
+  },
+  getTranslations: function() {
+    var tr = this.jsoneditor.options.translations || {};
+    if (this.translate_to) tr[this.translate_to] = this.getCurrentTranslation();
+    return tr;
   },
   layoutEditors: function() {
     var self = this, i, j;
@@ -526,7 +531,9 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
             }
             const translateItem = this.theme.getTranslationItem(lang_str);
             translateItem.addEventListener('click', () => {
+              this.jsoneditor.options.translations = this.getTranslations();
               this.translate_to = lang_code;
+              this.setCurrentTranslation(this.jsoneditor.options.translations[this.translate_to] || {});
               this.translation_holder.lastChild.children[2].textContent = lang_str;
             });
             this.translation_holder.lastChild.lastChild.appendChild(translateItem);
@@ -640,7 +647,6 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
       this.editjson_button.lastChild.addEventListener('click',function(e) {
         e.preventDefault();
         e.stopPropagation();
-        if (self.translate_mode) self.translate_button.click();
         self.showEditJSON();
       });
       this.editjson_controls.appendChild(this.editjson_button);
@@ -665,8 +671,10 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
         this.container.className = this.container.className.replace(/\s*translating/g, '');
         if (this.translate_mode) this.container.className += ' translating';
         else this.container.className += ' not-translating';
-        if (this.translate_mode) this.enableTranslation();
-        else this.disableTranslation();
+        if (this.translate_mode) {
+          this.setCurrentTranslation((this.jsoneditor.options.translations || {})[this.translate_to] || {});
+          this.enableTranslation();
+        } else this.disableTranslation();
         this.translate_button.lastChild.innerHTML = (this.translate_mode ? 'Exit Translation' : 'Translate');
         this.translate_button.className = this.translate_button.className.replace(/\s*inverted/g, '');
         if (this.translate_mode) this.translate_button.className += ' inverted';
@@ -714,7 +722,11 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
     this.row_container.style.display = 'none';
 
     // Start the textarea with the current value
-    this.editjson_textarea.value = JSON.stringify(this.getValue(),null,2);
+    if (this.translate_mode) {
+      this.editjson_textarea.value = JSON.stringify(this.getCurrentTranslation(),null,2);
+    } else {
+      this.editjson_textarea.value = JSON.stringify(this.getValue(),null,2);
+    }
 
     // Disable the rest of the form while editing JSON
     this.disable();
@@ -741,7 +753,8 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
 
     try {
       var json = JSON.parse(this.editjson_textarea.value);
-      this.setValue(json);
+      if (this.translate_mode) this.setCurrentTranslation(json);
+      else this.setValue(json);
       this.hideEditJSON();
     }
     catch(e) {

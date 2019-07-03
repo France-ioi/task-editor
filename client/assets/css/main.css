@@ -1648,4 +1648,6 @@ p:last-child {
     margin-top: 0;
 }
 
-
+.navbar-text.navbar-right {
+    margin-top: 16px;
+}

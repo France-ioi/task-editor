@@ -50,6 +50,12 @@ export default (state = default_state, action) => {
                 schema: action.schema
             };
 
+        case 'TASK_SET_TRANSLATIONS':
+            return {
+                ...state,
+                translations: action.translations
+            };
+
         case 'TASK_FETCH_SUCCESS':
             return {
                 ...state,
