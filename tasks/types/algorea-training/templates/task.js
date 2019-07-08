@@ -3,6 +3,8 @@
 
         subTask.gridInfos;
 
+        subTask.gridInfos.maxInstructions;
+
         subTask.data;
 
         initBlocklySubTask(subTask);

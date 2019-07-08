@@ -68,15 +68,13 @@ module.exports = {
         AlgoreaTrainingTaskMetaData: require('./AlgoreaTrainingTaskMetaData.js'),
         PEMTaskMetaData: require('./PEMTaskMetaData.js'),
         task: require('./task.js'),
-        context: {
-            type: 'string',
-            enum: ['none', 'arrows', 'cards', 'gems', 'chticode_abs', 'chticode_rel', 'cones', 'course', 'dominoes', 'marbles', 'objects_in_space', 'paint', 'rocket', 'sokoban', 'new']
-        },
+        context: require('./context.js'),
         conceptViewer: {
             type: 'boolean',
             format: 'checkbox',
             title: 'conceptViewer'
         },
+        maxInstructions: require('./maxInstructions.js'),
         groupByCategory: {
             type: 'boolean',
             format: 'checkbox',
@@ -112,7 +110,7 @@ module.exports = {
 
         difficulties: require('./difficulties.js')
     },
-    required: ['title', 'windowLanguage', 'conceptViewer', 'groupByCategory', 'generatedBlocks', 'standardBlocks', 'AlgoreaTrainingTaskMetaData', 'PEMTaskMetaData', 'task', 'context', 'difficulties'],
+    required: ['title', 'windowLanguage', 'conceptViewer', 'maxInstructions', 'groupByCategory', 'generatedBlocks', 'standardBlocks', 'AlgoreaTrainingTaskMetaData', 'PEMTaskMetaData', 'task', 'context', 'difficulties'],
 
     generator: [
         {

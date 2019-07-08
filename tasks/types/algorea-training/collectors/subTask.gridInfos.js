@@ -1,8 +1,5 @@
 module.exports = function (data) {
 
-    var defaults = {
-        max_instructions: 10
-    }
     var context_key = 'robot';
     var levels = ['basic', 'easy', 'medium', 'hard'];
 
@@ -16,14 +13,12 @@ module.exports = function (data) {
         for (var i = 0; i < data.difficulties.length; i++) {
             if (i >= levels.length) continue;
             var level = levels[i];
-            maxInstructions[level] = data.difficulties[i].gridInfo.maxInstructions || defaults.max_instructions;
             generatedBlocks[context_key][level] = data.difficulties[i].gridInfo.generatedBlocks || [];
             singleBlocks[context_key][level] = data.difficulties[i].gridInfo.singleBlocks || [];
         }
         generatedBlocks[context_key]['shared'] = data.generatedBlocks || [];
         generatedBlocks[context_key]['shared'] = data.standardBlocks.singleBlocks || [];
     } else {
-        var maxInstructions = data.difficulties[0].gridInfo.maxInstructions || defaults.max_instructions;
         var generatedBlocks = {};
         generatedBlocks[context_key] = data.generatedBlocks || [];
         var singleBlocks = data.standardBlocks.singleBlocks || [];
@@ -33,7 +28,6 @@ module.exports = function (data) {
     return {
         conceptViewer: !!data.conceptViewer,
         contextType: data.context,
-        maxInstructions: maxInstructions,
         includeBlocks: {
             groupByCategory: !!data.groupByCategory,
             generatedBlocks: generatedBlocks,
