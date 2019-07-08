@@ -94,7 +94,7 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
   },
   getTranslations: function() {
     var tr = this.jsoneditor.options.translations || {};
-    if (this.translate_to) tr[this.translate_to] = this.getCurrentTranslation();
+    if (this.translate_mode && this.translate_to) tr[this.translate_to] = this.getCurrentTranslation();
     return tr;
   },
   layoutEditors: function() {
@@ -665,19 +665,20 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
       this.translate_button.insertBefore(this.theme.getIcon('transfer'), this.translate_button.firstChild);
       this.translate_mode = false;
       this.translate_button.addEventListener('click', () => {
-        this.translate_mode = !this.translate_mode;
-        this.translation_holder.style.display = this.translate_mode ? 'block' : null;
+        var new_mode = !this.translate_mode;
+        this.translation_holder.style.display = new_mode ? 'block' : null;
         this.container.className = this.container.className.replace(/\s*not-translating/g, '');
         this.container.className = this.container.className.replace(/\s*translating/g, '');
-        if (this.translate_mode) this.container.className += ' translating';
+        if (new_mode) this.container.className += ' translating';
         else this.container.className += ' not-translating';
-        if (this.translate_mode) {
+        if (new_mode) {
           this.setCurrentTranslation((this.jsoneditor.options.translations || {})[this.translate_to] || {});
           this.enableTranslation();
         } else this.disableTranslation();
-        this.translate_button.lastChild.innerHTML = (this.translate_mode ? 'Exit Translation' : 'Translate');
+        this.translate_button.lastChild.innerHTML = (new_mode ? 'Exit Translation' : 'Translate');
         this.translate_button.className = this.translate_button.className.replace(/\s*inverted/g, '');
-        if (this.translate_mode) this.translate_button.className += ' inverted';
+        if (new_mode) this.translate_button.className += ' inverted';
+        this.translate_mode = new_mode;
       });
 
       if ('languages' in this.schema) {

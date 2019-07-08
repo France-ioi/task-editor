@@ -113,8 +113,16 @@ module.exports = function(src_path) {
 
 
     return {
-        walk: function(callback) {
-            processNode(tree, [], {}, callback)
+        walk: function(language, callback) {
+            processNode(tree, [], { language }, callback)
+        },
+        getTranslations: function() {
+            if (tree.languages) {
+                var languages = Object.keys(tree.languages.list);
+                return languages.filter(lang => lang !== tree.languages.original);
+            } else {
+                return []
+            }
         }
     }
 

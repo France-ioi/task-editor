@@ -1,6 +1,7 @@
 var clone = require('clone')
+var deepmerge = require('deepmerge')
 
-module.exports = function(task_data) {
+module.exports = function(task_data, translations) {
 
     var local_data = task_data;
     var local_modifications = false;
@@ -99,6 +100,14 @@ module.exports = function(task_data) {
                 local_modifications = true;
             }
             return find(json_path.slice(), local_data, false, value)
+        },
+
+        translate: function(language) {
+            if (language && translations[language]) {
+                local_data = deepmerge(task_data, translations[language]);
+            } else {
+                local_data = task_data;
+            }
         },
 
         info: function() {

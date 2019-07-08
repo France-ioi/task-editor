@@ -17,6 +17,7 @@
     "bootstrap": "^3.4.1",
     "cheerio": "^1.0.0-rc.3",
     "clone": "^2.1.2",
+    "deepmerge": "^3.3.0",
     "easymde": "^2.5.1",
     "ejs": "^2.6.1",
     "express": "^4.16.4",

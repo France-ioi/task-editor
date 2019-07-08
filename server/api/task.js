@@ -71,7 +71,8 @@ function loadTask(req, res) {
             if(err) return res.status(400).send(err.message);
             res.json({
                 schema,
-                data: task_data.data
+                data: task_data.data,
+                translations: task_data.translations
             })
         })
     })
@@ -86,6 +87,7 @@ var api = {
             var task_data = {
                 type: req.body.task_type,
                 data: null,
+                translations: null,
                 files: []
             }
             svn.checkout(req.user, req.body.path, (err) => {
@@ -123,6 +125,7 @@ var api = {
             var params = {
                 path: path.join(config.path, req.body.path),
                 data: req.body.data,
+                translations: req.body.translations,
                 type: task_data.type,
                 files: task_data.files
             }
