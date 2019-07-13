@@ -1473,6 +1473,7 @@ input[type="file"].file-input {
     display: none;
     word-break: break-all;
     font-size: 16px;
+    margin-top: 8px;
     padding: 6.6px 0;
     color: #4A90E2;
     max-height: 500px;
@@ -1650,4 +1651,16 @@ p:last-child {
 
 .navbar-text.navbar-right {
     margin-top: 16px;
+}
+
+.no-translate {
+    display: none !important;
+}
+
+.translating .array-item-holder>.field-container .form-control {
+    border-radius: 4px;
+}
+
+.translating .array-item-holder>.field-container>.readonly-view, .array-item-holder>td>.field-container>.readonly-view {
+    margin-top: 0;
 }

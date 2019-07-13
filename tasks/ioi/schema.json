@@ -518,6 +518,7 @@
 
     "required": ["PEMTaskMetaData", "FIOITaskMetaData", "title", "task", "solution", "testFiles", "taskSettings"],
     "advanced": ["files"],
+    "translate": ["PEMTaskMetaData", "title"],
     "languages": {
       "list": {
         "en": "English",

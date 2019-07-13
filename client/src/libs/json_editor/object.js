@@ -53,6 +53,9 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
       }
     }
   },
+  shouldTranslate: function(key) {
+    return this.schema.translate === undefined || this.schema.translate.indexOf(key) !== -1;
+  },
   enableTranslation: function() {
     $each(this.editors, (key, editor) => {
       if (key in this.translate_editors) {
@@ -60,7 +63,9 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
         editor.container.className += ' original-field';
         editor.disable();
       }
-      if (editor.enableTranslation) editor.enableTranslation();
+      if (!this.shouldTranslate(key)) {
+        editor.container.className += ' no-translate';
+      } else if (editor.enableTranslation) editor.enableTranslation();
     });
     this.sections['optional'] && this.sections['optional'].lastChild.collapsed && this.sections['optional'].firstChild.click();
     this.sections['advanced'] && this.sections['advanced'].lastChild.collapsed && this.sections['advanced'].firstChild.click();
@@ -72,7 +77,9 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
         editor.container.className = editor.container.className.replace(/\s*original-field/g, '');
         editor.enable();
       }
-      if (editor.disableTranslation) editor.disableTranslation();
+      if (!this.shouldTranslate(key)) {
+        editor.container.className = editor.container.className.replace(/\s*no-translate/g, '');
+      } else if (editor.disableTranslation) editor.disableTranslation();
     });
     this.sections['optional'] && this.sections['optional'].lastChild.collapsed && this.sections['optional'].firstChild.click();
     this.sections['advanced'] && !this.sections['advanced'].lastChild.collapsed && this.sections['advanced'].firstChild.click();
@@ -82,14 +89,21 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
     var translation = {};
     $each(this.editors, (key, editor) => {
       if (key in this.translate_editors) translation[key] = this.translate_editors[key].getValue();
-      else if (editor.getCurrentTranslation) translation[key] = editor.getCurrentTranslation();
+      else if (this.shouldTranslate(key) && editor.getCurrentTranslation) translation[key] = editor.getCurrentTranslation();
     });
     return translation;
   },
+  reshapeArray: function(arr, orig) {
+    if (!orig) return orig
+    else if (arr.length === orig.length) return arr
+    else if (arr.length > orig.length) return arr.slice(0, orig.length)
+    else return arr.concat(orig.slice(arr.length))
+  },
   setCurrentTranslation: function(obj) {
     $each(this.editors, (key, editor) => {
+      if (Array.isArray(obj[key])) obj[key] = this.reshapeArray(obj[key], this.editors[key].getValue());
       if (key in this.translate_editors) this.translate_editors[key].setValue(obj[key] || this.editors[key].getValue());
-      else if (editor.setCurrentTranslation) editor.setCurrentTranslation(obj[key] || editor.getValue());
+      else if (this.shouldTranslate(key) && editor.setCurrentTranslation) editor.setCurrentTranslation(obj[key] || editor.getValue());
     });
   },
   getTranslations: function() {
@@ -378,6 +392,7 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
       if (this.jsoneditor.translate_editors === undefined) this.jsoneditor.translate_editors = {}
       if (this.jsoneditor.original_editors === undefined) this.jsoneditor.original_editors = {}
       $each(this.schema.properties, (key, schema) => {
+        if (!this.shouldTranslate(key)) return
         var editor = this.jsoneditor.getEditorClass(schema);
         if ((editor !== JSONEditor.defaults.editors.object || (schema.options && schema.options.table_row)) && (editor !== JSONEditor.defaults.editors.array || this.editors[key].isCompressedArray())) {
           this.translate_editors[key] = this.jsoneditor.createEditor(editor, {
