@@ -70,6 +70,7 @@ JSONEditor.defaults.editors.multiple = JSONEditor.AbstractEditor.extend({
     });
     self.refreshValue();
     self.refreshHeaderText();
+    self.configureCurrentEditorTranslation();
   },
   buildChildEditor: function(i) {
     var self = this;
@@ -124,6 +125,7 @@ JSONEditor.defaults.editors.multiple = JSONEditor.AbstractEditor.extend({
     this.type = 0;
     this.editors = [];
     this.validators = [];
+    this.translating = false;
 
     this.keep_values = true;
     if(typeof this.jsoneditor.options.keep_oneof_values !== "undefined") this.keep_values = this.jsoneditor.options.keep_oneof_values;
@@ -287,5 +289,34 @@ JSONEditor.defaults.editors.multiple = JSONEditor.AbstractEditor.extend({
         editor.showValidationErrors(errors);
       });
     }
-  }
+  },
+  enableTranslation: function() {
+    this.translating = true;
+    this.switcher.disabled = true;
+    this.configureCurrentEditorTranslation();
+  },
+  disableTranslation: function() {
+    this.translating = false;
+    this.switcher.disabled = false;
+    this.configureCurrentEditorTranslation();
+  },
+  configureCurrentEditorTranslation: function() {
+    var cur_editor = this.editors[this.type];
+    if (this.translating) {
+      cur_editor.enableTranslation && cur_editor.enableTranslation();
+    } else {
+      cur_editor.disableTranslation && cur_editor.disableTranslation();
+    }
+  },
+  getOtherTranslatePair: function(item) {
+    var original = this.jsoneditor.original_editors[this.path];
+    if (original) original = original.editors[original.type];
+    var translate = this.jsoneditor.translate_editors[this.path];
+    if (translate) translate = translate.editors[translate.type]
+    return original === item ? translate : original;
+  },
+  setCurrentTranslation: function(obj) {
+    var cur_editor = this.editors[this.type];
+    cur_editor.setCurrentTranslation && cur_editor.setCurrentTranslation(obj);
+  },
 });

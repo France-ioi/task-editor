@@ -261,11 +261,12 @@ div[data-schemaid="root"][data-schemapath="root"]>.well {
     padding: 4px 36px 20px 36px;
     background-color: white;
     cursor: pointer;
+    position: relative;
 }
 
 .description-container p {
     color: #787878;
-    max-width: 50%;
+    max-width: 45%;
 }
 
 .header-container {
@@ -274,6 +275,7 @@ div[data-schemaid="root"][data-schemapath="root"]>.well {
     padding: 25px 36px 4px 36px;
     background-color: white;
     cursor: pointer;
+		position: relative;
 }
 
 .header-container h3 {
@@ -340,6 +342,7 @@ div[data-schemaid="root"][data-schemapath="root"]>.description-container {
     border-bottom: none;
     background-color: white;
     padding: 16px 36px;
+		position: relative;
 }
 
 .field-container, .header-container, .description-container, .multi-type-container, .array-control-bar {
@@ -1337,8 +1340,10 @@ input[type="file"].file-input {
 }
 
 .translate-controls {
-    margin-top: -24px;
     display: none;
+    position: absolute;
+    top: 20px;
+    right: 2px;
 }
 
 .translate-controls>button {
@@ -1555,6 +1560,14 @@ input[type="file"].file-input {
     background: transparent;
 }
 
+.translating .array-multiple-item.even-row, .object-array>div>.even-row {
+    background: transparent;
+}
+
+.translating .array-multiple-item.even-row .field-container, .object-array>div>.even-row .field-container {
+    background: white;
+}
+
 .translating .array-row-container {
     padding: 8px;
 }
@@ -1663,4 +1676,44 @@ p:last-child {
 
 .translating .array-item-holder>.field-container>.readonly-view, .array-item-holder>td>.field-container>.readonly-view {
     margin-top: 0;
+}
+
+.array.readonly-view {
+    margin-left: 8px;
+}
+
+.translating .original-field .file-preview>.input-field-container>.form-control {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+.translate-separator {
+    display: none;
+}
+
+.translating .translate-separator {
+    display: block;
+    height: 100%;
+    border-left: 1px solid rgba(0, 0, 0, 0.06);
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    margin-left: -3px;
+}
+
+div.translating[data-schemaid="root"][data-schemapath="root"]>div>.translate-separator {
+    display: none;
+}
+
+.translating .required-field>.field-container>.form-left-group>.control-label::after, .translating .required-field>.header-container>h3::after, .translating .required-field>.multi-type-container>.control-label::after {
+    content: "";
+}
+
+.translating .required-field>.field-container, .translating .required-field>.header-container, .translating .required-field>.description-container, .translating .required-field>.multi-type-container, .translating .required-field>.array-control-bar {
+    border-left-color: #4A90E2;
+}
+
+.translating .required-field>.field-container>.form-left-group>.control-label, .translating .required-field>.multi-type-container>.control-label, .translating .required-field>.header-container>h3 {
+		color: #787878 !important;
 }

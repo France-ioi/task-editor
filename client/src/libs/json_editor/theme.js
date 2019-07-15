@@ -235,6 +235,9 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
     var container = document.createElement('div');
     label.className += ' control-label';
     container.className = 'multi-type-container';
+    var translate_separator = document.createElement('div');
+    translate_separator.className = 'translate-separator';
+    container.appendChild(translate_separator);
     container.appendChild(label);
     container.appendChild(sw);
     return container;
@@ -362,7 +365,11 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
     }
     el.style.margin = '0';
     el.style.display = 'inline-block';
-    container.appendChild(el)
+
+    var translate_separator = document.createElement('div');
+    translate_separator.className = 'translate-separator';
+    container.appendChild(translate_separator);
+    container.appendChild(el);
 
     return container;
   },
@@ -371,6 +378,9 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
     container.className = 'description-container';
     var el = document.createElement('p');
     el.innerHTML = text;
+    var translate_separator = document.createElement('div');
+    translate_separator.className = 'translate-separator';
+    container.appendChild(translate_separator);
     container.appendChild(el)
     return container;
   },

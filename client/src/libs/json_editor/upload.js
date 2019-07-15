@@ -33,7 +33,10 @@ JSONEditor.defaults.editors.upload = JSONEditor.AbstractEditor.extend({
     if (!description) description = '';
 
     this.preview = this.theme.getFormInputDescription(description);
+    this.readonly_view = document.createElement('div');
+    this.readonly_view.className = 'file readonly-view';
     this.control = this.theme.getFormControl(this.label, this.file_bar, this.preview);
+    this.control.lastChild.appendChild(this.readonly_view);
     this.container.appendChild(this.control);
   },
   addByEditor: function() {
@@ -112,6 +115,7 @@ JSONEditor.defaults.editors.upload = JSONEditor.AbstractEditor.extend({
       this.file_error && this.file_error.parentNode.removeChild(this.file_error);
       this.file_error = null;
       this.parent.file_error = null;
+      this.setEqualHeigths();
       return;
     }
     if(!this.file_error) {
@@ -137,6 +141,7 @@ JSONEditor.defaults.editors.upload = JSONEditor.AbstractEditor.extend({
       } else this.file_view.appendChild(this.file_error);
     }
     this.file_error.children[1].textContent = msg;
+    this.setEqualHeigths();
   },
   formatFileSize: function(size) {
     var unit = 'B';
@@ -317,6 +322,13 @@ JSONEditor.defaults.editors.upload = JSONEditor.AbstractEditor.extend({
       this.onChange();
       if(this.parent) this.parent.onChildEditorChange(this);
       else this.jsoneditor.onChange();
+      if (!val) {
+        this.readonly_view.textContent = '[None]';
+        this.readonly_view.style.display = null;
+      } else {
+        this.readonly_view.textContent = '';
+        this.readonly_view.style.display = 'none';
+      }
     }
     this.setEqualHeigths();
   },

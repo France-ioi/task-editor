@@ -54,7 +54,7 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
     }
   },
   shouldTranslate: function(key) {
-    return this.schema.translate === undefined || this.schema.translate.indexOf(key) !== -1;
+    return (this.schema.translate === undefined || this.schema.translate.indexOf(key) !== -1) && Object.keys(this.schema.properties).indexOf(key) !== -1;
   },
   enableTranslation: function() {
     $each(this.editors, (key, editor) => {
@@ -657,7 +657,7 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
       this.editjson_button.firstChild.addEventListener('click',function(e) {
         e.preventDefault();
         e.stopPropagation();
-        self.hideEditJSON();
+        self.saveJSON();
       });
       this.editjson_button.lastChild.addEventListener('click',function(e) {
         e.preventDefault();

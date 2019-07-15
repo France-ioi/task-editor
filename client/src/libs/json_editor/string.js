@@ -429,7 +429,7 @@ JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
           translate_pair.container.style.height = maxHeight + 'px';
         }
       }
-      setTimeout(setHeight, 0) && setTimeout(setHeight, 25) && setTimeout(setHeight, 50) && setTimeout(setHeight, 100);
+      setTimeout(setHeight, 0) && setTimeout(setHeight, 100);
     }
   }
 });

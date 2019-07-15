@@ -132,6 +132,9 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
         this.row_holder = document.createElement('div');
         this.row_holder.className = 'array-row-holder';
         this.controls = this.theme.getButtonHolder();
+        this.readonly_view = document.createElement('div');
+        this.readonly_view.className = 'array readonly-view';
+        this.panel.appendChild(this.readonly_view);
         this.panel.appendChild(this.row_holder);
         this.panel.appendChild(this.controls);
         this.panel.appendChild(this.error_holder);
@@ -210,6 +213,16 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
 
     // Add controls
     this.addControls();
+  },
+  updateReadOnlyView: function() {
+    if (!this.readonly_view) return
+    if (this.rows.length === 0) {
+			this.readonly_view.textContent = '[None]';
+			this.readonly_view.style.display = null;
+    } else {
+			this.readonly_view.textContent = '';
+			this.readonly_view.style.display = 'none';
+		}
   },
   onChildEditorChange: function(editor) {
     this.refreshValue();
@@ -477,6 +490,7 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
     self.refreshValue(initial);
     self.refreshTabs(true);
     self.refreshTabs();
+    self.updateReadOnlyView();
 
     self.onChange();
     
@@ -640,6 +654,7 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
 
     if(value) self.rows[i].setValue(value, initial);
     self.refreshTabs();
+    self.updateReadOnlyView();
   },
   addControls: function() {
     var self = this;
@@ -862,19 +877,25 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
   afterInputReady: function(focus) {
     for (var child = 0; child < this.rows.length; child++) {
       var el = this.rows[child];
-      el.afterInputReady && el.afterInputReady(focus)
+      el.afterInputReady && el.afterInputReady(focus);
     }
   },
   enableTranslation: function() {
     for (var child = 0; child < this.rows.length; child++) {
       var el = this.rows[child];
-      el.enableTranslation && el.enableTranslation()
+      el.enableTranslation && el.enableTranslation();
     }
   },
   disableTranslation: function() {
     for (var child = 0; child < this.rows.length; child++) {
       var el = this.rows[child];
-      el.disableTranslation && el.disableTranslation()
+      el.disableTranslation && el.disableTranslation();
+    }
+  },
+  setCurrentTranslation: function(obj) {
+    for (var child = 0; child < this.rows.length; child++) {
+      var el = this.rows[child];
+      el.setCurrentTranslation && el.setCurrentTranslation(obj[child]);
     }
   },
 });
