@@ -91,6 +91,10 @@ body, html, #reactbody {
     background-color: #F1F2F7;
 }
 
+* {
+    unicode-bidi: plaintext;
+}
+
 .json-editor-container {
     max-width: 1015px;
     margin-left: auto;

@@ -28,9 +28,9 @@ module.exports = function(params) {
     window.tinymce.init({
         target: params.element,
         auto_focus: params.autoFocus,
-        plugins: 'autoresize image link codesample fullscreen lists textcolor colorpicker table code',
+        plugins: 'autoresize image link codesample fullscreen lists textcolor colorpicker table code directionality',
         menubar: 'edit format',
-        toolbar: 'view_mode image link codesample forecolor backcolor table numlist bullist | fullscreen code '  + (params.multitext ? 'markdown' : ''),
+        toolbar: 'view_mode image link codesample forecolor backcolor table numlist bullist | ltr rtl fullscreen code '  + (params.multitext ? 'markdown' : ''),
         branding: false,
         skin: false,
         codesample_content_css: 'assets/prism.css',

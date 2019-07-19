@@ -20,6 +20,7 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
   },
   getTextareaInput: function() {
     var el = document.createElement('textarea');
+    el.setAttribute('dir', 'auto');
     el.className = 'form-control';
     return el;
   },
@@ -47,6 +48,7 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
     translate_menu.className = 'translation-menu';
     translate_menu.appendChild(this.getIcon('menu-down'));
     var translate_language = document.createElement('div');
+    translate_language.setAttribute('dir', 'auto');
     translate_language.className = 'language';
     translate_language.textContent = 'PlaceHolder';
     var translate_list = document.createElement('div');
@@ -66,8 +68,10 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
   },
   getTranslationItem: function(language) {
     var translate_item = document.createElement('div');
+    translate_item.setAttribute('dir', 'auto');
     translate_item.className = 'translate-item';
     translate_item.textContent = language;
+    translate_item.style.marginRight = '42px';
     return translate_item;
   },
   getExternalInput: function() {
@@ -86,6 +90,7 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
     container.appendChild(topContainer);
     var preview = document.createElement('div');
     preview.className = 'wysiwyg-preview';
+    preview.setAttribute('dir', 'auto');
     container.appendChild(preview);
 		container.appendChild(el);
     return el;
@@ -244,6 +249,7 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
   },
   getFormInputField: function(type, icon) {
     var el = this._super(type);
+    el.setAttribute('dir', 'auto');
     if(type !== 'checkbox') {
       el.className += 'form-control';
     }
