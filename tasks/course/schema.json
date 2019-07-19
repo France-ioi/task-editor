@@ -17,5 +17,14 @@
                 }
             }]
         }
+    },
+    "languages": {
+      "list": {
+        "en": "English",
+        "fr": "French",
+        "de": "Dutch",
+        "fa": "فارسی"
+      },
+      "original": "en"
     }
 }

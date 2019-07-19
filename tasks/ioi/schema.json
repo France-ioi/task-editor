@@ -516,9 +516,9 @@
             }
     },
 
-    "required": ["PEMTaskMetaData", "FIOITaskMetaData", "title", "task", "solution", "testFiles", "taskSettings"],
-    "advanced": ["files"],
-    "translate": ["PEMTaskMetaData", "title"],
+    "required": ["PEMTaskMetaData", "FIOITaskMetaData", "title", "task", "solution", "testFiles"],
+    "translate": ["PEMTaskMetaData", "FIOITaskMetaData", "title", "task", "solution", "testFiles"],
+    "advanced": ["taskSettings"],
     "languages": {
       "list": {
         "en": "English",

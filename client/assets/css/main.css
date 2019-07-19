@@ -1556,7 +1556,7 @@ input[type="file"].file-input {
 }
 
 .translating .even-row {
-    background: #F8F8F8;
+    background: rgba(0, 0, 0, 0.03);
     border-radius: 2px;
 }
 

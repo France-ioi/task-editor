@@ -1,7 +1,8 @@
 {
   "title": "Task",
   "type": "object",
-  "required": ["text", "test_files"],
+  "required": ["text"],
+  "advanced": ["texts"],
   "definitions": {
     "text_editor": {
       "title": "Test text editor",
@@ -127,5 +128,14 @@
         }
       }
     }
+  },
+  "languages": {
+    "list": {
+      "en": "English",
+      "fr": "French",
+      "de": "Dutch",
+      "fa": "فارسی"
+    },
+    "original": "en"
   }
 }

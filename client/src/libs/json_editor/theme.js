@@ -48,6 +48,7 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
     translate_menu.className = 'translation-menu';
     translate_menu.appendChild(this.getIcon('menu-down'));
     var translate_language = document.createElement('div');
+    translate_language.style.marginRight = '42px';
     translate_language.setAttribute('dir', 'auto');
     translate_language.className = 'language';
     translate_language.textContent = 'PlaceHolder';
@@ -71,7 +72,6 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
     translate_item.setAttribute('dir', 'auto');
     translate_item.className = 'translate-item';
     translate_item.textContent = language;
-    translate_item.style.marginRight = '42px';
     return translate_item;
   },
   getExternalInput: function() {

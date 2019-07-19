@@ -186,6 +186,15 @@
       }
     },
 
-    "required": ["taskMetaData", "title", "taskpre", "taskpost", "videoData"]
+    "required": ["taskMetaData", "title", "taskpre", "taskpost", "videoData"],
+    "languages": {
+      "list": {
+        "en": "English",
+        "fr": "French",
+        "de": "Dutch",
+        "fa": "فارسی"
+      },
+      "original": "en"
+    }
 }
 
