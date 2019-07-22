@@ -59,6 +59,9 @@ JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
     return Math.min(12,Math.max(min,num));
   },
   build: function() {
+    this.afterInputReadyLocked = false;
+    this.afterInputReadyCalled = false;
+
     var self = this, i;
     if (!this.options.compact) this.header = this.label = this.theme.getFormInputLabel(this.getTitle());
     if(this.schema.description) this.description = this.theme.getFormInputDescription(this.schema.description);
@@ -325,11 +328,29 @@ JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
     this._super();
   },
   afterInputReady: function(focus) {
+    /* Call Burst Guard Start */
+    if (this.afterInputReadyLocked) {
+      focus = focus || false;
+      this.afterInputReadyCalled = this.afterInputReadyCalled || focus;
+      return;
+    } else {
+      this.afterInputReadyLocked = true;
+      this.afterInputReadyCalled = undefined;
+      setTimeout(() => {
+        this.afterInputReadyLocked = false;
+        if (this.afterInputReadyCalled !== undefined) this.afterInputReady(this.afterInputReadyCalled);
+      }, 1000);
+    }
+    /* Call Burst Guard End */
+
     this.html_editor && this.html_editor.destroy();
     var self = this;
     if(this.options.wysiwyg && ['html','bbcode'].indexOf(this.input_type) >= 0) {
+      var root = this;
+      while (root.parent) root = root.parent;
       this.html_editor = HTMLEditor({
         element: this.input,
+        directionality: root.isRTL ? 'rtl' : 'ltr',
         autoFocus: focus && this.input.id,
         path: this.jsoneditor.options.task.path,
         onChange: function(content) {

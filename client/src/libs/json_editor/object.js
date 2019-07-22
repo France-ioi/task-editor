@@ -93,6 +93,9 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
     });
     return translation;
   },
+  setRTLTranslation: function() {
+    this.isRTL = Array.isArray(this.schema.languages.rtl) && this.schema.languages.rtl.indexOf(this.translate_to) > -1;
+  },
   reshapeArray: function(arr, orig) {
     if (!orig) return orig
     else if (arr.length === orig.length) return arr
@@ -102,8 +105,10 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
   setCurrentTranslation: function(obj) {
     $each(this.editors, (key, editor) => {
       if (Array.isArray(obj[key])) obj[key] = this.reshapeArray(obj[key], this.editors[key].getValue());
-      if (key in this.translate_editors) this.translate_editors[key].setValue(obj[key] || this.editors[key].getValue());
-      else if (this.shouldTranslate(key) && editor.setCurrentTranslation) editor.setCurrentTranslation(obj[key] || editor.getValue());
+      if (key in this.translate_editors) {
+        this.translate_editors[key].setValue(obj[key] || this.editors[key].getValue());
+        if (this.translate_editors[key].afterInputReady) setTimeout(() => this.translate_editors[key].afterInputReady(), 0);
+      } else if (this.shouldTranslate(key) && editor.setCurrentTranslation) editor.setCurrentTranslation(obj[key] || editor.getValue());
     });
   },
   getTranslations: function() {
@@ -111,7 +116,7 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
     if (this.translate_mode && this.translate_to) tr[this.translate_to] = this.getCurrentTranslation();
     return tr;
   },
-  layoutEditors: function() {
+  layoutEditors: function(light) {
     var self = this, i, j;
 
     if(!this.row_container) return;
@@ -248,8 +253,10 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
           }
           row.appendChild(editor.container);
           if (translate_editor) row.appendChild(translate_editor.container);
-          editor.afterInputReady && setTimeout(() => editor.afterInputReady(), 0)
-          translate_editor && translate_editor.afterInputReady && setTimeout(() => translate_editor.afterInputReady(), 0)
+          if (!light) {
+            editor.afterInputReady && setTimeout(() => editor.afterInputReady(), 0)
+            translate_editor && translate_editor.afterInputReady && setTimeout(() => translate_editor.afterInputReady(), 0)
+          }
         });
         if (fields !== required_fields && fields.length) {
           var section_type = fields === optional_fields ? 'optional' : 'advanced';
@@ -323,6 +330,7 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
     this.translate_editors = {};
     this.sections = {};
     this.cached_editors = {};
+    this.isRTL = false;
     var self = this;
 
     this.format = this.options.layout || this.options.object_layout || this.schema.format || this.jsoneditor.options.object_layout || 'normal';
@@ -542,12 +550,14 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
             const lang_str = this.schema.languages.list[key];
             if (!this.translate_to) {
               this.translate_to = lang_code;
+              this.setRTLTranslation();
               this.translation_holder.lastChild.children[2].textContent = lang_str;
             }
             const translateItem = this.theme.getTranslationItem(lang_str);
             translateItem.addEventListener('click', () => {
               this.jsoneditor.options.translations = this.getTranslations();
               this.translate_to = lang_code;
+              this.setRTLTranslation();
               this.setCurrentTranslation(this.jsoneditor.options.translations[this.translate_to] || {});
               this.translation_holder.lastChild.children[2].textContent = lang_str;
             });
@@ -722,7 +732,7 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
     // Layout object editors in grid if needed
     else {
       // Initial layout
-      this.layoutEditors();
+      this.layoutEditors(true);
       // Do it again now that we know the approximate heights of elements
       this.layoutEditors();
     }

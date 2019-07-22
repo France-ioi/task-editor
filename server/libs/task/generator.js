@@ -107,6 +107,7 @@ module.exports = {
             var languages = [null].concat(schema.getTranslations());
             languages.forEach(language => {
                 data.translate(language);
+                post_processor.setDirectionality(schema.isRTL(language) ? 'rtl' : 'ltr');
                 var generators = [];
                 schema.walk(language, (data_path, input, output) => {
                     if(input && ('step' in input)) {

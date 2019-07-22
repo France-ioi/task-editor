@@ -95,6 +95,10 @@ body, html, #reactbody {
     unicode-bidi: plaintext;
 }
 
+.CodeMirror * {
+    unicode-bidi: normal;
+}
+
 .json-editor-container {
     max-width: 1015px;
     margin-left: auto;

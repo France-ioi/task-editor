@@ -123,6 +123,13 @@ module.exports = function(src_path) {
             } else {
                 return []
             }
+        },
+        isRTL: function(language) {
+            if (tree.languages && Array.isArray(tree.languages.rtl)) {
+                return tree.languages.rtl.indexOf(language) > -1;
+            } else {
+                return false;
+            }
         }
     }
 

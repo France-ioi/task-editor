@@ -49,6 +49,7 @@ module.exports = function(params) {
         minHeight: '100px',
         autofocus: !!params.autoFocus
     })
+    if (params.directionality) instance.codemirror.setOption('direction', params.directionality);
     instance.codemirror.on('blur', function() {
         params.onChange && params.onChange(instance.value())
     })

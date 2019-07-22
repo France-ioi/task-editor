@@ -33,6 +33,7 @@ module.exports = function(params) {
         toolbar: 'view_mode image link codesample forecolor backcolor table numlist bullist | ltr rtl fullscreen code '  + (params.multitext ? 'markdown' : ''),
         branding: false,
         skin: false,
+        directionality: params.directionality,
         codesample_content_css: 'assets/prism.css',
         content_css: 'assets/tinymce_custom.css',
         autoresize_min_height: 100,
