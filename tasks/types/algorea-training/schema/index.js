@@ -75,42 +75,36 @@ module.exports = {
             title: 'conceptViewer'
         },
         maxInstructions: require('./maxInstructions.js'),
-        groupByCategory: {
-            type: 'boolean',
-            format: 'checkbox',
-            title: 'groupByCategory'
-        },
-        generatedBlocks: {
-            type: 'sortable_list',
-            description: ' La gestion des instructions pour le robot',
-            items: require('./blocks/generated.js')
-        },
-        standardBlocks: {
+        blocks: {
             type: 'object',
-            description: ' La gestion des blocs pour l algorithme',
+            title: 'Blocks',
             properties: {
-                includeAll: {
+                groupByCategory: {
                     type: 'boolean',
                     format: 'checkbox',
-                    title: 'includeAll'
+                    title: 'Group by category'
                 },
-                wholeCategories: {
-                    type: 'sortable_list',
-                    description: 'Bloc pour le robot.',
-                    items: require('./blocks/generated.js')
-                },
-                singleBlocks: {
-                    type: 'sortable_list',
-                    description: "La gestion des blocs pour l'algorithme.",
-                    items: require('./blocks/single.js')
-                }
+                generatedBlocks: require('./generatedBlocks.js'),
+                standardBlocks: require('./standardBlocks.js')
             },
-            required: ['includeAll', 'wholeCategories', 'singleBlocks']
+            required: ['groupByCategory', 'generatedBlocks', 'standardBlocks'],
+            generator: [
+                {
+                    input: {
+                        collector: 'collectors/subTask.gridInfos.includeBlocks.js'
+                    },
+                    output: {
+                        inject: {
+                            template: 'task.js',
+                            selector: '$subTask.gridInfos.includeBlocks'
+                        }
+                    }
+                }
+            ]
         },
-
         difficulties: require('./difficulties.js')
     },
-    required: ['title', 'windowLanguage', 'conceptViewer', 'maxInstructions', 'groupByCategory', 'generatedBlocks', 'standardBlocks', 'AlgoreaTrainingTaskMetaData', 'PEMTaskMetaData', 'task', 'context', 'difficulties'],
+    required: ['title', 'windowLanguage', 'conceptViewer', 'maxInstructions', 'AlgoreaTrainingTaskMetaData', 'PEMTaskMetaData', 'task', 'context', 'blocks', 'difficulties'],
 
     generator: [
         {

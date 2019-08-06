@@ -2,9 +2,8 @@
     function initTask(subTask) {
 
         subTask.gridInfos;
-
         subTask.gridInfos.maxInstructions;
-
+        subTask.gridInfos.includeBlocks;
         subTask.data;
 
         initBlocklySubTask(subTask);

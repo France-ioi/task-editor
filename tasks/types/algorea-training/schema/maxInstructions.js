@@ -54,12 +54,12 @@ module.exports = {
     generator: [
         {
             input: {
-                collector: 'collectors/maxInstructions.js'
+                collector: 'collectors/subTask.gridInfos.maxInstructions.js'
             },
             output: {
                 inject: {
                     template: 'task.js',
-                    selector: '$maxInstructions'
+                    selector: '$subTask.gridInfos.maxInstructions'
                 }
             }
         }

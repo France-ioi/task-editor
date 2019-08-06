@@ -42,10 +42,6 @@ module.exports = {
                         },
                         required: ['count', 'type']
                     },
-                    maxInstructions: {
-                        type: 'integer',
-                        title: 'maxInstructions'
-                    },
                     languageStrings: {
                         type: 'object',
                         description: ' personnalisation du texte ',
@@ -85,48 +81,6 @@ module.exports = {
                         },
                         required: ['blocklyRobot_lib']
                     },
-
-                    additionalBlocksByLevel: {
-                        type: 'object',
-                        description: ' La gestion des blocs ',
-                        properties: {
-                            generatedBlocks: {
-                                type: 'object',
-                                description: 'La gestion des instruction pour le robot',
-                                properties: {
-                                    robot: {
-                                        type: 'array',
-                                        description: 'La gestion des instruction selon le niveau ',
-                                        items: require('./blocks/generated.js')
-                                    }
-                                },
-                                required: ['robot']
-                            },
-                            standardBlocks: {
-                                type: 'object',
-                                description: ' La gestion des blocs pour l algorithme',
-                                properties: {
-                                    includeAll: {
-                                        type: 'boolean',
-                                        format: 'checkbox',
-                                        title: 'includeAll'
-                                    },
-                                    wholeCategories: {
-                                        type: 'sortable_list',
-                                        description: 'Bloc pour le robot.',
-                                        items: require('./blocks/generated.js')
-                                    },
-                                    singleBlocks: {
-                                        type: 'sortable_list',
-                                        description: "La gestion des blocs pour l'algorithme.",
-                                        items: require('./blocks/single.js')
-                                    }
-                                },
-                                required: ['includeAll', 'wholeCategories', 'singleBlocks']
-                            }
-                        },
-                        required: ['generatedBlocks', 'standardBlocks']
-                    },
                     checkEndCondition: {
                         type: 'string',
                         description: 'methode de verification de la solution.',
@@ -163,8 +117,7 @@ module.exports = {
                             title: 'variables'
                         }
                     }
-                },
-                required: ['maxInstructions']
+                }
             },
             displayHelperThreshold: {
                 type: 'integer',
