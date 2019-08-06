@@ -26,7 +26,6 @@ JSONEditor.defaults.editors['sortable_list'] = JSONEditor.AbstractEditor.extend(
         if (serialized === this.serialized) return;
         this.serialized = serialized;
         this.value = value;
-        console.log(this.value);
 
         this.resetItems();
         for (var i = 0; i < this.value.length; i++) {
