@@ -131,18 +131,6 @@ module.exports = {
         },
         {
             input: {
-                collector: 'collectors/levels.js',
-                keepArray: true
-            },
-            output: {
-                inject: {
-                    template: 'task.js',
-                    selector: '$levels'
-                }
-            }
-        },
-        {
-            input: {
                 collector: 'collectors/thresholds.js',
                 keepArray: true
             },

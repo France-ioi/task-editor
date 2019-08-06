@@ -14,6 +14,5 @@
         }
     }
 
-    var levels;
-    initWrapper(initTask, levels, null, true);
+    initWrapper(initTask, Object.keys(subTask.data), null, true);
 })()
