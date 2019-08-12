@@ -1,9 +1,7 @@
-var blockly_images_url = window.__CONFIG__.blockly.images_url;
-var field_size = 40;
-
-import Toolbar from './grid/toolbar'
+import Toolbar from './grid/toolbar';
 import Display from './grid/display';
 
+var field_size = 40;
 
 JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
 

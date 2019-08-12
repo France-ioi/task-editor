@@ -1,17 +1,20 @@
 import Sprite from './sprite';
 
+var max_grid_size = 11;
+
 module.exports = function (params) {
+
+    var cell_size = params.field_size + 1;
 
     var container = $('<div class="te-grid-display"></div>');
     $(params.parent).append(container);
 
     container.resizable({
-        grid: [params.field_size + 1, params.field_size + 1],
-        resize: function (event, ui) {
-            params.onResize(
-                Math.floor(ui.size.width / (1 + params.field_size)) || 1,
-                Math.floor(ui.size.height / (1 + params.field_size)) || 1
-            );
+        grid: [cell_size, cell_size],
+        maxHeight: max_grid_size * cell_size,
+        maxWidth: max_grid_size * cell_size,
+        resize: function(event, ui) {
+            params.onResize(Math.floor(ui.size.width / cell_size) || 1, Math.floor(ui.size.height / cell_size) || 1);
         }
     });
 
@@ -22,7 +25,7 @@ module.exports = function (params) {
     var cells = [];
 
     function resize(w, h) {
-        container.width(w * (1 + params.field_size)).height(h * (1 + params.field_size));
+        container.width(w * cell_size).height(h * cell_size);
         width = w;
         var size = w * h;
         if (size > cells.length) {
