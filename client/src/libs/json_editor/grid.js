@@ -129,12 +129,8 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
             this.value.tiles[row][col] = item.num;
         }
         Sprite.reset();
-        console.log('Sprite.reset')
-
         this.display.render(this.value);
-        console.log('Sprite.images')
         this.value.images = Sprite.images();
-        console.log('onChange', this.value.images)
         this.onChange(true);
     },
 
