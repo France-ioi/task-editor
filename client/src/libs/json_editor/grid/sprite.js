@@ -1,10 +1,14 @@
+var used_images = {}
+
+
 function url(file) {
-    return window.__CONFIG__.blockly.images_url + file;
+    var img = '/_common/images/robot/' + file;
+    used_images[img] = true;
+    return window.__CONFIG__.url_prefix + img;
 }
 
 
-// data: { img: , color: , offset: }
-module.exports = function (data) {
+function create(data) {
     var opts = {
         class: 'te-grid-sprite'
     };
@@ -27,4 +31,22 @@ module.exports = function (data) {
         }
     }
     return $('<div>', opts);
+}
+
+
+function images() {
+    return Object.keys(used_images);
+}
+
+
+function reset() {
+    used_images = {}
+}
+
+
+// data: { img: , color: , offset: }
+module.exports = {
+    create,
+    images,
+    reset
 }

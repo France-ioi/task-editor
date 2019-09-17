@@ -1,5 +1,6 @@
 import Toolbar from './grid/toolbar';
 import Display from './grid/display';
+import Sprite from './grid/sprite';
 
 var field_size = 40;
 
@@ -127,7 +128,13 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
         } else if (item.num) {
             this.value.tiles[row][col] = item.num;
         }
+        Sprite.reset();
+        console.log('Sprite.reset')
+
         this.display.render(this.value);
+        console.log('Sprite.images')
+        this.value.images = Sprite.images();
+        console.log('onChange', this.value.images)
         this.onChange(true);
     },
 

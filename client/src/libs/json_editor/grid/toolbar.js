@@ -30,7 +30,7 @@ module.exports = function (params) {
             };
         });
         btn.append(
-            Sprite({
+            Sprite.create({
                 color: data.color
             })
         );
@@ -53,7 +53,7 @@ module.exports = function (params) {
             };
         });
         btn.append(
-            Sprite({
+            Sprite.create({
                 img: data.img
             })
         );
@@ -83,7 +83,7 @@ module.exports = function (params) {
                 })(btn, offset, state)
             );
             btn.append(
-                Sprite({
+                Sprite.create({
                     img: data.img,
                     offset: offset
                 })
@@ -101,7 +101,7 @@ module.exports = function (params) {
             active_item = cmd;
         });
         btn.append(
-            Sprite({
+            Sprite.create({
                 img: img
             })
         );

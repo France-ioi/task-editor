@@ -35,8 +35,7 @@ module.exports = {
     },
 
     blockly: {
-        api_url: process.env.BLOCKLY_API_URL,
-        images_url: process.env.BLOCKLY_IMAGES_URL
+        api_url: process.env.BLOCKLY_API_URL
     }
 
 };

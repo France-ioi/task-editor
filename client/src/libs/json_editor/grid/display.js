@@ -77,7 +77,7 @@ module.exports = function (params) {
     return {
         setItemTypes: function(types) {
             backgrounds = [];
-            backgrounds[1] = Sprite({
+            backgrounds[1] = Sprite.create({
                 color: '#FFF'
             });
             init_items = {};
@@ -86,17 +86,17 @@ module.exports = function (params) {
                 if (data.num === undefined) {
                     init_items[type] = [];
                     for (var state = 0; state <= Math.max(data.nbStates / 2 - 1, 0); state++) {
-                        init_items[type][state] = Sprite({
+                        init_items[type][state] = Sprite.create({
                             img: data.img,
                             offset: -1 * params.field_size * 2 * state
                         });
                     }
                 } else if (data.color) {
-                    backgrounds[data.num] = Sprite({
+                    backgrounds[data.num] = Sprite.create({
                         color: data.color
                     });
                 } else if (data.img) {
-                    backgrounds[data.num] = Sprite({
+                    backgrounds[data.num] = Sprite.create({
                         img: data.img
                     });
                 }
