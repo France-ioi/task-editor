@@ -53,20 +53,28 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
     build: function () {
         this.id = this.path.replace(/\./g, "-");
         var self = this;
-        this.header = document.createElement('span');
-        this.header.textContent = this.getTitle();
-        this.title = this.theme.getHeader(this.header);
-        this.container.appendChild(this.title);
+        var wrapper = document.createElement('div');
+        if(this.schema.description) {
+            this.description = this.theme.getFormInputDescription(this.schema.description);
+        }
+        this.header = this.label = this.theme.getFormInputLabel(this.getTitle());
+        this.container.appendChild(
+            this.theme.getFormControl(
+                this.header,
+                wrapper,
+                this.description
+            )
+        );
 
         // item types toolbar
         this.toolbar = Toolbar({
-            parent: this.container,
+            parent: wrapper,
             field_size: field_size
         });
 
         // display
         this.display = Display({
-            parent: this.container,
+            parent: wrapper,
             field_size: field_size,
             onCellClick: this.onCellClick.bind(this),
             onResize: this.onResize.bind(this)
