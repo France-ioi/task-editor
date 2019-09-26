@@ -18,7 +18,7 @@ function loadSchema(task_type, callback) {
         var schema = schema_loader.load(task_path);
     } catch(e) {
         return callback(
-            new Error('Error reading schema ' + task_type + '/' + file + '. ' + e.message)
+            new Error('Error reading schema for task type: ' + task_type + '. ' + e.message)
         );
     }
     callback(null, schema);

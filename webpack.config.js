@@ -5,6 +5,7 @@ var UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 module.exports = function(env) {
 
     var vendor = [
+        'jquery',
         'babel-polyfill',
         'body-parser',
         'json-editor',
@@ -36,14 +37,12 @@ module.exports = function(env) {
         new webpack.optimize.CommonsChunkPlugin({
             name: 'vendor',
             filename: 'vendor.js'
-        })
-        /*,
+        }),
         new webpack.ProvidePlugin({
-            //$: "jquery",
-            //jQuery: "jquery",
-            "window.jQuery": "jquery"
+            $: 'jquery',
+            jQuery: 'jquery',
+            'window.jQuery': 'jquery'
         })
-        */
     ];
 
     var production = process.env.NODE_ENV === 'production';

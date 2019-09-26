@@ -1,5 +1,6 @@
-require('node-env-file')(__dirname + '/../.env')
-var config = require('./config')
+require('node-env-file')(__dirname + '/../.env');
+require('./bootstrap');
+var config = require('./config');
 var express = require('express');
 var app = express();
 

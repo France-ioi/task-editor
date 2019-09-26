@@ -223,22 +223,6 @@ JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
         self.onChange(true);
       });
 
-<<<<<<< HEAD
-    afterInputReady: function() {
-        var self = this;
-        if(this.options.wysiwyg && ['html','bbcode'].indexOf(this.input_type) >= 0) {
-            this.html_editor = HTMLEditor({
-                element: this.input,
-                path: this.jsoneditor.options.task.path,
-                options: this.options,
-                onChange: function(content) {
-                    self.input.value = content;
-                    self.value = self.input.value;
-                    self.is_dirty = true;
-                    self.onChange(true);
-                }
-            })
-=======
     if(this.options.input_height) this.input.style.height = this.options.input_height;
     if(this.options.expand_height) {
       this.adjust_height = function(el) {
@@ -263,7 +247,6 @@ JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
             el.style.height = ch+'px';
           }
           el.style.height = (ch+1)+'px';
->>>>>>> new-design
         }
       };
 
