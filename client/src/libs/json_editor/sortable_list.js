@@ -54,15 +54,7 @@ JSONEditor.defaults.editors['sortable_list'] = JSONEditor.AbstractEditor.extend(
     build: function() {
         this.id = this.path.replace(/\./g, '-');
 
-        var container = this.container;
-        this.title = this.header = this.label = this.theme.getFormInputLabel(this.getTitle());
-        this.container.appendChild(this.title);
-
-        // Display area
-        this.display_area = this.theme.getIndentedPanel();
-        this.container.appendChild(this.display_area);
-
-        if (this.options.hide_display) this.display_area.style.display = 'none';
+        this.header = this.label = this.theme.getFormInputLabel(this.getTitle());
 
         this.lists = {
             src: {
@@ -88,14 +80,19 @@ JSONEditor.defaults.editors['sortable_list'] = JSONEditor.AbstractEditor.extend(
                 </div>\
             </div>\
         ');
+        this.container.appendChild(
+            this.theme.getCustomControl(
+                this.header,
+                el[0],
+                this.description
+            )
+        );
         var lists = el.find('ul');
         this.lists.src.el = $(lists[0]);
         this.lists.dst.el = $(lists[1]);
 
         this.initItems();
         this.resetItems();
-
-        $(this.display_area).append(el);
 
         var self = this;
         this.lists.src.el

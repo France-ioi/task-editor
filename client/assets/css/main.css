@@ -314,6 +314,10 @@ div[data-schemaid="root"][data-schemapath="root"]>.description-container {
     display: flex;
 }
 
+.field-container-custom {
+    display: block;
+}
+
 .multi-type-container {
     border: 1px solid #e3e3e3;
     border-bottom: none;
@@ -360,22 +364,14 @@ div[data-schematype="array"]>.header-container>h3 {
     position: absolute;
     left: 18px;
     background-color: #FF001F;
-    padding: 0px 8px;
+    padding: 2px 8px 0 8px;
+    height: 28px;
     font-size: 25px;
-    color: #FF001F;
+    color: #FFF;
+    vertical-align: middle;
     border-radius: 0 15px 15px 0;
 }
 
-.required-field>.field-container::after, .required-field>.header-container::after, .required-field>.multi-type-container {
-    content: "*";
-    position: absolute;
-    margin-top: 4px;
-    left: 18px;
-    padding: 0px 8px;
-    font-size: 25px;
-    color: white;
-    border-radius: 0 15px 15px 0;
-}
 
 .form-left-group {
     display: inline-block;
