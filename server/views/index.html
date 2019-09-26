@@ -6,6 +6,9 @@
         <meta http-equiv="x-ua-compatible" content="ie=edge" />
         <title>Task editor</title>
         <script type="text/javascript" src="/app/vendor.js"></script>
+        <% if (blockly_api_url) { %>
+        <script type="text/javascript" src=<%- blockly_api_url %>></script>
+        <% } %>
     </head>
     <body>
         <div id="reactbody"></div>

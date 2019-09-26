@@ -18,5 +18,9 @@
     {
         "type": "course",
         "title": "Course with Markdown/MathJax text"
+    },
+    {
+        "type": "algorea-training",
+        "title": "Algorea training task"
     }
 ]

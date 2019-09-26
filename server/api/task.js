@@ -7,13 +7,30 @@ var shell = require('shelljs')
 var tree = require('../libs/tree')
 var schema_loader = require('../libs/schema_loader')
 
+
+function loadJSON(file, callback) {
+    fs.readFile(
+        file,
+        { encoding: 'utf-8' },
+        (err, data) => {
+            if(err) return callback(err);
+            try {
+                data = JSON.parse(data);
+            } catch(e) {
+                return callback(new Error('Error reading JSON file: ' + file));
+            }
+            callback(null, data);
+        }
+    )
+}
+
 function taskDataFile(task_subpath) {
     return path.join(config.path, task_subpath, config.task.data_file);
 }
 
 
 function loadSchema(task_type, callback) {
-    var task_path = path.resolve('../tasks/', task_type);
+    var task_path = path.resolve('../tasks/types/', task_type);
     try {
         var schema = schema_loader.load(task_path);
     } catch(e) {
@@ -25,26 +42,6 @@ function loadSchema(task_type, callback) {
 }
 
 
-function loadTaskData(task_subpath, callback) {
-    fs.readFile(
-        taskDataFile(task_subpath),
-        { encoding: 'utf-8' },
-        (err, task_data) => {
-            if(err) return callback(err);
-            try {
-                task_data = JSON.parse(task_data);
-            } catch(e) {
-                return callback(new Error('Error reading task data. ' + e.message));
-            }
-            callback(null, task_data);
-        }
-    )
-}
-
-
-
-
-
 function saveTaskData(task_subpath, task_data, callback) {
     fs.writeFile(
         taskDataFile(task_subpath),
@@ -54,18 +51,52 @@ function saveTaskData(task_subpath, task_data, callback) {
 }
 
 
-function loadTask(req, res) {
-    loadTaskData(req.body.path, (err, task_data) => {
-        if(err) return res.status(400).send(err.message);
-        loadSchema(task_data.type, (err, schema) => {
-            if(err) return res.status(400).send(err.message);
-            res.json({
-                schema,
-                data: task_data.data
-            })
-        })
-    })
+function checkoutDependencies(user, task_subpath, task_type, callback) {
+    var deps_file = path.resolve('../tasks/types/', task_type, 'dependencies.json');
+    if (!fs.existsSync(deps_file)) {
+        callback();
+    }
+    loadJSON(
+        deps_file,
+        (err, dependencies) => {
+            if(err) return callback(err);
+            Promise.all(dependencies.map((dependency_path) => {
+                return new Promise((resolve, reject) => {
+                    svn.checkout(user, dependency_path, (err) => {
+                        err && reject(err);
+                        resolve();
+                    });
+                });
+            })).then(() => callback(null)).catch(callback);
+        }
+    )
 }
+
+
+function loadTask(req, res) {
+    loadJSON(
+        taskDataFile(req.body.path),
+        (err, task_data) => {
+            if(err) return res.status(400).send(err.message);
+            checkoutDependencies(
+                req.user,
+                req.body.path,
+                task_data.type,
+                (err) => {
+                    if(err) return res.status(400).send(err.message);
+                    loadSchema(task_data.type, (err, schema) => {
+                        if(err) return res.status(400).send(err.message);
+                        res.json({
+                            schema,
+                            data: task_data.data
+                        })
+                    })
+                }
+            )
+        }
+    )
+}
+
 
 
 var api = {
@@ -108,25 +139,28 @@ var api = {
 
 
     save: (req, res) => {
-        loadTaskData(req.body.path, (err, task_data) => {
-            if(err) return res.status(400).send(err.message);
-            var params = {
-                path: path.join(config.path, req.body.path),
-                data: req.body.data,
-                type: task_data.type,
-                files: task_data.files
-            }
-            generator.output(params, (err, task_data) => {
+        loadJSON(
+            taskDataFile(req.body.path),
+            (err, task_data) => {
                 if(err) return res.status(400).send(err.message);
-                saveTaskData(req.body.path, task_data, (err) =>  {
+                var params = {
+                    path: path.join(config.path, req.body.path),
+                    data: req.body.data,
+                    type: task_data.type,
+                    files: task_data.files
+                }
+                generator.output(params, (err, task_data) => {
                     if(err) return res.status(400).send(err.message);
-                    svn.addCommit(req.user, req.body.path, (err) => {
+                    saveTaskData(req.body.path, task_data, (err) =>  {
                         if(err) return res.status(400).send(err.message);
-                        res.json({});
+                        svn.addCommit(req.user, req.body.path, (err) => {
+                            if(err) return res.status(400).send(err.message);
+                            res.json({});
+                        })
                     })
                 })
-            })
-        })
+            }
+        )
     },
 
 

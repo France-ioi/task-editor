@@ -1,0 +1,20 @@
+.sortable-list {
+    max-height: 300px;
+    overflow: auto;
+}
+
+.sortable-list .list-group {
+    background: #fff;
+}
+
+.sortable-list .list-group:empty {
+    height: 52px;
+    background: #fff;
+}
+
+.sortable-list .list-group-item {
+    cursor: move;
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+

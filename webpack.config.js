@@ -21,6 +21,8 @@ module.exports = function(env) {
         './node_modules/tinymce/plugins/codesample/plugin.js',
         './node_modules/tinymce/plugins/code/plugin.js',
         './node_modules/tinymce/plugins/noneditable/plugin.js',
+        'jquery',
+        'jquery-ui-dist/jquery-ui.js',
         'easymde',
         'react',
         'react-bootstrap',

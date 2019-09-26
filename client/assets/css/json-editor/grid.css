@@ -1,0 +1,51 @@
+.te-grid-sprite {
+    width: 40px;
+    height: 40px;
+    background: #FFF;
+    display: inline-block;
+}
+
+
+
+.te-grid-toolbar {
+    min-height: 55px;
+}
+
+.te-grid-toolbar .item-type {
+    cursor: pointer;
+    margin: 6px;
+    width: 40px;
+    height: 40px;
+    background: #FFF;
+    display: inline-block;
+}
+
+.te-grid-toolbar .item-type.active {
+    width: 44px;
+    height: 44px;
+    margin: 4px !important;
+    border: 2px solid cadetblue;
+}
+
+
+
+.te-grid-display {
+    background: #EEE;
+    border-left: 1px solid #CCC;
+    border-top: 1px solid #CCC;
+}
+
+.te-grid-display .grid-cell {
+    width: 41px;
+    height: 41px;
+    border-right: 1px solid #CCC;
+    border-bottom: 1px solid #CCC;
+    position: relative;
+    float: left;
+}
+
+.te-grid-display .grid-cell .te-grid-sprite {
+    position: absolute;
+    left: 0;
+    top: 0;
+}

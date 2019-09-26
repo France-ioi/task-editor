@@ -4,7 +4,7 @@ import { Button, DropdownButton, MenuItem, ButtonToolbar,
         Modal, Alert, Breadcrumb, Glyphicon, FormGroup, InputGroup, FormControl } from 'react-bootstrap';
 import Loader from './ui/loader';
 import Breadcrumbs from './ui/breadcrumbs';
-import tasks_config from '../../../tasks/config.json';
+import tasks_config from '../../../tasks/types/config.json';
 
 
 function pathJoin(path1, path2) {
