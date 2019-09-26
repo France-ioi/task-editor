@@ -33,6 +33,8 @@ tinymce.PluginManager.add('placeholder', function(editor, url) {
 
 module.exports = function(params) {
 
+    params.options = params.options || {};
+
     var instance;
 
     window.tinymce.init({

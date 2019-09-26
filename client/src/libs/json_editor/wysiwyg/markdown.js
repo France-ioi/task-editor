@@ -30,6 +30,8 @@ var default_toolbar = [
 
 module.exports = function(params) {
 
+    params.options = params.options || {};
+
     var instance;
     var toolbar = default_toolbar.slice(0);
     if(params.multitext) {
