@@ -7,13 +7,15 @@
         var stringsLanguage;
         var taskStrings = {};
     </script>
-    <script class="remove" type="text/javascript" src="%%TASK_PATH%%/_common/modules/pemFioi/importModules-1.3.js" id="import-modules"></script>
+    <script class="remove" type="text/javascript" src="%%TASK_PATH%%/_common/modules/pemFioi/importModules-1.4-mobileFirst.js" id="import-modules"></script>
     <script class="remove" type="text/javascript">
         var modulesPath = '%%TASK_PATH%%/_common/modules'
         importModules([
             'jquery-1.7.1', 'JSON-js', 'raphael-2.2.1', 'beaver-task-2.0', 'jschannel', 'raphaelFactory-1.0', 'delayFactory-1.0', 'simulationFactory-1.0',
-            'platform-pr', 'buttonsAndMessages', 'beav-1.0', 'installationAPI.01', 'miniPlatform', 'conceptViewer-1.0', 'conceptViewer_css-1.0',
-            'taskStyles-0.1']);
+            'platform-pr', 'buttonsAndMessages', 'beav-1.0', 'installationAPI.01', 'miniPlatform',
+            'conceptDisplay-1.0', 'conceptViewer-1.0', 'conceptViewer_css-1.0',
+            'taskStyles-mobileFirst', 'blockly-robot-1.0'
+        ]);
         // set Blockly as default language when none is specified through ?language=
         // use 3 curly braces like this in html {{{.}}} in order not to escape characters
         var languageModules;
@@ -28,7 +30,8 @@
 
 <body onresize="task.displayedSubTask.updateScale()">
 <div id="task">
-    <h1 id = "taskTitle"></h1>
+    <h1 id="taskTitle"></h1>
+    <img src="icon.png" style="display:none" />
     <div id="images-preload"></div>
 
     <div id="tabsContainer"></div>

@@ -18,13 +18,6 @@ module.exports = {
             type: 'object',
             title: 'Accurate',
             properties: {
-                basic: {
-                    title: 'Basic',
-                    type: 'integer',
-                    default: 10,
-                    minimum: 1,
-                    maximum: 99
-                },
                 easy: {
                     title: 'Easy',
                     type: 'integer',
@@ -47,7 +40,7 @@ module.exports = {
                     maximum: 99
                 }
             },
-            required: ['basic', 'easy', 'medium', 'hard']
+            required: ['easy', 'medium', 'hard']
         }
     ],
     title: 'maxInstructions',

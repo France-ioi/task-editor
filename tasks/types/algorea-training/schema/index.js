@@ -37,8 +37,7 @@ module.exports = {
     properties: {
         title: {
             type: 'string',
-            description: 'Title of the window.',
-            title: 'Title',
+            title: 'Title of the window',
             generator: [
                 {
                     output: {
@@ -46,6 +45,23 @@ module.exports = {
                             template: 'index.html',
                             selector: 'title'
                         }
+                    }
+                }
+            ]
+        },
+        icon: {
+            type: "string",
+            description: 'PNG image file.',
+            title: 'Icon',
+            format: "url",
+            options: {
+                upload: true,
+                editor: true
+            },
+            generator: [
+                {
+                    output: {
+                        copy: "icon.png"
                     }
                 }
             ]
@@ -104,7 +120,7 @@ module.exports = {
         },
         difficulties: require('./difficulties.js')
     },
-    required: ['title', 'windowLanguage', 'conceptViewer', 'maxInstructions', 'AlgoreaTrainingTaskMetaData', 'PEMTaskMetaData', 'task', 'context', 'blocks', 'difficulties'],
+    required: ['title', 'icon', 'windowLanguage', 'conceptViewer', 'maxInstructions', 'AlgoreaTrainingTaskMetaData', 'PEMTaskMetaData', 'task', 'context', 'blocks', 'difficulties'],
 
     generator: [
         {
@@ -125,7 +141,7 @@ module.exports = {
             output: {
                 inject: {
                     template: 'task.js',
-                    selector: '$subTask.data'
+                    selector: '$subTaskData'
                 }
             }
         },
@@ -153,17 +169,6 @@ module.exports = {
                 inject: {
                     template: 'index.html',
                     selector: '#images-preload'
-                }
-            }
-        },
-        {
-            input: {
-                collector: 'collectors/image_urls.js',
-                keepArray: true
-            },
-            output: {
-                download: {
-                    // overwrite: false,
                 }
             }
         }

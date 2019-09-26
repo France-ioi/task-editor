@@ -1,10 +1,11 @@
 (function () {
-    function initTask(subTask) {
+    var subTaskData;
 
+    function initTask(subTask) {
         subTask.gridInfos;
         subTask.gridInfos.maxInstructions;
         subTask.gridInfos.includeBlocks;
-        subTask.data;
+        subTask.data = subTaskData;
 
         initBlocklySubTask(subTask);
 
@@ -14,5 +15,5 @@
         }
     }
 
-    initWrapper(initTask, Object.keys(subTask.data), null, true);
+    initWrapper(initTask, Object.keys(subTaskData), null, true);
 })()

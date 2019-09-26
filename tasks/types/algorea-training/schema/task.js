@@ -5,7 +5,7 @@ module.exports = {
         title: {
             type: "string",
             description: "Title of the task.",
-            title: "Title",
+            title: "Task body title",
             generator: [
                 {
                     output: {

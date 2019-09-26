@@ -2,7 +2,7 @@ module.exports = function (data) {
 
     var default_value = 5000;
 
-    var levels = ['basic', 'easy', 'medium', 'hard'];
+    var levels = ['easy', 'medium', 'hard'];
     var res = []
     for (var i = 0; i < data.difficulties.length; i++) {
         if (i >= levels.length) continue;
