@@ -1,0 +1,26 @@
+[
+    {
+        "type": "dev",
+        "title": "Test dev task"
+    },
+    {
+        "type": "ioi",
+        "title": "IOI task"
+    },
+    {
+        "type": "video",
+        "title": "Course with YouTube video"
+    },
+    {
+        "type": "quiz",
+        "title": "Quiz"
+    },
+    {
+        "type": "course",
+        "title": "Course with Markdown/MathJax text"
+    },
+    {
+        "type": "algorea-training",
+        "title": "Algorea training task"
+    }
+]

@@ -1,7 +1,6 @@
-// multitext must be before string
 import './string'
-import './select'
 import './multitext'
+import './select'
 import './number'
 import './integer'
 import './array'
@@ -10,3 +9,5 @@ import './object'
 import './multiple'
 import './upload'
 import './theme'
+import './grid'
+import './sortable_list';

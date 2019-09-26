@@ -5,6 +5,8 @@ var UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 module.exports = function(env) {
 
     var vendor = [
+        'jquery',
+        'jquery-ui-dist/jquery-ui.js',
         'babel-polyfill',
         'body-parser',
         'json-editor',
@@ -21,6 +23,7 @@ module.exports = function(env) {
         './node_modules/tinymce/plugins/image/plugin.js',
         './node_modules/tinymce/plugins/codesample/plugin.js',
         './node_modules/tinymce/plugins/code/plugin.js',
+        './node_modules/tinymce/plugins/noneditable/plugin.js',
         'easymde',
         'react',
         'react-bootstrap',
@@ -37,14 +40,12 @@ module.exports = function(env) {
         new webpack.optimize.CommonsChunkPlugin({
             name: 'vendor',
             filename: 'vendor.js'
-        })
-        /*,
+        }),
         new webpack.ProvidePlugin({
-            //$: "jquery",
-            //jQuery: "jquery",
-            "window.jQuery": "jquery"
+            $: 'jquery',
+            jQuery: 'jquery',
+            'window.jQuery': 'jquery'
         })
-        */
     ];
 
     var production = process.env.NODE_ENV === 'production';

@@ -1,13 +1,12 @@
 var path = require('path')
 
 module.exports = {
-
     port: process.env.PORT,
 
     task: {
         tmp_dir: 'task_content_files',
         images_dir: 'images',
-        data_file: 'task_editor.json',
+        data_file: 'task_editor.json'
     },
 
     // tasks url prefix
@@ -25,12 +24,14 @@ module.exports = {
         }
     },
 
-    svn_repository:  process.env.SVN_REPOSITORY,
+    svn_repository: process.env.SVN_REPOSITORY,
 
     dev: {
         task_autoload: process.env.DEV_TASK_AUTOLOAD,
         username: process.env.DEV_USERNAME,
         password: process.env.DEV_PASSWORD,
-        log: !!process.env.DEV_LOG
+        log: !!process.env.DEV_LOG,
+        debug: !!process.env.DEV_DEBUG
     }
-}
+
+};

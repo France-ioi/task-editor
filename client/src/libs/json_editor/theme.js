@@ -305,7 +305,20 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
       group.appendChild(leftGroup);
       group.appendChild(rightGroup);
     }
-
+    return group;
+  },
+  getCustomControl: function(label, content, description) {
+    var group = document.createElement('div');
+    group.className = 'field-container field-container-custom form-group';
+    var leftGroup = document.createElement('div');
+    leftGroup.className = 'form-left-group';
+    group.appendChild(leftGroup);
+    if(label) {
+      label.className += ' control-label';
+      leftGroup.appendChild(label);
+    }
+    group.appendChild(content);
+    if(description) group.appendChild(description);
     return group;
   },
   getArrayItemContainer: function() {

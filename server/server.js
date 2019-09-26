@@ -1,5 +1,6 @@
-require('node-env-file')(__dirname + '/../.env')
-var config = require('./config')
+require('node-env-file')(__dirname + '/../.env');
+require('./bootstrap');
+var config = require('./config');
 var express = require('express');
 var app = express();
 
@@ -20,8 +21,9 @@ require('./routes')(app);
 
 var config = JSON.stringify(require('./config'));
 var app_instance_id = Math.random().toString().replace('0.', '');
+var tasks_host = process.env.TASKS_HOST;
 app.get('/', (req, res) => {
-    res.status(200).render('index.html', { config, app_instance_id });
+    res.status(200).render('index.html', { config, app_instance_id, tasks_host });
 });
 
 app.listen(process.env.PORT, () => {

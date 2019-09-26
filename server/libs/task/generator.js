@@ -6,7 +6,7 @@ var clone = require('clone')
 module.exports = {
 
     output: (params, callback) => {
-        var src_path = path.resolve(__dirname, '../../../tasks/' + params.type);
+        var src_path = path.resolve(__dirname, '../../../tasks/types/' + params.type);
 
         var schema = require('./schema')(src_path);
         var data = require('./data')(params.data, params.translations);
@@ -16,6 +16,7 @@ module.exports = {
         var templates = require('./templates')(params.path, tpl_path, post_processor);
         var collector = require('./collector')(src_path);
         var renderer = require('./renderer')(tpl_path);
+        var downloader = require('./downloader')(params.path);
 
         var files = require('./files')(params.path, params.files);
 
@@ -36,6 +37,9 @@ module.exports = {
             }
             if(idx === null && output && 'render' in output) {
                 value = renderer.execute(output.render, value)
+            }
+            if(idx === null && output && 'download' in output) {
+                downloader.execute(value);
             }
 
             if(value instanceof Array && (!input || !input.keepArray)) {

@@ -20,22 +20,40 @@ function createImagesListHandler(path) {
 }
 
 
+tinymce.PluginManager.add('placeholder', function(editor, url) {
+    editor.addButton('placeholder', {
+        icon: 'placeholder',
+        onclick: function() {
+            editor.insertContent('<span class="placeholder noneditable">&nbsp;</span>');
+        }
+    });
+});
+
+
 
 module.exports = function(params) {
+
+    params.options = params.options || {};
 
     var instance;
 
     window.tinymce.init({
         target: params.element,
         auto_focus: params.autoFocus,
-        plugins: 'autoresize image link codesample fullscreen lists textcolor colorpicker table code directionality',
+        plugins: 'autoresize image link codesample fullscreen lists textcolor colorpicker table code noneditable placeholder directionality',
         menubar: 'edit format',
-        toolbar: 'view_mode image link codesample forecolor backcolor table numlist bullist | ltr rtl fullscreen code '  + (params.multitext ? 'markdown' : ''),
+        toolbar:
+            'view_mode image link codesample forecolor backcolor table numlist bullist ' +
+            (params.options.placeholder ? 'placeholder' : '') +
+            ' | ltr rtl fullscreen code ' +
+            (params.multitext ? 'markdown' : ''),
+
         branding: false,
         skin: false,
         directionality: params.directionality,
         codesample_content_css: 'assets/prism.css',
-        content_css: 'assets/tinymce_custom.css',
+        content_css: 'assets/tinymce_content.css',
+        noneditable_noneditable_class: 'noneditable',
         autoresize_min_height: 100,
         autoresize_max_height: 400,
         autoresize_bottom_margin: 4,

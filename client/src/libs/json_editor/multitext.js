@@ -16,6 +16,7 @@ window.JSONEditor.defaults.editors.multitext = JSONEditor.defaults.editors.strin
             directionality: root.isRTL ? 'rtl' : 'ltr',
             path: this.jsoneditor.options.task.path,
             multitext: true,
+            options: this.options || {},
             onChange: function(content) {
                 self.input.parentNode.children[1].innerHTML = converter.makeHtml(content);
                 self.input.value = content;

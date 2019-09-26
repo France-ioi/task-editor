@@ -29,12 +29,12 @@ module.exports = function(content) {
         if(value instanceof Array) {
             value.map(item => {
                 el.before(
-                    el.clone().html(item.toString())
+                    el.clone().html(toString(item))
                 );
             })
             el.remove();
         } else {
-            el.html(value.toString());
+            el.html(toString(value));
         }
     }
 
@@ -51,13 +51,12 @@ module.exports = function(content) {
                     return value.__value;
             }
         }
-        return value
+        return value;
     }
 
     return {
 
         inject: function(selector, value) {
-            value = toString(value)
             if(selector.variable) {
                 injectVariable(selector, value)
             } else {
