@@ -7,11 +7,15 @@ class TaskJsonEditor extends React.Component {
 
     componentDidMount() {
         const self = this;
+        JSONEditor.plugins.selectize.enable = true;
         this.editor = new JSONEditor(this.element, {
-            theme: 'bootstrap3',
+            theme: 'taskeditor',
             schema: this.props.task.schema,
-//            disable_properties: true,
-            display_required_only: true,
+            disable_properties: true,
+            display_required_only: false,
+            //disable_edit_json: true,
+            disable_array_delete_last_row: true,
+            disable_array_delete_all_rows: true,
 //            disable_array_reorder: true,
             startval: this.props.task.data,
             upload: this.editorUpload,
@@ -56,7 +60,7 @@ class TaskJsonEditor extends React.Component {
             path: this.props.task.path,
             filename
         }).then((res) => {
-            cbs.success(res.content);
+            cbs.success(res);
         }).catch((err) => {
             cbs.failure(err.message);
         });

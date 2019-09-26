@@ -1,4 +1,5 @@
 var fs = require('fs');
+var is_binary_file = require('isbinaryfile').isBinaryFileSync;
 var path = require('path');
 var shell = require('shelljs');
 var config = require('../config')
@@ -37,11 +38,11 @@ module.exports = {
     getContent: (req, res) => {
         fs.readFile(
             taskFilePath(req.body.path, req.body.filename),
-            { encoding: 'utf-8' },
             (err, content) => {
                 if(err) return res.status(400).send(err.message);
                 res.json({
-                    content
+                    content: content.toString('utf8'),
+                    binary: is_binary_file(content)
                 });
             }
         )

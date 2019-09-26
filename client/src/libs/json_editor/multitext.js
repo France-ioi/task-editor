@@ -5,17 +5,19 @@ import converter from '../showdown_converter'
 window.JSONEditor.defaults.editors.multitext = JSONEditor.defaults.editors.string.extend({
 
 
-    initWysiwyg: function() {
+    initWysiwyg: function(focus) {
         var self = this;
         this.wysiwyg && this.wysiwyg.destroy();
 
         var func = this.value_type == 'markdown' ? MarkdownEditor : HTMLEditor;
         this.wysiwyg = func({
             element: this.input,
+            autoFocus: focus && (this.input.id || true),
             path: this.jsoneditor.options.task.path,
             multitext: true,
             options: this.options,
             onChange: function(content) {
+                self.input.parentNode.children[1].innerHTML = converter.makeHtml(content);
                 self.input.value = content;
                 self.value = self.input.value;
                 self.is_dirty = true;
@@ -79,8 +81,9 @@ window.JSONEditor.defaults.editors.multitext = JSONEditor.defaults.editors.strin
     },
 
 
-    afterInputReady: function() {
-        this.initWysiwyg();
+    afterInputReady: function(focus) {
+        this.wysiwyg && this.wysiwyg.destroy();
+        this.initWysiwyg(focus);
         this.theme.afterInputReady(this.input);
     },
 

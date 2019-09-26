@@ -45,7 +45,8 @@ module.exports = function(params) {
     }
     instance = new EasyMDE({
         element: params.element,
-        toolbar: toolbar
+        toolbar: toolbar,
+        autofocus: !!params.autoFocus
     })
     instance.codemirror.on('blur', function() {
         params.onChange && params.onChange(instance.value())
@@ -60,7 +61,10 @@ module.exports = function(params) {
         },
 
         setContent: function(content) {
-            instance && instance.value(content)
+            if (instance) {
+              instance.value(content);
+              params.onChange && params.onChange(content);
+            }
         }
     }
 

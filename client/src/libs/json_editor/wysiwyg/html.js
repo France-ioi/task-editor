@@ -48,11 +48,14 @@ module.exports = function(params) {
         skin: false,
         codesample_content_css: 'assets/prism.css',
         content_css: 'assets/tinymce_content.css',
-        noneditable_noneditable_class: "noneditable",
+        noneditable_noneditable_class: 'noneditable',
         setup: function(editor) {
             instance = editor;
+            editor.on('init blur', function() {
+                params.onChange && params.onChange(editor.getContent());
+            });
             editor.on('blur', function() {
-                params.onChange && params.onChange(editor.getContent())
+                params.onBlur && params.onBlur();
             });
             if(params.multitext) {
                 editor.addButton('markdown', {
@@ -81,7 +84,10 @@ module.exports = function(params) {
 
 
         setContent: function(content) {
-            instance && instance.setContent(content)
+            if (instance) {
+              instance.setContent(content)
+              params.onChange && params.onChange(instance.getContent());
+            }
         }
 
     }
