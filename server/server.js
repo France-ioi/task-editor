@@ -21,9 +21,9 @@ require('./routes')(app);
 
 var config = JSON.stringify(require('./config'));
 var app_instance_id = Math.random().toString().replace('0.', '');
-var blockly_api_url = process.env.BLOCKLY_API_URL;
+var tasks_host = process.env.TASKS_HOST;
 app.get('/', (req, res) => {
-    res.status(200).render('index.html', { config, app_instance_id, blockly_api_url });
+    res.status(200).render('index.html', { config, app_instance_id, tasks_host });
 });
 
 app.listen(process.env.PORT, () => {

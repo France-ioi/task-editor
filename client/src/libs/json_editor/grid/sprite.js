@@ -2,7 +2,7 @@ var used_images = {}
 
 
 function url(file) {
-    var img = '/_common/images/robot/' + file;
+    var img = '/_common/modules/img/robot/' + file;
     used_images[img] = true;
     return window.__CONFIG__.url_prefix + img;
 }

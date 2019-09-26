@@ -108,12 +108,35 @@ body, html, #reactbody {
     margin-right: 5px;
 }
 
+
+.task-viewer {
+    top: 51px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    position: fixed;
+    z-index: 1020;
+}
+
+.task-viewer iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
 .form-control[type=file] {
     padding: 0;
 }
 
 .editor-container {
-    margin: 65px 50px 0 50px;
+    top: 51px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    position: fixed;
+    z-index: 10;
+    overflow: auto;
+    padding: 15px 50px 0 50px;
 }
 
 .task-importer {

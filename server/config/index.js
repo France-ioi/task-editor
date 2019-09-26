@@ -32,10 +32,6 @@ module.exports = {
         password: process.env.DEV_PASSWORD,
         log: !!process.env.DEV_LOG,
         debug: !!process.env.DEV_DEBUG
-    },
-
-    blockly: {
-        api_url: process.env.BLOCKLY_API_URL
     }
 
 };

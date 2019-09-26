@@ -52,6 +52,8 @@ function saveTaskData(task_subpath, task_data, callback) {
 
 
 function checkoutDependencies(user, task_subpath, task_type, callback) {
+    callback();
+    /*
     var deps_file = path.resolve('../tasks/types/', task_type, 'dependencies.json');
     if (!fs.existsSync(deps_file)) {
         callback();
@@ -70,6 +72,7 @@ function checkoutDependencies(user, task_subpath, task_type, callback) {
             })).then(() => callback(null)).catch(callback);
         }
     )
+    */
 }
 
 

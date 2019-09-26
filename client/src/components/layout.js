@@ -10,6 +10,7 @@ import TaskJsonEditor from './task_json_editor';
 import TaskSvn from './task_svn';
 import TaskImporter from './task_importer';
 import FilesManager from './files_manager';
+import TaskViewer from './task_viewer';
 import Confirmation from './confirmation';
 import AlertPopup from './alert_popup';
 
@@ -122,6 +123,7 @@ class Layout extends React.Component {
                     { sectionVisible('svn') && <TaskSvn path={task.path}/>}
                     { sectionVisible('import') && <TaskImporter path={task.path} token={auth.token}/>}
                     { sectionVisible('files_manager') && <FilesManager task_path={task.path}/>}
+                    { sectionVisible('view_task') && <TaskViewer task_path={task.path}/>}
                 </div>
                 <Explorer task_path={this.props.task.path}/>
                 <Confirmation/>
