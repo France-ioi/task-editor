@@ -88,8 +88,9 @@ class Layout extends React.Component {
     }
 
 
-    taskDataChange = (data) => {
+    taskDataChange = (data, translations) => {
         this.props.dispatch({type: 'TASK_SET_DATA', data})
+        this.props.dispatch({type: 'TASK_SET_TRANSLATIONS', translations})
     }
 
 

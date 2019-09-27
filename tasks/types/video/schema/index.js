@@ -56,5 +56,14 @@ module.exports = {
       "videoData": require('./videoData.js')
     },
 
-    "required": ["taskMetaData", "title", "taskpre", "taskpost", "videoData"]
+    "required": ["taskMetaData", "title", "taskpre", "taskpost", "videoData"],
+    "languages": {
+      "list": {
+        "en": "English",
+        "fr": "French",
+        "fa": "فارسی"
+      },
+      "rtl": ["fa"],
+      "original": "en"
+    }
 }

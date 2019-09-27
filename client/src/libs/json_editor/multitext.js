@@ -7,12 +7,13 @@ window.JSONEditor.defaults.editors.multitext = JSONEditor.defaults.editors.strin
 
     initWysiwyg: function(focus) {
         var self = this;
-        this.wysiwyg && this.wysiwyg.destroy();
-
         var func = this.value_type == 'markdown' ? MarkdownEditor : HTMLEditor;
+        var root = this;
+        while (root.parent) root = root.parent;
         this.wysiwyg = func({
             element: this.input,
             autoFocus: focus && (this.input.id || true),
+            directionality: root.isRTL ? 'rtl' : 'ltr',
             path: this.jsoneditor.options.task.path,
             multitext: true,
             options: this.options || {},
@@ -21,7 +22,11 @@ window.JSONEditor.defaults.editors.multitext = JSONEditor.defaults.editors.strin
                 self.input.value = content;
                 self.value = self.input.value;
                 self.is_dirty = true;
+                self.refreshValue();
                 self.onChange(true);
+            },
+            onResize: function() {
+                self.setEqualHeigths();
             },
             onTypeChange: function(type, content) {
                 self.input.value = content;

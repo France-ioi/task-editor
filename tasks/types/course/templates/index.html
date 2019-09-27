@@ -20,9 +20,14 @@
             modules.push('post_processor');
             importModules(modules);
         </script>
+        <style>
+            * {
+                unicode-bidi: plaintext;
+            }
+        </style>
     </head>
-    <body lang="fr-FR" text="#000000" dir="ltr" style="background: transparent">
-        <div id="content">
+    <body text="#000000" dir="%%LANG_DIR%%" style="background: transparent">
+        <div dir="auto" id="content">
         </div>
     </body>
 </html>

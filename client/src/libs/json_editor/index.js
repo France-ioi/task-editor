@@ -1,6 +1,6 @@
-// multitext must be before string
-import './multitext'
 import './string'
+import './multitext'
+import './select'
 import './number'
 import './integer'
 import './array'

@@ -19,5 +19,14 @@ module.exports = {
                 }
             ]
         }
+    },
+    languages: {
+      list: {
+        en: "English",
+        fr: "French",
+        fa: "فارسی"
+      },
+      rtl: ["fa"],
+      original: "en"
     }
 };

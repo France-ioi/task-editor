@@ -33,7 +33,10 @@ JSONEditor.defaults.editors.upload = JSONEditor.AbstractEditor.extend({
     if (!description) description = '';
 
     this.preview = this.theme.getFormInputDescription(description);
+    this.readonly_view = document.createElement('div');
+    this.readonly_view.className = 'file readonly-view';
     this.control = this.theme.getFormControl(this.label, this.file_bar, this.preview);
+    this.control.lastChild.appendChild(this.readonly_view);
     this.container.appendChild(this.control);
   },
   addByEditor: function() {
@@ -80,12 +83,9 @@ JSONEditor.defaults.editors.upload = JSONEditor.AbstractEditor.extend({
 
     var file_change = this.file_preview.children[0].children[2];
 
-    this.jsoneditor.options.upload(this.path, file, {
+    this.jsoneditor.options.upload(this.path, file, this.getLanguage(), {
       success: (url) => {
         this.setValue(url);
-
-        if(this.parent) this.parent.onChildEditorChange(this);
-        else this.jsoneditor.onChange();
 
         if (this.progressBar) this.progressBar.parentNode.removeChild(this.progressBar);
         this.file_input.removeAttribute('disabled');
@@ -115,6 +115,7 @@ JSONEditor.defaults.editors.upload = JSONEditor.AbstractEditor.extend({
       this.file_error && this.file_error.parentNode.removeChild(this.file_error);
       this.file_error = null;
       this.parent.file_error = null;
+      this.setEqualHeigths();
       return;
     }
     if(!this.file_error) {
@@ -140,6 +141,7 @@ JSONEditor.defaults.editors.upload = JSONEditor.AbstractEditor.extend({
       } else this.file_view.appendChild(this.file_error);
     }
     this.file_error.children[1].textContent = msg;
+    this.setEqualHeigths();
   },
   formatFileSize: function(size) {
     var unit = 'B';
@@ -163,17 +165,18 @@ JSONEditor.defaults.editors.upload = JSONEditor.AbstractEditor.extend({
     var mime = Mime.lookup(file_name);
     return mime && mime.startsWith('image')
   },
-  showPane: function() {
+  showPane: function(initial_call = true) {
     this.setFileError(null);
 
     var cbs = {
       success: (file) => {
-        this.old_filename = this.input.value;
         if (this.parent.activateItem) this.parent.activateItem(this)
         else this.file_view.className += ' active-item';
         this.file_preview.children[0].children[1].value = this.file_bar.firstChild.innerHTML; // File Rename Field
-        this.file_preview.children[1].children[1].innerHTML = this.formatFileSize(file.content.length); // File Size
-        this.file_preview.children[2].value = file.content; // File Editor
+        var plainText = atob(file.content);
+        this.file_preview.children[1].children[1].innerHTML = this.formatFileSize(plainText.length); // File Size
+        this.file_preview.children[2].value = file.binary ? file.content : plainText; // File Editor
+        this.isBinary = file.binary;
         this.pane_shown = true;
         if (!file.binary) {
           this.file_preview.children[2].style.display = 'block';
@@ -183,21 +186,25 @@ JSONEditor.defaults.editors.upload = JSONEditor.AbstractEditor.extend({
         if (this.isImage()) {
           this.file_preview.children[3].style.display = 'block';
           this.file_preview.children[3].firstChild.setAttribute('src', this.options.jsoneditor.options.task.getFileUrl(this.input.value));
+          this.file_preview.children[3].firstChild.addEventListener('load', () => this.setEqualHeigths());
         } else {
           this.file_preview.children[3].style.display = 'none';
         }
+        this.setEqualHeigths();
       },
       failure: (error) => {
         this.setFileError(error);
-        this.file_preview.style.display = '';
       }
     }
     this.jsoneditor.options.task.getContent(
       this.input.value,
       cbs
     );
+
+    var translate_pair = this.getOtherTranslatePair();
+    initial_call && translate_pair && translate_pair.showPane(false);
   },
-  hidePane: function(e) {
+  hidePane: function(e, initial_call = true) {
     if (e) e.stopPropagation();
 
     this.pane_shown = false;
@@ -208,6 +215,10 @@ JSONEditor.defaults.editors.upload = JSONEditor.AbstractEditor.extend({
       this.file_view.className += ' no-file';
       if (this.temporary_array_item) this.parent.deleteItem(this);
     }
+
+    var translate_pair = this.getOtherTranslatePair();
+    initial_call && translate_pair && translate_pair.hidePane(null, false);
+    this.setEqualHeigths();
   },
   setModifyEnabled: function(enabled) {
     var file_name = this.file_preview.children[0].children[1];
@@ -221,18 +232,13 @@ JSONEditor.defaults.editors.upload = JSONEditor.AbstractEditor.extend({
     var file_name = this.file_preview.children[0].children[1];
     var file_content = this.file_preview.children[2];
     if(file_name.value.trim() == '' || this.modify_in_progress) return;
-    var new_filename = this.options.path + '.' + file_name.value;
+    var old_filename = this.options.path + '.' + this.getLanguage() + '.' + this.file_bar.firstChild.innerHTML;
+    var new_filename = this.options.path + '.' + this.getLanguage() + '.' + file_name.value;
     this.setModifyEnabled(true);
     var cbs = {
       success: () => {
         this.setModifyEnabled(false);
         this.setValue(new_filename);
-        if(this.parent) {
-          this.parent.onChildEditorChange(this);
-        } else {
-          this.jsoneditor.onChange();
-        }
-        this.old_filename = new_filename;
         if (this.temporary_array_item) this.temporary_array_item = false;
         if (this.new_file) {
           this.new_file = false;
@@ -245,9 +251,9 @@ JSONEditor.defaults.editors.upload = JSONEditor.AbstractEditor.extend({
       }
     }
     this.jsoneditor.options.task.setContent(
-      this.old_filename,
+      old_filename,
       new_filename,
-      file_content.value,
+      this.isBinary ? file_content.value : btoa(file_content.value),
       cbs
     );
   },
@@ -255,10 +261,12 @@ JSONEditor.defaults.editors.upload = JSONEditor.AbstractEditor.extend({
     this.setFileError(null);
     var file_content = this.file_preview.children[2];
     if(this.modify_in_progress) return;
+    var old_filename = this.options.path + '.' + this.getLanguage() + '.' + this.file_bar.firstChild.innerHTML;
     this.setModifyEnabled(true);
     var cbs = {
       success: () => {
         this.setModifyEnabled(false);
+        this.setValue(old_filename);
         this.file_preview.children[1].children[1].innerHTML = this.formatFileSize(file_content.value.length); // File Size
       },
       failure: (error) => {
@@ -267,81 +275,21 @@ JSONEditor.defaults.editors.upload = JSONEditor.AbstractEditor.extend({
       }
     }
     this.jsoneditor.options.task.setContent(
-      this.old_filename,
-      this.old_filename,
-      file_content.value,
+      old_filename,
+      old_filename,
+      this.isBinary ? file_content.value : btoa(file_content.value),
       cbs
     );
-  },
-  saveEditor: function(e) {
-    this.setFileError(null);
-    if(this.editor_filename.value.trim() == '') return;
-    this.btn_save_editor.setAttribute('disabled', 'disabled');
-    var new_filename = this.options.path + '.' + this.editor_filename.value;
-    var cbs = {
-      success: (content) => {
-        this.btn_save_editor.removeAttribute('disabled');
-        this.setValue(new_filename);
-        if(this.parent) {
-          this.parent.onChildEditorChange(this);
-        } else {
-          this.jsoneditor.onChange();
-        }
-      },
-      failure: (error) => {
-        this.btn_save_editor.removeAttribute('disabled');
-        this.setFileError(error);
-      }
-    }
-    this.jsoneditor.options.task.setContent(
-      this.old_filename,
-      new_filename,
-      this.editor_content.value,
-      cbs
-    );
-  },
-  refreshPreview: function() {
-    if(this.last_preview === this.preview_value) return;
-    this.last_preview = this.preview_value;
-
-    this.preview.innerHTML = '';
-
-    if(!this.preview_value) return;
-
-    var self = this;
-
-    var mime = this.preview_value.match(/^data:([^;,]+)[;,]/);
-    if(mime) mime = mime[1];
-    if(!mime) mime = 'unknown';
-
-    var file = this.uploader.files[0];
-
-    this.preview.innerHTML = '<strong>Type:</strong> '+mime+', <strong>Size:</strong> '+file.size+' bytes';
-    if(mime.substr(0,5)==="image") {
-      this.preview.innerHTML += '<br>';
-      var img = document.createElement('img');
-      img.style.maxWidth = '100%';
-      img.style.maxHeight = '100px';
-      img.src = this.preview_value;
-      this.preview.appendChild(img);
-    }
-
-    this.preview.innerHTML += '<br>';
-    var uploadButton = this.getButton('Upload', 'upload', 'Upload');
-    this.preview.appendChild(uploadButton);
-    uploadButton.addEventListener('click',function(event) {
-      event.preventDefault();
-
-      uploadButton.setAttribute("disabled", "disabled");
-    });
   },
   enable: function() {
-    this.file_view.disabled = true;
+    this.file_preview.children[0].children[1].disabled = false;
+    this.file_preview.children[2].disabled = false;
     if(this.uploader) this.uploader.disabled = false;
     this._super();
   },
   disable: function() {
-    this.file_view.disabled = false;
+    this.file_preview.children[0].children[1].disabled = true;
+    this.file_preview.children[2].disabled = true;
     if(this.uploader) this.uploader.disabled = true;
     this._super();
   },
@@ -353,7 +301,12 @@ JSONEditor.defaults.editors.upload = JSONEditor.AbstractEditor.extend({
       else {
         this.file_view.className = this.file_view.className.replace(/\s*no-file/g, '');
       }
-      this.file_bar.firstChild.innerHTML = this.input.value.substr(this.options.path.length + 1);
+      var file_name = this.input.value.substr(this.options.path.length + 1);
+      var lang_prefix = this.getLanguage() + '.';
+      var original_prefix = this.getOriginalLanguage() + '.';
+      if (file_name.startsWith(lang_prefix)) file_name = file_name.substr(lang_prefix.length);
+      else if (file_name.startsWith(original_prefix)) file_name = file_name.substr(original_prefix.length);
+      this.file_bar.firstChild.innerHTML = file_name;
       if (this.pane_shown) {
         this.hidePane();
         this.showPane();
@@ -364,9 +317,20 @@ JSONEditor.defaults.editors.upload = JSONEditor.AbstractEditor.extend({
         this.file_view.className += ' image-file';
         this.container.parentNode.className += ' image-file-container';
         this.file_bar.children[1].setAttribute('src', this.options.jsoneditor.options.task.getFileUrl(val));
+        this.file_bar.children[1].addEventListener('load', () => this.setEqualHeigths());
       }
       this.onChange();
+      if(this.parent) this.parent.onChildEditorChange(this);
+      else this.jsoneditor.onChange();
+      if (!val) {
+        this.readonly_view.textContent = '[None]';
+        this.readonly_view.style.display = null;
+      } else {
+        this.readonly_view.textContent = '';
+        this.readonly_view.style.display = 'none';
+      }
     }
+    this.setEqualHeigths();
   },
   destroy: function() {
     if(this.preview && this.preview.parentNode) this.preview.parentNode.removeChild(this.preview);
@@ -378,19 +342,41 @@ JSONEditor.defaults.editors.upload = JSONEditor.AbstractEditor.extend({
     if(this.btn_toggle_editor && this.btn_toggle_editor.parentNode) this.btn_toggle_editor.parentNode.removeChild(this.btn_toggle_editor);
     this._super();
   },
-  getLink: function(data) {
-    var link = this.theme.getBlockLink();
-    link.setAttribute('target', '_blank');
-    this.link_watchers.push((vars) => {
-      var url = '';
-      var filename = '';
-      if(vars.self) {
-        url = this.options.jsoneditor.options.task.getFileUrl(vars.self);
-        filename = vars.self.substr(this.options.path.length + 1);
+  getOtherTranslatePair: function() {
+    var original = this.jsoneditor.original_editors[this.path];
+    var translate = this.jsoneditor.translate_editors[this.path];
+    var my_pair = original === this ? translate : original;
+    return my_pair || (this.parent.getOtherTranslatePair && this.parent.getOtherTranslatePair(this));
+  },
+  setEqualHeigths: function() {
+    var translate_pair = this.getOtherTranslatePair();
+    if (translate_pair && translate_pair.container) {
+      translate_pair.container.className = translate_pair.container.className.replace(/\s*equal-translate-pair/g, '');
+      this.container.className = this.container.className.replace(/\s*equal-translate-pair/g, '');
+      translate_pair.container.className += ' equal-translate-pair';
+      this.container.className += ' equal-translate-pair';
+
+      const setHeight = () => {
+        this.container.style.height = null;
+        translate_pair.container.style.height = null;
+        var maxHeight = Math.max(this.container.offsetHeight, translate_pair.container.offsetHeight);
+        if (maxHeight) {
+          this.container.style.height = maxHeight + 'px';
+          translate_pair.container.style.height = maxHeight + 'px';
+        }
       }
-      link.setAttribute('href', url);
-      link.textContent = filename;
-    });
-    return link;
+      setTimeout(setHeight, 0);
+    }
+  },
+  getLanguage: function() {
+    var isTranslate = this.container.className.search(/\s*translate-field/g) > -1 || (this.parent && this.parent.container.className.search(/\s*translate-field/g) > -1);
+    if (!isTranslate) return this.getOriginalLanguage();
+
+    var root = this;
+    while (root.parent) root = root.parent;
+    return root.translate_to;
+  },
+  getOriginalLanguage: function() {
+    return 'orig';
   }
 });

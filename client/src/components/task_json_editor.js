@@ -7,7 +7,6 @@ class TaskJsonEditor extends React.Component {
 
     componentDidMount() {
         const self = this;
-        JSONEditor.plugins.selectize.enable = true;
         this.editor = new JSONEditor(this.element, {
             theme: 'taskeditor',
             schema: this.props.task.schema,
@@ -18,6 +17,7 @@ class TaskJsonEditor extends React.Component {
             disable_array_delete_all_rows: true,
 //            disable_array_reorder: true,
             startval: this.props.task.data,
+            translations: this.props.task.translations,
             upload: this.editorUpload,
             keep_oneof_values: false,
             task: {
@@ -35,16 +35,17 @@ class TaskJsonEditor extends React.Component {
             }
         });
         this.editor.on('change', () => {
-            this.props.onChange(this.editor.getValue());
+            this.props.onChange(this.editor.getValue(), this.editor.root.getTranslations());
         });
     }
 
 
-    editorUpload = (type, file, cbs) => {
+    editorUpload = (type, file, language, cbs) => {
         cbs.updateProgress();
         files_api.upload({
             path: this.props.task.path,
             json_path: type,
+            language,
             file
         }).then((res) => {
             cbs.success(res.filename);
@@ -81,11 +82,6 @@ class TaskJsonEditor extends React.Component {
     }
 
 
-    taskDataUpdate = () => {
-        this.props.onChange(this.editor.getValue());
-    }
-
-
     componentWillUnmount() {
         this.editor.destroy();
     }
@@ -93,7 +89,7 @@ class TaskJsonEditor extends React.Component {
 
     render() {
         return (
-            <div ref={(el) => { this.element = el; }}></div>
+            <div className='json-editor-container' ref={(el) => { this.element = el; }}></div>
         );
     }
 

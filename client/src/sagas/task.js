@@ -52,9 +52,10 @@ function* create(action) {
             path: action.path,
             task_type: action.task_type
         }
-        const { schema, data } = yield call(api_task.create, params);
+        const { schema, data, translations } = yield call(api_task.create, params);
         yield put({type: 'TASK_SET_SCHEMA', schema});
         yield put({type: 'TASK_SET_DATA', data});
+        yield put({type: 'TASK_SET_TRANSLATIONS', translations});
         yield put({type: 'TASK_FETCH_SUCCESS'});
         if(action.creating) {
             yield put({type: 'TASK_FETCH_SAVE_VIEW'});
@@ -73,9 +74,10 @@ function* load(action) {
             token,
             path: action.path
         }
-        const { data, schema } = yield call(api_task.load, params);
+        const { data, schema, translations } = yield call(api_task.load, params);
         yield put({type: 'TASK_SET_SCHEMA', schema});
         yield put({type: 'TASK_SET_DATA', data});
+        yield put({type: 'TASK_SET_TRANSLATIONS', translations});
         yield put({type: 'TASK_FETCH_SUCCESS'});
     } catch (e) {
         yield put({type: 'TASK_FETCH_FAIL', error: e.message});
@@ -93,9 +95,10 @@ function* clone(action) {
             path: action.path,
             path_src: action.path_src
         }
-        const { data, schema } = yield call(api_task.clone, params);
+        const { data, schema, translations } = yield call(api_task.clone, params);
         yield put({type: 'TASK_SET_SCHEMA', schema});
         yield put({type: 'TASK_SET_DATA', data});
+        yield put({type: 'TASK_SET_TRANSLATIONS', translations});
         yield put({type: 'TASK_FETCH_SUCCESS'});
     } catch (e) {
         yield put({type: 'TASK_FETCH_FAIL', error: e.message});
@@ -111,7 +114,8 @@ function* save(action) {
         const params = {
             token,
             path: task.path,
-            data: task.data
+            data: task.data,
+            translations: task.translations
         }
         const data = yield call(api_task.save, params);
         yield put({type: 'TASK_FETCH_SUCCESS'});
@@ -129,7 +133,8 @@ function* saveView(action) {
         const params = {
             token,
             path: task.path,
-            data: task.data
+            data: task.data,
+            translations: task.translations
         }
         yield call(api_task.save, params);
         yield put({type: 'TASK_FETCH_SUCCESS'});

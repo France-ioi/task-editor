@@ -15,6 +15,7 @@ module.exports = function (task_path, tpl_path, post_processor) {
     }
 
     var templates = {};
+    var translate = {};
 
     function create(ext, content) {
         if(ext in handlers) {
@@ -61,24 +62,41 @@ module.exports = function (task_path, tpl_path, post_processor) {
         }
     }
 
+    function appendLanguageToFileName(filename, language) {
+        if (!language) return filename;
+        var extpos = filename.lastIndexOf('.');
+        var postfix = '_' + language;
+        var name = filename.substr(0, extpos);
+        var ext = filename.substr(extpos);
+        return name.endsWith(postfix) ? filename : (name + postfix + ext);
+    }
+
     return {
 
         inject: function(destination, value) {
             var selector = parseSelector(destination.selector);
+            translate[destination.template] = destination.translate === undefined ? true : destination.translate;
             get(destination.template).inject(selector, value);
         },
 
 
-        save: function() {
+        save: function(language) {
             Object.keys(templates).map(filename => {
+                if (language && !translate[filename]) return;
                 var content = post_processor.apply(
                     templates[filename].content()
                 );
                 fs.writeFileSync(
-                    path.resolve(task_path, filename),
+                    path.resolve(task_path, appendLanguageToFileName(filename, language)),
                     content
                 );
             })
+        },
+
+
+        reset: function() {
+            templates = {};
+            translate = {};
         }
     }
 

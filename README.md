@@ -91,6 +91,7 @@ Selector syntax based on jQuery selectors syntax + ability to define JS variable
     }
 }
 ```
+Make sure your template supports both RTL and LTR contents.
 
 #### Inject data to json
 Dot-notation selector syntax, arrays not supported
@@ -102,6 +103,7 @@ Dot-notation selector syntax, arrays not supported
     }
 }
 ```
+In addition to "template" and "selector", you can specify a "translate" boolean property to each inject specifying whether it should be translated for different languages or not. The d efault value is true.
 
 
 #### Copy file(s)
@@ -112,10 +114,37 @@ Placeholders supported. Scope vars + files specific vars [name] [ext] [index]
 }
 ```
 
+## Advanced Section
+Specify advanced fields of each object like this:
+```
+"advanced": ["taskSettings"]
+```
+
+## Translation
+Translation supported. Add languages object to the top-level schema. Original must be specified. rtl is optional and adds rtl editors for those languages.
+```
+"languages": {
+    "list": {
+        "en": "English",
+        "fr": "French",
+        "de": "Dutch",
+        "fa": "فارسی"
+    },
+    "rtl": ["fa"],
+    "original": "en"
+}
+```
+
+For each object, you can specify which fields can be translated using the translate property:
+```
+"translate": ["PEMTaskMetaData", "FIOITaskMetaData", "title", "task", "solution", "testFiles"]
+```
+
 ## Post processor
 Post processor placeholders may be used in templates and task data.
 
-#### Currently only one placeholder supported, relative path to task:
+#### Placeholders supported :
 ```
-%%TASK_PATH%%
+%%TASK_PATH%% (relative path to task)
+%%LANG_DIR%%  (Either rtl or ltr based on the language)
 ```

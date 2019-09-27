@@ -1,7 +1,7 @@
 module.exports = {
     title: "taskSettings.json",
     description:
-        'Optional taskSettings.json file for the task. Please refer to the documentation at https://france-ioi.github.io/taskgrader/tasksettings/ . Click "Object Properties" to add desired items (such as "checker").',
+        'Optional taskSettings.json file for the task. Please refer to the documentation at https://france-ioi.github.io/taskgrader/tasksettings/',
     type: "object",
     generator: [
         {
@@ -11,6 +11,7 @@ module.exports = {
             output: {
                 inject: {
                     template: "taskSettings.json",
+                    translate: false,
                     selector: ""
                 }
             }

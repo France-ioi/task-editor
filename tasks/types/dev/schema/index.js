@@ -1,7 +1,8 @@
 module.exports = {
     title: "Task",
     type: "object",
-    required: ["text", "test_files"],
+    required: ["text"],
+    advanced: ["texts"],
     definitions: {
         text_editor: {
             title: "Test text editor",
@@ -128,5 +129,14 @@ module.exports = {
                 }
             }
         }
+    },
+    languages: {
+        list: {
+            en: "English",
+            fr: "French",
+            fa: "فارسی"
+        },
+        rtl: ["fa"],
+        original: "en"
     }
 };

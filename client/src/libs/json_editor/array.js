@@ -132,6 +132,9 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
         this.row_holder = document.createElement('div');
         this.row_holder.className = 'array-row-holder';
         this.controls = this.theme.getButtonHolder();
+        this.readonly_view = document.createElement('div');
+        this.readonly_view.className = 'array readonly-view';
+        this.panel.appendChild(this.readonly_view);
         this.panel.appendChild(this.row_holder);
         this.panel.appendChild(this.controls);
         this.panel.appendChild(this.error_holder);
@@ -149,14 +152,17 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
         this.description = this.theme.getDescription(this.schema.description || '');
         this.container.appendChild(this.description);
         this.error_holder = document.createElement('div');
-        this.container.appendChild(this.error_holder);
+        this.description.appendChild(this.error_holder);
         this.panel = this.theme.getIndentedPanel();
         this.container.appendChild(this.panel);
         this.row_holder = document.createElement('div');
         this.panel.appendChild(this.row_holder);
         this.controls = document.createElement('span');
         this.controls.className = 'array-buttons';
-        this.title_controls.insertBefore(this.controls, this.title_controls.firstChild);
+        this.control_bar = document.createElement('div');
+        this.control_bar.appendChild(this.controls);
+        this.control_bar.className = 'array-control-bar';
+        this.panel.appendChild(this.control_bar)
         this.container.lastChild.className += ' object-array';
       }
       this.sorter = new Sortable(this.row_holder, {
@@ -197,16 +203,26 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
       });
     }
     else {
-        this.panel = this.theme.getIndentedPanel();
-        this.container.appendChild(this.panel);
-        this.controls = this.theme.getButtonHolder();
-        this.panel.appendChild(this.controls);
-        this.row_holder = document.createElement('div');
-        this.panel.appendChild(this.row_holder);
+      this.panel = this.theme.getIndentedPanel();
+      this.container.appendChild(this.panel);
+      this.controls = this.theme.getButtonHolder();
+      this.panel.appendChild(this.controls);
+      this.row_holder = document.createElement('div');
+      this.panel.appendChild(this.row_holder);
     }
 
     // Add controls
     this.addControls();
+  },
+  updateReadOnlyView: function() {
+    if (!this.readonly_view) return
+    if (this.rows.length === 0) {
+			this.readonly_view.textContent = '[None]';
+			this.readonly_view.style.display = null;
+    } else {
+			this.readonly_view.textContent = '';
+			this.readonly_view.style.display = 'none';
+		}
   },
   onChildEditorChange: function(editor) {
     this.refreshValue();
@@ -309,6 +325,13 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
     }
 
     row_container.appendChild(before_controls);
+
+    var index = document.createElement('div');
+    index.className = 'array-index';
+    index.textContent = (i + 1);
+    row_container.appendChild(index);
+    if (i % 2 === 1) row_container.className += ' even-row';
+
     holder.className = 'array-item-holder';
     row_container.appendChild(holder);
 
@@ -467,6 +490,7 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
     self.refreshValue(initial);
     self.refreshTabs(true);
     self.refreshTabs();
+    self.updateReadOnlyView();
 
     self.onChange();
     
@@ -630,6 +654,7 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
 
     if(value) self.rows[i].setValue(value, initial);
     self.refreshTabs();
+    self.updateReadOnlyView();
   },
   addControls: function() {
     var self = this;
@@ -700,10 +725,16 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
       if (itemName === 'item') itemName = '';
       this.add_row_button = this.getButton(itemName, 'add',this.translate('button_add_row_title',[itemName]));
 
-      this.add_row_button.addEventListener('click',function(e) {
+      this.add_row_button.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
         addNewRow();
+        if (this.isCompressedArray() && this.isWideArray() && !this.isObjectTable()) {
+          this.activateItem(this.rows[this.rows.length - 1]);
+          setTimeout(() => this.rows[this.rows.length - 1].afterInputReady(true), 0);
+        } else {
+          this.rows[this.rows.length - 1].input && this.rows[this.rows.length - 1].input.focus();
+        }
       });
     }
     self.controls.appendChild(this.add_row_button);
@@ -745,18 +776,20 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
         e.stopPropagation();
         if(self.collapsed) {
           self.collapsed = false;
-          if(self.panel) self.panel.style.display = '';
-          self.row_holder.style.display = row_holder_display;
+          self.panel.style.maxHeight = self.panel.scrollHeight + 'px';
+          setTimeout(() => { self.panel.style.maxHeight = null; self.panel.style.overflow = null }, 200);
           if(self.tabs_holder) self.tabs_holder.style.display = '';
-          self.controls.style.display = controls_display;
           self.setButtonText(this,'','collapse',self.translate('button_collapse'));
         }
         else {
           self.collapsed = true;
-          self.row_holder.style.display = 'none';
+          self.panel.style.maxHeight = self.panel.scrollHeight + 'px';
+          window.requestAnimationFrame(() => {
+            window.requestAnimationFrame(() => {
+              self.panel.style.overflow = 'hidden'; self.panel.style.maxHeight = '0';
+            });
+          });
           if(self.tabs_holder) self.tabs_holder.style.display = 'none';
-          self.controls.style.display = 'none';
-          if(self.panel) self.panel.style.display = 'none';
           self.setButtonText(this,'','expand',self.translate('button_expand'));
         }
       });
@@ -764,6 +797,11 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
       // If it should start collapsed
       if(this.options.collapsed) {
         $trigger(this.toggle_button,'click');
+      }
+
+      if (!this.isCompressedArray()) {
+        this.title.addEventListener('click', () => this.toggle_button.click())
+        this.description.addEventListener('click', () => this.toggle_button.click())
       }
 
       // Collapse button disabled
@@ -815,18 +853,49 @@ JSONEditor.defaults.editors.array = JSONEditor.defaults.editors.array.extend({
     for (var child = 0; child < this.rows.length; child++) {
       var el = this.rows[child];
       if (el !== item) {
-        el.container.parentNode.className = el.container.parentNode.className.replace(/\s*active-item/g, '');
+        this.deactivateItem(el);
       }
     }
     item.container.parentNode.className += ' active-item';
   },
   deactivateItem: function(item) {
     item.container.parentNode.className = item.container.parentNode.className.replace(/\s*active-item/g, '');
+    item.setEqualHeigths && item.setEqualHeigths();
+  },
+  getOtherTranslatePair: function(item) {
+    var idx = this.rows.indexOf(item);
+    var original = this.jsoneditor.original_editors[this.path] && this.jsoneditor.original_editors[this.path].rows[idx];
+    var translate = this.jsoneditor.translate_editors[this.path] && this.jsoneditor.translate_editors[this.path].rows[idx];
+    return original === item ? translate : original;
   },
   deleteItem: function(item) {
     item.delete_button.children[0].children[1].children[0].click();
   },
   showItem: function(item) {
     item.container.parentNode.style.display = '';
-  }
+  },
+  afterInputReady: function(focus) {
+    for (var child = 0; child < this.rows.length; child++) {
+      var el = this.rows[child];
+      el.afterInputReady && el.afterInputReady(focus);
+    }
+  },
+  enableTranslation: function() {
+    for (var child = 0; child < this.rows.length; child++) {
+      var el = this.rows[child];
+      el.enableTranslation && el.enableTranslation();
+    }
+  },
+  disableTranslation: function() {
+    for (var child = 0; child < this.rows.length; child++) {
+      var el = this.rows[child];
+      el.disableTranslation && el.disableTranslation();
+    }
+  },
+  setCurrentTranslation: function(obj) {
+    for (var child = 0; child < this.rows.length; child++) {
+      var el = this.rows[child];
+      el.setCurrentTranslation && el.setCurrentTranslation(obj[child]);
+    }
+  },
 });

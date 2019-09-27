@@ -6,7 +6,8 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
     return el;
   },
   setGridColumnSize: function(el,size) {
-    el.className = 'col-md-'+size;
+    el.className = el.className.replace(/\s*col-md-\d+/g, '');
+    el.className += ' col-md-' + size;
   },
   afterInputReady: function(input) {
     if(input.controlgroup) return;
@@ -19,11 +20,62 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
   },
   getTextareaInput: function() {
     var el = document.createElement('textarea');
+    el.setAttribute('dir', 'auto');
     el.className = 'form-control';
     return el;
   },
+  getTranslationHolder: function() {
+    var translation_holder = document.createElement('div');
+    translation_holder.className = 'translation-holder';
+    var original_holder = document.createElement('div');
+    original_holder.className = 'original-language';
+    var translate_holder = document.createElement('div');
+    translate_holder.className = 'translation-language';
+    translation_holder.appendChild(original_holder);
+    translation_holder.appendChild(translate_holder);
+    var original_title = document.createElement('div');
+    original_title.className = 'title';
+    original_title.textContent = 'Original Language';
+    var original_language = document.createElement('div');
+    original_language.className = 'language';
+    original_language.textContent = 'PlaceHolder';
+    original_holder.appendChild(original_title);
+    original_holder.appendChild(original_language);
+    var translate_title = document.createElement('div');
+    translate_title.className = 'title';
+    translate_title.textContent = 'Translation';
+    var translate_menu = document.createElement('span');
+    translate_menu.className = 'translation-menu';
+    translate_menu.appendChild(this.getIcon('menu-down'));
+    var translate_language = document.createElement('div');
+    translate_language.style.marginRight = '42px';
+    translate_language.setAttribute('dir', 'auto');
+    translate_language.className = 'language';
+    translate_language.textContent = 'PlaceHolder';
+    var translate_list = document.createElement('div');
+    translate_list.className = 'translate-list';
+    translate_holder.addEventListener('click', () => {
+      if (translate_list.style.maxHeight) {
+        translate_list.style.maxHeight = null;
+      } else {
+        translate_list.style.maxHeight = translate_list.scrollHeight + 'px';
+      }
+    });
+    translate_holder.appendChild(translate_title);
+    translate_holder.appendChild(translate_menu);
+    translate_holder.appendChild(translate_language);
+    translate_holder.appendChild(translate_list);
+    return translation_holder;
+  },
+  getTranslationItem: function(language) {
+    var translate_item = document.createElement('div');
+    translate_item.setAttribute('dir', 'auto');
+    translate_item.className = 'translate-item';
+    translate_item.textContent = language;
+    return translate_item;
+  },
   getExternalInput: function() {
-	  var container = document.createElement('div');
+    var container = document.createElement('div');
     container.className = 'external-control';
     var topContainer = document.createElement('div');
     var wysiwygTitle = document.createElement('div');
@@ -38,6 +90,7 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
     container.appendChild(topContainer);
     var preview = document.createElement('div');
     preview.className = 'wysiwyg-preview';
+    preview.setAttribute('dir', 'auto');
     container.appendChild(preview);
 		container.appendChild(el);
     return el;
@@ -56,6 +109,16 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
   getRangeInput: function(min, max, step) {
     // TODO: use better slider
     return this._super(min, max, step);
+  },
+  getErrorMessage: function(text) {
+    var el = document.createElement('p');
+    el.style = el.style || {};
+    el.style.color = 'red';
+    el.style.fontWeight = 'bold';
+    el.style.fontStyle = 'normal';
+    el.style.marginTop = '4px';
+    el.appendChild(document.createTextNode(text));
+    return el;
   },
   getIcon: function(name) {
     var el = document.createElement('span');
@@ -169,18 +232,24 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
     var text = document.createElement('span');
     text.innerHTML = 'HIDE ' + section.toUpperCase() + ' PARAMETERS';
     container.appendChild(text);
+    var collapse = this.getIcon('menu-up');
+    container.appendChild(collapse);
     return container;
   },
   getMultiField: function(label, sw) {
     var container = document.createElement('div');
     label.className += ' control-label';
     container.className = 'multi-type-container';
+    var translate_separator = document.createElement('div');
+    translate_separator.className = 'translate-separator';
+    container.appendChild(translate_separator);
     container.appendChild(label);
     container.appendChild(sw);
     return container;
   },
   getFormInputField: function(type, icon) {
     var el = this._super(type);
+    el.setAttribute('dir', 'auto');
     if(type !== 'checkbox') {
       el.className += 'form-control';
     }
@@ -267,10 +336,14 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
     confirm.className = 'array-delete-confirm';
     var okButton = this.getIcon('ok');
     var cancelButton = this.getIcon('remove');
-    el.addEventListener('click', function() {
+    el.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
       confirm.style.display = 'inline';
     });
-    cancelButton.addEventListener('click', function() {
+    cancelButton.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
       confirm.style.display = 'none';
     });
     confirm.appendChild(okButton);
@@ -311,7 +384,11 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
     }
     el.style.margin = '0';
     el.style.display = 'inline-block';
-    container.appendChild(el)
+
+    var translate_separator = document.createElement('div');
+    translate_separator.className = 'translate-separator';
+    container.appendChild(translate_separator);
+    container.appendChild(el);
 
     return container;
   },
@@ -320,6 +397,9 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
     container.className = 'description-container';
     var el = document.createElement('p');
     el.innerHTML = text;
+    var translate_separator = document.createElement('div');
+    translate_separator.className = 'translate-separator';
+    container.appendChild(translate_separator);
     container.appendChild(el)
     return container;
   },
@@ -348,7 +428,7 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
   },
   getButton: function(text, icon, title) {
     if (text == 'Collapse') {
-      var el = this.getIcon('chevron-up');
+      var el = this.getIcon('menu-up');
       el.className += ' collapse-button';
       return el;
     }
@@ -364,7 +444,7 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
   setButtonText: function(button, text, icon, title) {
     if (button.nodeName == 'SPAN') {
       var updown = (text == 'Collapse') ? 'up' : 'down'
-      button.className = 'collapse-button glyphicon glyphicon-chevron-' + updown;
+      button.className = 'collapse-button glyphicon glyphicon-menu-' + updown;
       return;
     }
     while (button.firstChild) {

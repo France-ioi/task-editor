@@ -58,6 +58,15 @@ module.exports = {
         }
     },
     required: ["taskMetaData", "quiz_settings", "title", "intro", "questions"],
+    languages: {
+        list: {
+            en: "English",
+            fr: "French",
+            fa: "فارسی"
+        },
+        rtl: ["fa"],
+        original: "en"
+    },
 
     definitions: {
         question_single: require('./question_types/question_single.js'),

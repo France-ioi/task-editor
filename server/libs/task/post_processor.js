@@ -11,6 +11,7 @@ module.exports = function(params, data_info) {
 
     addValue('TASK_PATH', path.relative(params.path, config.path))
     addValue('TASK_DATA_INFO', JSON.stringify(data_info))
+    addValue('LANG_DIR', 'ltr')
 
     return {
         apply: function(content) {
@@ -20,6 +21,9 @@ module.exports = function(params, data_info) {
                     return values[key] || key
                 }
             )
+        },
+        setDirectionality: function(direction) {
+            addValue('LANG_DIR', direction)
         }
     }
 }

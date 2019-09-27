@@ -5,8 +5,6 @@ module.exports = {
     type: "array",
     items: {
         type: "object",
-        description:
-            'Click "Object Properties" to add an expected output file as well.',
         properties: {
             input: {
                 type: "string",

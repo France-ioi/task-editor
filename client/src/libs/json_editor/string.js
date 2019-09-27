@@ -14,7 +14,6 @@ JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
   },
   setValue: function(value,initial,from_template) {
     var self = this;
-
     if(this.template && !from_template) {
       return;
     }
@@ -23,6 +22,7 @@ JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
     else if(typeof value === "object") value = JSON.stringify(value);
     else if(typeof value !== "string") value = ""+value;
 
+    this.setEqualHeigths();
     if(value === this.serialized) return;
 
     // Sanitize value before setting it
@@ -59,6 +59,9 @@ JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
     return Math.min(12,Math.max(min,num));
   },
   build: function() {
+    this.afterInputReadyLocked = false;
+    this.afterInputReadyCalled = false;
+
     var self = this, i;
     if (!this.options.compact) this.header = this.label = this.theme.getFormInputLabel(this.getTitle());
     if(this.schema.description) this.description = this.theme.getFormInputDescription(this.schema.description);
@@ -159,14 +162,21 @@ JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
         enablerInput.addEventListener('click', () => {
           if (this.parent.activateItem) {
             this.parent.activateItem(this);
-          } else this.input.parentNode.className = 'external-control active-item';
+          } else {
+            this.input.parentNode.className = 'external-control active-item';
+          }
+          this.setEqualHeigths();
           setTimeout(() => self.afterInputReady(true), 0);
         });
         var exitButton = this.input.parentNode.firstChild.lastChild;
         exitButton.addEventListener('click', () => {
           if (this.parent.deactivateItem) {
             this.parent.deactivateItem(this);
-          } else this.input.parentNode.className = 'external-control';
+          } else {
+            this.input.parentNode.className = 'external-control';
+          }
+          var translate_pair = this.getOtherTranslatePair();
+          this.setEqualHeigths();
         });
       }
       // HTML5 Input type
@@ -180,6 +190,10 @@ JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
       this.input_type = 'text';
       this.input = this.theme.getFormInputField(this.input_type, this.string_type);
     }
+
+    this.input.addEventListener('input', () => {
+      this.input.setAttribute('size', this.input.value.length || 1);
+    });
 
     // minLength, maxLength, and pattern
     if(typeof this.schema.maxLength !== "undefined") this.input.setAttribute('maxlength',this.schema.maxLength);
@@ -264,6 +278,25 @@ JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
     this.control = this.theme.getFormControl(this.label, this.input, this.description);
     this.container.appendChild(this.control);
 
+    this.readOnlyView = document.createElement('div');
+    this.readOnlyView.className = 'readonly-view';
+    if (this.options.wysiwyg) {
+      this.readOnlyView.collapsed = true;
+      this.readOnlyView.addEventListener('click', () => {
+        this.readOnlyView.collapsed = !this.readOnlyView.collapsed;
+        if (this.readOnlyView.collapsed) {
+          this.readOnlyView.style.height = null;
+        } else {
+          this.readOnlyView.style.height = 'auto';
+        }
+        this.setEqualHeigths();
+      });
+    }
+    if (this.options.wysiwyg) this.readOnlyView.className += ' wysiwyg';
+    else this.readOnlyView.className += ' string';
+    this.control.lastChild.className += ' hide-on-translate-original';
+    this.control.appendChild(this.readOnlyView);
+
     // Any special formatting that needs to happen after the input is added to the dom
     window.requestAnimationFrame(function() {
       // Skip in case the input is only a temporary editor,
@@ -295,11 +328,29 @@ JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
     this._super();
   },
   afterInputReady: function(focus) {
+    /* Call Burst Guard Start */
+    if (this.afterInputReadyLocked) {
+      focus = focus || false;
+      this.afterInputReadyCalled = this.afterInputReadyCalled || focus;
+      return;
+    } else {
+      this.afterInputReadyLocked = true;
+      this.afterInputReadyCalled = undefined;
+      setTimeout(() => {
+        this.afterInputReadyLocked = false;
+        if (this.afterInputReadyCalled !== undefined) this.afterInputReady(this.afterInputReadyCalled);
+      }, 1000);
+    }
+    /* Call Burst Guard End */
+
     this.html_editor && this.html_editor.destroy();
     var self = this;
     if(this.options.wysiwyg && ['html','bbcode'].indexOf(this.input_type) >= 0) {
+      var root = this;
+      while (root.parent) root = root.parent;
       this.html_editor = HTMLEditor({
         element: this.input,
+        directionality: root.isRTL ? 'rtl' : 'ltr',
         autoFocus: focus && this.input.id,
         path: this.jsoneditor.options.task.path,
         onChange: function(content) {
@@ -307,7 +358,11 @@ JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
           self.input.value = content;
           self.value = self.input.value;
           self.is_dirty = true;
+          self.refreshValue();
           self.onChange(true);
+        },
+        onResize: function() {
+          self.setEqualHeigths();
         }
       })
     }
@@ -315,8 +370,11 @@ JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
   },
   refreshValue: function() {
     this.value = this.input.value;
+    this.input.setAttribute('size', this.input.value.length || 1);
+    this.readOnlyView.innerHTML = this.value || '[None]';
     if(typeof this.value !== "string") this.value = '';
     this.serialized = this.value;
+    (this.html_editor || this.schema.type === 'multitext') && this.setEqualHeigths();
   },
   destroy: function() {
     this.html_editor && this.html_editor.destroy();
@@ -367,6 +425,32 @@ JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
     }
     else {
       this.theme.removeInputError(this.input);
+    }
+  },
+  getOtherTranslatePair: function() {
+    var original = this.jsoneditor.original_editors[this.path];
+    var translate = this.jsoneditor.translate_editors[this.path];
+    var my_pair = original === this ? translate : original;
+    return my_pair || (this.parent.getOtherTranslatePair && this.parent.getOtherTranslatePair(this));
+  },
+  setEqualHeigths: function() {
+    var translate_pair = this.getOtherTranslatePair();
+    if (translate_pair && translate_pair.container) {
+      translate_pair.container.className = translate_pair.container.className.replace(/\s*equal-translate-pair/g, '');
+      this.container.className = this.container.className.replace(/\s*equal-translate-pair/g, '');
+      translate_pair.container.className += ' equal-translate-pair';
+      this.container.className += ' equal-translate-pair';
+
+      const setHeight = () => {
+        this.container.style.height = null;
+        translate_pair.container.style.height = null;
+        var maxHeight = Math.max(this.container.offsetHeight, translate_pair.container.offsetHeight);
+        if (maxHeight) {
+          this.container.style.height = maxHeight + 'px';
+          translate_pair.container.style.height = maxHeight + 'px';
+        }
+      }
+      setTimeout(setHeight, 0) && setTimeout(setHeight, 100);
     }
   }
 });

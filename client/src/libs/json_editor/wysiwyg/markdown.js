@@ -48,10 +48,18 @@ module.exports = function(params) {
     instance = new EasyMDE({
         element: params.element,
         toolbar: toolbar,
+        minHeight: '100px',
         autofocus: !!params.autoFocus
     })
+    if (params.directionality) instance.codemirror.setOption('direction', params.directionality);
     instance.codemirror.on('blur', function() {
         params.onChange && params.onChange(instance.value())
+    })
+    instance.codemirror.on('change', function() {
+        params.onChange && params.onChange(instance.value())
+    })
+    instance.codemirror.on('refresh', function() {
+        params.onResize && params.onResize()
     })
 
 

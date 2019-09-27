@@ -3,6 +3,10 @@
 	color: #787878 !important;
 }
 
+.mce-edit-area, .mce-content-body {
+    background-color: rgba(0, 0, 0, 0.02) !important;
+}
+
 .placeholder {
     display: inline-block;
     background: #AAA;
