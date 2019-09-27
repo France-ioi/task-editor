@@ -1,5 +1,6 @@
 import HTMLEditor from './wysiwyg/html'
 import { $extend, $each, $isplainobject, $trigger, $triggerc } from './utils'
+import converter from '../showdown_converter'
 
 JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
   register: function() {
@@ -371,7 +372,8 @@ JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
   refreshValue: function() {
     this.value = this.input.value;
     this.input.setAttribute('size', this.input.value.length || 1);
-    this.readOnlyView.innerHTML = this.value || '[None]';
+    if (this.value_type === 'markdown') this.readOnlyView.innerHTML = converter.makeHtml(this.value) || '[None]';
+    else this.readOnlyView.innerHTML = this.value || '[None]';
     if(typeof this.value !== "string") this.value = '';
     this.serialized = this.value;
     (this.html_editor || this.schema.type === 'multitext') && this.setEqualHeigths();

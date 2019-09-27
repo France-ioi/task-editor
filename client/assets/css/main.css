@@ -266,9 +266,8 @@ i.mce-i-placeholder:before {
     line-height: 1;
 }
 
-.CodeMirror {
+.CodeMirror-scroll {
     max-height: 400px;
-    overflow-y: scroll;
 }
 
 .CodeMirror.CodeMirror-fullscreen {
