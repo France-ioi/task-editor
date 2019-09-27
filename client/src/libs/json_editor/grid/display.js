@@ -20,7 +20,7 @@ module.exports = function (params) {
 
 
     var backgrounds = [];
-    var init_items = [];
+    var init_items = {};
     var width = 1;
     var cells = [];
 
@@ -84,9 +84,9 @@ module.exports = function (params) {
             for (var type in types) {
                 var data = types[type];
                 if (data.num === undefined) {
-                    init_items[type] = [];
+                    init_items[type] = {};
                     for (var state = 0; state <= Math.max(data.nbStates / 2 - 1, 0); state++) {
-                        init_items[type][state] = Sprite.create({
+                        init_items[type][data.nbStates > 1 ? state : undefined] = Sprite.create({
                             img: data.img,
                             offset: -1 * params.field_size * 2 * state
                         });

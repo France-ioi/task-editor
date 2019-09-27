@@ -67,13 +67,13 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
         );
 
         // item types toolbar
-        this.toolbar = Toolbar({
+        this.toolbar = new Toolbar({
             parent: wrapper,
             field_size: field_size
         });
 
         // display
-        this.display = Display({
+        this.display = new Display({
             parent: wrapper,
             field_size: field_size,
             onCellClick: this.onCellClick.bind(this),

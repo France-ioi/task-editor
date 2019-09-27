@@ -77,7 +77,7 @@ module.exports = function (params) {
                             color: null,
                             num: null,
                             type: type,
-                            dir: state
+                            dir: data.nbStates > 1 ? state : undefined
                         };
                     };
                 })(btn, offset, state)
