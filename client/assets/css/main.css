@@ -144,7 +144,7 @@ body, html, #reactbody {
 
 .editor-container {
     overflow: auto;
-    margin: 75px 50px 50px 50px;
+    padding: 75px 50px 50px 50px;
 }
 
 .task-importer {
