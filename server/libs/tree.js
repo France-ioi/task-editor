@@ -1,4 +1,4 @@
-var svn = require('./svn')
+var repo = require('./repo')
 var config = require('../config')
 
 var data = {}
@@ -80,7 +80,7 @@ module.exports = {
         if(node.loaded) {
             return callback(null, node.data)
         }
-        svn.list(user, path, (err, list) => {
+        repo.list(user, path, (err, list) => {
             if(err) return callback(err)
             fillNode(node, path, list)
             callback(null, node.data)

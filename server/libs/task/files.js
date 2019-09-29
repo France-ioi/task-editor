@@ -2,7 +2,7 @@ var path = require('path');
 var fs = require('fs');
 var shell = require('shelljs');
 var config = require('../../config');
-var svn = require('../svn');
+var repo = require('../repo');
 
 
 module.exports = function(task_path, old_files) {
@@ -109,6 +109,12 @@ module.exports = function(task_path, old_files) {
 
             // TODO: check that files are inside task dir to avoind security problems
             // TODO: remove empty dirs?
+            var repo_path = path.relative(config.path, task_path);
+            if(repo_path.includes('..')) {
+                console.log(repo_path + ' includes `..`!');
+                callback(new_files);
+                return;
+            }
             var delFile = null;
             delFile = function() {
                 if(!del_files.length) {
@@ -118,7 +124,7 @@ module.exports = function(task_path, old_files) {
                 }
 
                 // Delete a file
-                svn.remove(path.join(task_path, del_files.pop()), delFile);
+                repo.remove(path.join(repo_path, del_files.pop()), delFile);
             }
             delFile();
         }
