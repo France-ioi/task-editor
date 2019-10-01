@@ -472,7 +472,7 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
     if(!input.errmsg) {
       input.errmsg = document.createElement('p');
       input.errmsg.className = 'help-block errormsg';
-      input.controlgroup.lastChild.appendChild(input.errmsg);
+      input.controlgroup.children[1].appendChild(input.errmsg);
     }
     else {
       input.errmsg.style.display = '';

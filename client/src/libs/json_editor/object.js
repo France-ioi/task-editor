@@ -1147,15 +1147,44 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
       editor.showValidationErrors(other_errors);
     });
   },
+  isEmptyField: function(value, field) {
+    const editor = this.editors && this.editors[field];
+    const defaultVal = editor && this.editors[field].getDefault();
+    const logicalDrop = editor && editor.shouldIncludeObject && !editor.shouldIncludeObject(value);
+    return !value || (value && value.constructor === Array && value.length === 0) || value === defaultVal
+      || (value && value.constructor === Object && Object.keys(value).length === 0) || logicalDrop;
+  },
   filterJSON: function(result) {
     const shouldOmit = (key) => !this.isRequired(this.editors[key]);
     if (this.jsoneditor.options.remove_empty_properties || this.options.remove_empty_properties) {
-      for(var i in result) {
-        if(result.hasOwnProperty(i) && shouldOmit(i)) {
-          if(result[i] === "" || result[i] === null || result[i] === undefined || (result[i] && result[i].constructor === Array && result[i].length === 0)
-              || result[i] === this.editors[i].getDefault() || (result[i] && result[i].constructor === Object && Object.keys(result[i]).length === 0)) delete result[i];
+      var shouldInclude = this.shouldIncludeObject(result);
+      for (var i in result) {
+        if (result.hasOwnProperty(i) && shouldOmit(i)) {
+          if (this.isEmptyField(result[i], i)) delete result[i];
         }
       }
+    }
+  },
+  shouldIncludeObject: function(value) {
+    if (!this.parent) return true; // Root object should be included
+
+    var included = true;
+    var cur = this;
+    while (cur.parent) {
+      if (!cur.parent.isRequired(cur)) included = false;
+      cur = cur.parent;
+    }
+
+    if (included) return true; // Include if all parents are required
+    else {
+      for (var i in value) {
+        if (value.hasOwnProperty(i)) {
+          if (!this.isEmptyField(value[i], i)) {
+            return true; // Include if there's a field set
+          }
+        }
+      }
+      return false;
     }
   }
 });

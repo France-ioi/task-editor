@@ -41,6 +41,7 @@ module.exports = {
                 }
             }
         ],
+        required: ["name"]
     },
 
     compilationDescr: {
@@ -63,6 +64,7 @@ module.exports = {
                 items: { $ref: "#/definitions/fileDescr" }
             }
         },
+        required: ["language", "files", "dependencies"]
     },
 
     executionParams: {
@@ -116,6 +118,14 @@ module.exports = {
                 items: { $ref: "#/definitions/filename" }
             }
         },
+        required: [
+            "timeLimitMs",
+            "memoryLimitKb",
+            "useCache",
+            "stdoutTruncateKb",
+            "stderrTruncateKb",
+            "getFiles"
+        ]
     },
 
     compileAndRunParams: {
@@ -126,6 +136,7 @@ module.exports = {
             compilationExecution: { $ref: "#/definitions/executionParams" },
             runExecution: { $ref: "#/definitions/executionParams" }
         },
+        required: ["compilationDescr", "compilationExecution", "runExecution"]
     },
 
     filename: {
