@@ -91,6 +91,7 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
       if (key in this.translate_editors) translation[key] = this.translate_editors[key].getValue();
       else if (this.shouldTranslate(key) && editor.getCurrentTranslation) translation[key] = editor.getCurrentTranslation();
     });
+    this.filterJSON(translation);
     return translation;
   },
   setRTLTranslation: function() {
@@ -114,6 +115,9 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
   getTranslations: function() {
     var tr = this.jsoneditor.options.translations || {};
     if (this.translate_mode && this.translate_to) tr[this.translate_to] = this.getCurrentTranslation();
+    for(var i in tr) {
+      if(tr.hasOwnProperty(i) && !(i in this.schema.languages.list)) delete tr[i];
+    }
     return tr;
   },
   layoutEditors: function(light) {
@@ -957,13 +961,7 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
   },
   getValue: function() {
     var result = this._super();
-    if(this.jsoneditor.options.remove_empty_properties || this.options.remove_empty_properties) {
-      for(var i in result) {
-        if(result.hasOwnProperty(i)) {
-          if(!result[i]) delete result[i];
-        }
-      }
-    }
+    this.filterJSON(result);
     return result;
   },
   refreshValue: function() {
@@ -1148,5 +1146,16 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
     $each(this.editors, function(i,editor) {
       editor.showValidationErrors(other_errors);
     });
+  },
+  filterJSON: function(result) {
+    const shouldOmit = (key) => !this.isRequired(this.editors[key]);
+    if (this.jsoneditor.options.remove_empty_properties || this.options.remove_empty_properties) {
+      for(var i in result) {
+        if(result.hasOwnProperty(i) && shouldOmit(i)) {
+          if(result[i] === "" || result[i] === null || result[i] === undefined || (result[i] && result[i].constructor === Array && result[i].length === 0)
+              || result[i] === this.editors[i].getDefault() || (result[i] && result[i].constructor === Object && Object.keys(result[i]).length === 0)) delete result[i];
+        }
+      }
+    }
   }
 });
