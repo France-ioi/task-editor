@@ -39,14 +39,16 @@ window.JSONEditor.defaults.editors.multitext = JSONEditor.defaults.editors.strin
 
     setValueType: function(type) {
         if(this.value_type == type) return;
-        this.value_type = type;
-        this.initWysiwyg();
+        var new_val;
         if(type == 'html') {
-            this.value = converter.makeHtml(this.value)
+            new_val = converter.makeHtml(this.value)
         } else if(type == 'markdown') {
-            this.value = converter.makeMarkdown(this.value)
+            new_val = converter.makeMarkdown(this.value)
         }
-        this.wysiwyg.setContent(this.value);
+        this.value_type = type;
+        this.wysiwyg && this.wysiwyg.destroy();
+        this.initWysiwyg();
+        this.wysiwyg.setContent(new_val);
         this.is_dirty = true;
         this.onChange(true);
     },
