@@ -1,6 +1,5 @@
 var user = require('../libs/user')
-var svn = require('../libs/svn')
-var tree = require('../libs/tree')
+var repo = require('../libs/repo')
 
 
 module.exports = {
@@ -11,8 +10,8 @@ module.exports = {
             return res.json({ token })
         }
 
-        tree.readDir(req.body, '', (err, data) => {
-            if(err) return res.status(400).send('User not found');
+        repo.auth(req.body, (err) => {
+            if(err) return res.status(400).send('Login or password incorrect');
             res.json({
                 token: user.add(req.body)
             })

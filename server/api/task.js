@@ -2,7 +2,7 @@ var fs = require('fs');
 var path = require('path');
 var generator = require('../libs/task/generator')
 var config = require('../config')
-var svn = require('../libs/svn')
+var repo = require('../libs/repo')
 var shell = require('shelljs')
 var tree = require('../libs/tree')
 var schema_loader = require('../libs/schema_loader')
@@ -114,11 +114,11 @@ var api = {
                 translations: null,
                 files: []
             }
-            svn.checkout(req.user, req.body.path, (err) => {
+            repo.checkout(req.user, req.body.path, (err) => {
                 if(err) return res.status(400).send(err.message);
                 saveTaskData(req.body.path, task_data, (err) => {
                     if(err) return res.status(400).send(err.message);
-                    svn.addCommit(req.user, req.body.path, (err) => {
+                    repo.addCommit(req.user, req.body.path, (err) => {
                         if(err) {
                             shell.rm('-rf', path.join(config.path, req.body.path));
                             return res.status(400).send(err.message);
@@ -136,7 +136,7 @@ var api = {
 
 
     load: (req, res) => {
-        svn.checkout(req.user, req.body.path, (err) => {
+        repo.checkout(req.user, req.body.path, (err) => {
             if(err) return res.status(400).send(err.message);
             loadTask(req, res)
         })
@@ -159,7 +159,7 @@ var api = {
                     if(err) return res.status(400).send(err.message);
                     saveTaskData(req.body.path, task_data, (err) =>  {
                         if(err) return res.status(400).send(err.message);
-                        svn.addCommit(req.user, req.body.path, (err) => {
+                        repo.addCommit(req.user, req.body.path, (err) => {
                             if(err) return res.status(400).send(err.message);
                             res.json({});
                         })
@@ -171,15 +171,15 @@ var api = {
 
 
     clone: (req, res) => {
-        svn.checkout(req.user, req.body.path_src, (err) => {
+        repo.checkout(req.user, req.body.path_src, (err) => {
             if(err) return res.status(400).send(err.message);
-            svn.checkout(req.user, req.body.path, (err) => {
+            repo.checkout(req.user, req.body.path, (err) => {
                 if(err) return res.status(400).send(err.message);
                 var src = path.join(config.path, req.body.path_src);
                 var dst = path.join(config.path, req.body.path);
                 shell.cp('-rf', src + '/*', dst + '/');
                 shell.rm('-rf', src);
-                svn.addCommit(req.user, req.body.path, (err) => {
+                repo.addCommit(req.user, req.body.path, (err) => {
                     if(err) {
                         shell.rm('-rf', dst);
                         return res.status(400).send(err.message);

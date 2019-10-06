@@ -1,3 +1,5 @@
+// XXX :: This is very likely deprecated
+
 var exec = require('child_process').exec;
 var config = require('../config');
 var path = require('path');
