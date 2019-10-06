@@ -5,10 +5,17 @@ var git = require('./git')
 
 
 var defaultHandler = {
-    list: (config, credentials, path, callback) => {
-        callback(null, ['v01/', 'git/']);
+    list: (repoConfig, credentials, path, callback) => {
+        var accessible = [];
+        for(var prefix in config.repositories) {
+            subConfig = config.repositories[prefix];
+            if(!subConfig.limit_users || subConfig.limit_users.includes(credentials.username)) {
+                accessible.push(prefix + '/');
+            }
+        }
+        callback(null, accessible);
     },
-    update: (config, credentials, path, callback) => { callback(); }
+    update: (repoConfig, credentials, path, callback) => { callback(); }
 };
 
 

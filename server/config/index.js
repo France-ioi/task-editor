@@ -24,7 +24,14 @@ module.exports = {
         }
     },
 
-    svn_repository: process.env.SVN_REPOSITORY,
+    // Repositories
+    repositories: {
+        "v01": {
+            type: 'svn',
+            repository: process.env.SVN_REPOSITORY
+        }
+    },
+    auth_path: 'v01/',
 
     dev: {
         task_autoload: process.env.DEV_TASK_AUTOLOAD,
