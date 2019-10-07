@@ -19,7 +19,7 @@ app.use(fileUpload());
 require('./middleware')(app);
 require('./routes')(app);
 
-var config = JSON.stringify(require('./config'));
+var config = JSON.stringify(require('./config').client_config);
 var app_instance_id = Math.random().toString().replace('0.', '');
 var tasks_host = process.env.TASKS_HOST;
 app.get('/', (req, res) => {

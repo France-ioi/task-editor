@@ -1,6 +1,7 @@
 var path = require('path')
 
-module.exports = {
+// Server-side configuration ; will not be sent to the client
+var server_config = {
     port: process.env.PORT,
 
     task: {
@@ -16,14 +17,6 @@ module.exports = {
     path: process.env.TASKS_ROOT,
 
     // task importer
-    task_importer: {
-        url: process.env.TASK_IMPORTER_URL,
-        params: {
-            display: 'frame',
-            autostart: '1'
-        }
-    },
-
     // Repositories
     repositories: {
         "v01": {
@@ -34,11 +27,32 @@ module.exports = {
     auth_path: 'v01/',
 
     dev: {
-        task_autoload: process.env.DEV_TASK_AUTOLOAD,
-        username: process.env.DEV_USERNAME,
-        password: process.env.DEV_PASSWORD,
         log: !!process.env.DEV_LOG,
         debug: !!process.env.DEV_DEBUG
     }
 
 };
+
+// These configuration options will be sent publicly to the client (even
+// unauthenticated!)
+var client_config = {
+    task_importer: {
+        url: process.env.TASK_IMPORTER_URL,
+        params: {
+            display: 'frame',
+            autostart: '1'
+        }
+    },
+
+    dev: {
+        task_autoload: process.env.DEV_TASK_AUTOLOAD,
+        username: process.env.DEV_USERNAME,
+        password: process.env.DEV_PASSWORD,
+    },
+
+    url_prefix: server_config.url_prefix
+};
+
+server_config.client_config = client_config;
+
+module.exports = server_config;
