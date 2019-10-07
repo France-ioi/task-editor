@@ -1,5 +1,5 @@
 var path = require('path')
-var config = require('../../config')
+var repo = require('../repo')
 
 module.exports = function(params, data_info) {
 
@@ -9,7 +9,7 @@ module.exports = function(params, data_info) {
         values['%%' + key + '%%'] = value
     }
 
-    addValue('TASK_PATH', path.relative(params.path, config.path))
+    addValue('TASK_PATH', repo.getReverseTaskPath(params.path))
     addValue('TASK_DATA_INFO', JSON.stringify(data_info))
     addValue('LANG_DIR', 'ltr')
 

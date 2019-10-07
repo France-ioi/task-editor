@@ -1,5 +1,7 @@
-var config = require('../config')
+var path = require('path')
 var url = require('url')
+
+var config = require('../config')
 var svn = require('./svn')
 var git = require('./git')
 
@@ -55,6 +57,18 @@ var repo = {
 
     auth: (credentials, callback) => {
         repo.list(credentials, config.auth_path, callback);
+    },
+
+    getReverseTaskPath: (taskPath) => {
+        // Get a repository relative path to a task
+        // (used for generating path to _common)
+        var subPath = path.relative(config.path, taskPath);
+        var prefix = subPath.split('/')[0];
+        if(config.repositories[prefix]) {
+            return path.relative(taskPath, url.resolve(config.path, prefix + '/'));
+        } else {
+            return path.relative(taskPath, config.path);
+        }
     },
 
     list: makeBalancer('list', 1),
