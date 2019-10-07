@@ -146,6 +146,12 @@ function* saveView(action) {
 }
 
 
+function* fetchSuccess() {
+    const path = yield select(state => state.task.path);
+    window.location.hash = '#edit/' + path;
+}
+
+
 function* gotUrl(action) {
     try {
         const channel = yield select(state => state.channel);
@@ -168,5 +174,6 @@ export default function* () {
     yield takeEvery('TASK_FETCH_CLONE', clone);
     yield takeEvery('TASK_FETCH_SAVE_VIEW', saveView);
     yield takeEvery('TASK_FETCH_CREATE', create);
+    yield takeEvery('TASK_FETCH_SUCCESS', fetchSuccess);
     yield takeEvery('TASK_GOT_URL', gotUrl);
 }
