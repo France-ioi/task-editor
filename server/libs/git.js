@@ -1,6 +1,9 @@
 var child_process_exec = require('child_process').exec
 var url = require('url')
 
+var cfg_task_importer = require('../config').task_importer
+var user = require('./user')
+
 function auth(credentials) {
     return ' --username "' + credentials.username.replace(/"/g, '\\"') + '" ' +
         '--password "' + credentials.password.replace(/"/g, '"') + '"'
@@ -119,6 +122,25 @@ var git = {
             if(err) return callback(err)
             git.addCommit(config, credentials, path, callback);
         })
+    },
+
+    getImporterUrl: (config, credentials, path) => {
+        var token = config.username ? user.add({username: config.username, password: config.password}) : user.findToken(credentials);
+        var params = Object.assign({
+            type: 'git',
+            repo: config.repository,
+            path: path,
+            token: token,
+            display: 'frame',
+            autostart: 1
+        }, config.task_importer_params);
+        var q = [];
+        for(var k in params) {
+            if(params.hasOwnProperty(k)) {
+                q.push(k + '=' + encodeURIComponent(params[k]));
+            }
+        }
+        return cfg_task_importer.url + '?' + q.join('&');
     }
 
 }

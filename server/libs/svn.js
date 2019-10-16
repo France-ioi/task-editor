@@ -1,6 +1,9 @@
 var child_process_exec = require('child_process').exec
 var url = require('url')
 
+var cfg_task_importer = require('../config').task_importer
+var user = require('./user')
+
 function auth(credentials) {
     return ' --username "' + credentials.username.replace(/"/g, '\\"') + '" ' +
         '--password "' + credentials.password.replace(/"/g, '"') + '"'
@@ -112,8 +115,24 @@ var svn = {
     createDir: (config, credentials, path, callback) => {
         var cmd = 'svn mkdir ' + config.repository + path + auth(credentials) + message()
         exec(cmd, callback)
-    }
+    },
 
+    getImporterUrl: (config, credentials, path) => {
+        var params = Object.assign({
+            type: 'svn',
+            path: path,
+            token: user.findToken(credentials),
+            display: 'frame',
+            autostart: 1
+        }, config.task_importer_params);
+        var q = [];
+        for(var k in params) {
+            if(params.hasOwnProperty(k)) {
+                q.push(k + '=' + encodeURIComponent(params[k]));
+            }
+        }
+        return cfg_task_importer.url + '?' + q.join('&');
+    }
 }
 
 module.exports = svn

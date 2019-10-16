@@ -11,6 +11,9 @@ class TaskImporter extends React.Component {
             origin: '*',
             scope: 'importer'
             });
+
+        this.props.dispatch({type: 'IMPORTER_GET_URL', path: this.props.path});
+
         var that = this;
         this.channel.bind('link', function(ctx, params) {
             that.props.dispatch({type: 'TASK_GOT_URL', url: params.url});
@@ -18,25 +21,8 @@ class TaskImporter extends React.Component {
     }
 
 
-    getUrl = () => {
-        var params = Object.assign({
-            path: this.props.path,
-            token: this.props.token,
-            display: 'frame',
-            autostart: 1
-        }, window.__CONFIG__.task_importer_params);
-        var q = [];
-        for(var k in params) {
-            if(params.hasOwnProperty(k)) {
-                q.push(k + '=' + encodeURIComponent(params[k]));
-            }
-        }
-        return window.__CONFIG__.task_importer.url + '?' + q.join('&');
-    }
-
-
     render() {
-        const url = this.getUrl();
+        const { loading, url } = this.props.task_importer;
         return (
             <div className="task-importer">
                 <iframe

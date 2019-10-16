@@ -26,6 +26,14 @@ var server_config = {
     },
     auth_path: 'v01/',
 
+    task_importer: {
+        url: process.env.TASK_IMPORTER_URL,
+        params: {
+            display: 'frame',
+            autostart: '1'
+        }
+    },
+
     dev: {
         log: !!process.env.DEV_LOG,
         debug: !!process.env.DEV_DEBUG
@@ -36,14 +44,6 @@ var server_config = {
 // These configuration options will be sent publicly to the client (even
 // unauthenticated!)
 var client_config = {
-    task_importer: {
-        url: process.env.TASK_IMPORTER_URL,
-        params: {
-            display: 'frame',
-            autostart: '1'
-        }
-    },
-
     dev: {
         task_autoload: process.env.DEV_TASK_AUTOLOAD,
         username: process.env.DEV_USERNAME,

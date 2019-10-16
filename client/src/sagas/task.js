@@ -166,6 +166,20 @@ function* gotUrl(action) {
 }
 
 
+function* importerGetUrl(action) {
+    try {
+        const { token } = yield select(state => state.auth)
+        const params = {
+            token,
+            path: action.path
+        }
+        const { url } = yield call(api_importer.getUrl, params);
+        yield put({type: 'IMPORTER_GOT_URL', url});
+    } catch(e) {
+        console.log(e);
+    }
+}
+
 
 export default function* () {
     yield takeEvery('TASK_OPEN', open);
@@ -176,4 +190,5 @@ export default function* () {
     yield takeEvery('TASK_FETCH_CREATE', create);
     yield takeEvery('TASK_FETCH_SUCCESS', fetchSuccess);
     yield takeEvery('TASK_GOT_URL', gotUrl);
+    yield takeEvery('IMPORTER_GET_URL', importerGetUrl);
 }

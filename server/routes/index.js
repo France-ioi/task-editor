@@ -1,5 +1,6 @@
 var explorer = require('../api/explorer');
 var task = require('../api/task');
+var task_importer = require('../api/task_importer');
 var svn = require('../api/svn');
 var files = require('../api/files');
 var images = require('../api/images');
@@ -15,6 +16,8 @@ module.exports = function(app) {
     app.post('/api/task/save', task.save);
     app.post('/api/task/create', task.create);
     app.post('/api/task/clone', task.clone);
+
+    app.post('/api/task/importer', task_importer.getImporterUrl);
 
     app.post('/api/svn/update', svn.update);
     app.post('/api/svn/commit', svn.commit);

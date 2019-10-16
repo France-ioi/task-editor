@@ -2,8 +2,14 @@ var path = require('path')
 var url = require('url')
 
 var config = require('../config')
+var user = require('./user')
 var svn = require('./svn')
 var git = require('./git')
+
+
+function checkLimitUsers(credentials, subConfig) {
+    return !subConfig.limit_users || subConfig.limit_users.includes(credentials.username);
+}
 
 
 var defaultHandler = {
@@ -11,7 +17,7 @@ var defaultHandler = {
         var accessible = [];
         for(var prefix in config.repositories) {
             subConfig = config.repositories[prefix];
-            if(!subConfig.limit_users || subConfig.limit_users.includes(credentials.username)) {
+            if(checkLimitUsers(credentials, subConfig)) {
                 accessible.push(prefix + '/');
             }
         }
@@ -21,10 +27,11 @@ var defaultHandler = {
 };
 
 
-function makeBalancer(funcName, argIdx) {
+function makeBalancer(funcName, pathIdx) {
     return function() {
         console.log(funcName);
-        var path = arguments[argIdx];
+        var credentials = pathIdx > 0 ? arguments[pathIdx-1] : null;
+        var path = arguments[pathIdx];
         var args = [];
 
         var prefix = path.split('/')[0];
@@ -39,9 +46,14 @@ function makeBalancer(funcName, argIdx) {
             var destHandler = defaultHandler;
         }
 
+        if(credentials && !checkLimitUsers(credentials, subConfig)) {
+            console.log('Unauthorized user for action ' + funcName + ' on path `' + path + '`');
+            throw 'Unauthorized user for action ' + funcName + ' on path `' + path + '`';
+        }
+
         args.push(subConfig);
         for(var i = 0; i < arguments.length; i++) {
-            args.push(i == argIdx ? subPath : arguments[i]);
+            args.push(i == pathIdx ? subPath : arguments[i]);
         }
 
         if(!destHandler[funcName]) {
@@ -51,6 +63,23 @@ function makeBalancer(funcName, argIdx) {
         return destHandler[funcName].apply(destHandler, args);
     };
 }
+
+
+function getImporterUrl(credentials, path) {
+    var params = Object.assign({
+         path: path,
+         token: user.findToken(credentials),
+         display: 'frame',
+         autostart: 1
+    }, config.task_importer_params);
+    var q = [];
+    for(var k in params) {
+        if(params.hasOwnProperty(k)) {
+            q.push(k + '=' + encodeURIComponent(params[k]));
+        }
+    }
+    return config.task_importer.url + '?' + q.join('&');
+};
 
 
 var repo = {
@@ -71,6 +100,7 @@ var repo = {
         }
     },
 
+    getImporterUrl: makeBalancer('getImporterUrl', 1),
     list: makeBalancer('list', 1),
     checkout: makeBalancer('checkout', 1),
     update: makeBalancer('update', 1),

@@ -4,6 +4,7 @@ import active_section from './active_section'
 import auth from './auth'
 import channel from './channel'
 import task from './task';
+import task_importer from './task_importer';
 import explorer from './explorer';
 import svn from './svn';
 import files_manager from './files_manager'
@@ -15,6 +16,7 @@ const reducers = combineReducers({
     auth,
     channel,
     task,
+    task_importer,
     explorer,
     svn,
     files_manager,
