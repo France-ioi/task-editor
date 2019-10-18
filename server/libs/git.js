@@ -1,4 +1,5 @@
 var child_process_exec = require('child_process').exec
+var path = require('path')
 var url = require('url')
 
 var cfg_task_importer = require('../config').task_importer
