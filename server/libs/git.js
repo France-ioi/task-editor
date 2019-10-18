@@ -14,8 +14,8 @@ function message(credentials) {
 }
 
 function cd(config, sub_path) {
-    var path = sub_path ? path.resolve(config.path + '/', sub_path) : config.path;
-    return 'cd "' + path + '" &&  ';
+    var full_path = sub_path ? path.resolve(config.path + '/', sub_path) : config.path;
+    return 'cd "' + full_path + '" &&  ';
 }
 
 
@@ -121,7 +121,7 @@ var git = {
         var cmd = 'mkdir ' + path.resolve(config.path, subPath)
         exec(cmd, (err) => {
             if(err) return callback(err)
-            git.addCommit(config, credentials, path, callback);
+            git.addCommit(config, credentials, subPath, callback);
         })
     },
 
