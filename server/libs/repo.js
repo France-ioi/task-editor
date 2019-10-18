@@ -39,7 +39,7 @@ function makeBalancer(funcName, pathIdx) {
 
         if(config.repositories[prefix]) {
             var subConfig = config.repositories[prefix];
-            subConfig.path = url.resolve(config.path, prefix + '/');
+            subConfig.path = path.resolve(config.path, prefix + '/');
             var destHandler = subConfig.type == 'git' ? git : svn;
         } else {
             var subConfig = {path: config.path};
@@ -94,7 +94,7 @@ var repo = {
         var subPath = path.relative(config.path, taskPath);
         var prefix = subPath.split('/')[0];
         if(config.repositories[prefix]) {
-            return path.relative(taskPath, url.resolve(config.path, prefix + '/'));
+            return path.relative(taskPath, path.resolve(config.path, prefix + '/'));
         } else {
             return path.relative(taskPath, config.path);
         }
