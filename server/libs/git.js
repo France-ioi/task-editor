@@ -116,8 +116,8 @@ var git = {
         exec(cmd, callback)
     },
 
-    createDir: (config, credentials, path, callback) => {
-        var cmd = 'mkdir ' + path.resolve(config.path, path)
+    createDir: (config, credentials, subPath, callback) => {
+        var cmd = 'mkdir ' + path.resolve(config.path, subPath)
         exec(cmd, (err) => {
             if(err) return callback(err)
             git.addCommit(config, credentials, path, callback);

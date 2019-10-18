@@ -31,11 +31,11 @@ function makeBalancer(funcName, pathIdx) {
     return function() {
         console.log(funcName);
         var credentials = pathIdx > 0 ? arguments[pathIdx-1] : null;
-        var path = arguments[pathIdx];
+        var origPath = arguments[pathIdx];
         var args = [];
 
-        var prefix = path.split('/')[0];
-        var subPath = path.split('/').slice(1).join('/');
+        var prefix = origPath.split('/')[0];
+        var subPath = origPath.split('/').slice(1).join('/');
 
         if(config.repositories[prefix]) {
             var subConfig = config.repositories[prefix];
@@ -47,8 +47,8 @@ function makeBalancer(funcName, pathIdx) {
         }
 
         if(credentials && !checkLimitUsers(credentials, subConfig)) {
-            console.log('Unauthorized user for action ' + funcName + ' on path `' + path + '`');
-            throw 'Unauthorized user for action ' + funcName + ' on path `' + path + '`';
+            console.log('Unauthorized user for action ' + funcName + ' on path `' + origPath + '`');
+            throw 'Unauthorized user for action ' + funcName + ' on path `' + origPath + '`';
         }
 
         args.push(subConfig);
@@ -57,8 +57,8 @@ function makeBalancer(funcName, pathIdx) {
         }
 
         if(!destHandler[funcName]) {
-            console.log('Balancer error with path `' + path + '`');
-            throw 'Balancer error with path `' + path + '`';
+            console.log('Balancer error with path `' + origPath + '`');
+            throw 'Balancer error with path `' + origPath + '`';
         }
         return destHandler[funcName].apply(destHandler, args);
     };
