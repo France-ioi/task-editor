@@ -17,6 +17,10 @@ module.exports = {
         mathjax: {
             type: "boolean",
             title: "MathJax"
+        },
+        display_partial_feedback: {
+            type: "boolean",
+            title: "Display partial feedback"
         }
     },
     required: ["graderUrl"],
