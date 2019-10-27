@@ -3,6 +3,7 @@ var url = require('url')
 
 var cfg_task_importer = require('../config').task_importer
 var user = require('./user')
+var fs = require('fs');
 
 function auth(credentials) {
     return ' --username "' + credentials.username.replace(/"/g, '\\"') + '" ' +
@@ -13,7 +14,10 @@ function message() {
     return ' --message "Task editor"'
 }
 
-function cd(config) {
+function cd(config, force_create_dir) {
+    if(force_create_dir && !fs.existsSync(config.path)) {
+        fs.mkdirSync(config.path);
+    }
     return 'cd "' + config.path + '" &&  ';
 }
 
@@ -46,7 +50,7 @@ var svn = {
 
 
     checkout: (config, credentials, path, callback) => {
-        var cmd = cd(config) + 'svn co ' + url.resolve(config.repository, path) + ' ' + path + ' ' + auth(credentials)
+        var cmd = cd(config, true) + 'svn co ' + url.resolve(config.repository, path) + ' ' + path + ' ' + auth(credentials)
         exec(cmd, callback)
     },
 
