@@ -25,7 +25,8 @@ module.exports = {
     generator: [
         {
             input: {
-                keepArray: true
+                keepArray: true,
+                collector: "collectors/questions.js",
             },
             output: {
                 render: {

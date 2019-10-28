@@ -72,6 +72,7 @@ module.exports = {
         question_single: require('./question_types/question_single.js'),
         question_multiple: require('./question_types/question_multiple.js'),
         question_input: require('./question_types/question_input.js'),
-        question_fill_gaps: require('./question_types/question_fill_gaps.js')
+        question_fill_gaps: require('./question_types/question_fill_gaps.js'),
+        group_key: require('./group_key.js'),
     }
 };

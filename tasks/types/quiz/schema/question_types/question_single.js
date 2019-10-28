@@ -53,6 +53,9 @@ module.exports = {
             options: {
                 wysiwyg: true
             }
+        },
+        group_key: {
+            $ref: "#/definitions/group_key"
         }
     }
 }

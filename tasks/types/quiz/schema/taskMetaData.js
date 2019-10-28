@@ -37,18 +37,6 @@ module.exports = {
             items: {
                 type: "string"
             }
-        },
-        graderUrl: {
-            type: "string",
-            title: "Server side grader URL"
-        },
-        shuffle_questions: {
-            type: "boolean",
-            title: "Shuffle questions"
-        },
-        shuffle_answers: {
-            type: "boolean",
-            title: "Shuffle answers"
         }
     },
     required: ["id", "authors", "language"],
