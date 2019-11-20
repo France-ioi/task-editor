@@ -16,7 +16,7 @@ function escape_path(path) {
 
 function cd(config, sub_path) {
     var full_path = sub_path ? path.resolve(config.path + '/', sub_path) : config.path;
-    return 'cd ' + espace_path(full_path) + ' && ';
+    return 'cd ' + escape_path(full_path) + ' && ';
 }
 
 
