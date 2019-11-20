@@ -10,12 +10,13 @@ function auth(credentials) {
         '--password "' + credentials.password.replace(/"/g, '"') + '"'
 }
 
-function message(credentials) {
+function escape_path(path) {
+    return '"' + path.replace('"', '\\"') + '"';
 }
 
 function cd(config, sub_path) {
     var full_path = sub_path ? path.resolve(config.path + '/', sub_path) : config.path;
-    return 'cd "' + full_path + '" &&  ';
+    return 'cd ' + espace_path(full_path) + ' && ';
 }
 
 
@@ -66,7 +67,7 @@ var git = {
 
 
     add: (config, credentials, path, callback) => {
-        var cmd = cd(config) + 'git add ' + path
+        var cmd = cd(config) + 'git add ' + escape_path(path)
         exec(cmd, callback)
     },
 
@@ -97,7 +98,7 @@ var git = {
 
 
     revert: (config, credentials, path, callback) => {
-        var cmd = cd(config) + 'git checkout -q ' + path
+        var cmd = cd(config) + 'git checkout -q ' + escape_path(path)
         exec(cmd, callback)
     },
 
@@ -108,17 +109,17 @@ var git = {
 
 
     remove: (config, path, callback) => {
-        var cmd = cd(config) + 'git rm -q ' + path;
+        var cmd = cd(config) + 'git rm -q ' + escape_path(path);
         exec(cmd, callback)
     },
 
     removeDir: (config, credentials, path, callback) => {
-        var cmd = cd(config) + 'git rm -rq ' + path;
+        var cmd = cd(config) + 'git rm -rq ' + escape_path(path);
         exec(cmd, callback)
     },
 
     createDir: (config, credentials, subPath, callback) => {
-        var cmd = 'mkdir ' + path.resolve(config.path, subPath)
+        var cmd = 'mkdir ' + escape_path(path.resolve(config.path, subPath))
         exec(cmd, (err) => {
             if(err) return callback(err)
             git.addCommit(config, credentials, subPath, callback);
