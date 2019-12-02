@@ -148,7 +148,7 @@ function* saveView(action) {
 
 function* fetchSuccess() {
     const path = yield select(state => state.task.path);
-    window.location.hash = '#edit/' + path;
+    window.location.hash = '#edit/' + encodeURIComponent(path);
 }
 
 

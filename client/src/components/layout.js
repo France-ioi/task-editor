@@ -41,7 +41,7 @@ class Layout extends React.Component {
                 // Create a new task
                 this.props.dispatch({
                     type: 'TASK_OPEN',
-                    path: hashPath,
+                    path: decodeURIComponent(hashPath),
                     creating: true,
                     controls: {
                         load_task: true, // TODO :: yes or no?
@@ -53,7 +53,7 @@ class Layout extends React.Component {
             } else if(hashCmd == '#edit' && hashPath) {
                 this.props.dispatch({
                     type: 'TASK_FETCH_LOAD',
-                    path: hashPath
+                    path: decodeURIComponent(hashPath)
                 });
             }
         }
