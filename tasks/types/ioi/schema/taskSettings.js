@@ -128,6 +128,36 @@ module.exports = {
                 'Paramters to override in the generated "defaultParams.json" file. The keys of this object will be copied as-is to the file.'
         },
 
+        defaultToolCompParams: {
+            description:
+                "Default compilation parameters for evaluation tools (generators, sanitizer, checker).",
+            $ref: "#/definitions/compileParams"
+        },
+
+        defaultToolExecParams: {
+            description:
+                "Default execution parameters for evaluation tools (generators, sanitizer, checker).",
+            $ref: "#/definitions/runParams"
+        },
+
+        defaultGenerator: {
+            description:
+                "Checker, grades the solution's result. Will override automatic detection. Recommended only for advanced users.",
+            $ref: "#/definitions/compileAndRunParams"
+        },
+
+        defaultSanitizer: {
+            description:
+                "Checker, grades the solution's result. Will override automatic detection. Recommended only for advanced users.",
+            $ref: "#/definitions/compileAndRunParams"
+        },
+
+        defaultChecker: {
+            description:
+                "Checker, grades the solution's result. Will override automatic detection. Recommended only for advanced users.",
+            $ref: "#/definitions/compileAndRunParams"
+        },
+
         defaultEvaluationGenerators: {
             type: "array",
             description:
