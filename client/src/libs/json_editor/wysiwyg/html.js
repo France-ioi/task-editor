@@ -51,8 +51,8 @@ module.exports = function(params) {
         branding: false,
         skin: false,
         directionality: params.directionality,
-        codesample_content_css: 'assets/prism.css',
-        content_css: 'assets/tinymce_content.css',
+        codesample_content_css: '/assets/prism.css',
+        content_css: '/assets/tinymce_content.css',
         noneditable_noneditable_class: 'noneditable',
         autoresize_min_height: 100,
         autoresize_max_height: 400,
@@ -82,9 +82,10 @@ module.exports = function(params) {
         file_picker_types: 'image',
         images_upload_handler: createImagesUploadHandler(params.path),
         images_reuse_filename: true,
-        image_list: createImagesListHandler(params.path)
+        image_list: createImagesListHandler(params.path),
+        document_base_url: window.__CONFIG__.url_prefix + '/' + params.path + '/',
+        relative_urls: true
     })
-
 
     return {
 

@@ -15,16 +15,6 @@ function imageFilePath(task_subpath, filename) {
 }
 
 
-function imageFileLocation(task_subpath, filename) {
-    return path.join(
-        config.url_prefix,
-        task_subpath,
-        config.task.images_dir,
-        filename
-    )
-}
-
-
 function searchImages(task_subpath) {
     var extensions = ['.png', '.gif', '.jpg', '.jpeg'];
     var res = [];
@@ -37,12 +27,10 @@ function searchImages(task_subpath) {
             var stat = fs.statSync(filepath);
             if(stat.isFile(filepath)) {
                 if(extensions.indexOf(path.extname(file)) !== -1) {
-                    var title = path.relative(task_path, filepath);
-                    var value = path.join(
-                        config.url_prefix,
-                        path.relative(config.path, filepath)
-                    );
-                    res.push({ title, value })
+                    res.push({
+                        title: file,
+                        value: path.relative(task_path, filepath)
+                    });
                 }
             } else if(stat.isDirectory(filepath)) {
                 scanDir(filepath);
@@ -64,11 +52,13 @@ module.exports = {
             (err) => {
                 if(err) return res.status(400).send(err.message);
                 res.json({
-                    location: imageFileLocation(req.body.path, req.files.file.name)
+                    location: path.join(config.task.images_dir, req.files.file.name)
                 });
             }
         );
     },
+
+
 
 
     search: (req, res) => {
