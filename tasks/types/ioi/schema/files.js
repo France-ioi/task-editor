@@ -8,14 +8,21 @@ module.exports = {
         type: "object",
         title: "File",
         properties: {
-            path: {
+            inputfile: {
                 type: "string",
-                title: "Path"
-            },
-            type: {
-                type: "string",
-                title: "Type",
-                enum: ["image", "testCase", "solution"]
+                description: "File",
+                format: "url",
+                options: {
+                    editor: true,
+                    upload: true
+                },
+                generator: [
+                    {
+                        output: {
+                            copy: "[name][ext]"
+                        }
+                    }
+                ]
             },
             description: {
                 type: "string",
@@ -38,12 +45,7 @@ module.exports = {
             }
         },
         required: [
-            "path",
-            "type",
-            "description",
-            "usedInStatement",
-            "usedInSolution",
-            "usedInHints"
+            "inputfile"
         ]
     }
 };

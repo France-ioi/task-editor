@@ -54,7 +54,7 @@ module.exports = function(task_path, old_files) {
 
         var replace = {
             '[index]': index,
-            '[name]': name,
+            '[name]': name.replace(/^orig\./, ''),
             '[short_name]': short_name,
             '[ext]': ext
         }
