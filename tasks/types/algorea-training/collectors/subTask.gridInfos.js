@@ -1,6 +1,6 @@
 module.exports = function (data) {
     return {
-        conceptViewer: !!data.conceptViewer,
+        conceptViewer: data.conceptViewer,
         contextType: data.context,
     };
 }

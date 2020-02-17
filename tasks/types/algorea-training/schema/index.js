@@ -85,11 +85,7 @@ module.exports = {
         PEMTaskMetaData: require('./PEMTaskMetaData.js'),
         task: require('./task.js'),
         context: require('./context.js'),
-        conceptViewer: {
-            type: 'boolean',
-            format: 'checkbox',
-            title: 'conceptViewer'
-        },
+        conceptViewer: require('./conceptViewer.js'),
         maxInstructions: require('./maxInstructions.js'),
         blocks: {
             type: 'object',

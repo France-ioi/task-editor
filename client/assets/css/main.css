@@ -851,7 +851,7 @@ button.btn:focus, button.btn:active:focus {
     padding: 8px;
     border-radius: 6px;
     display: none;
-    z-index: 2;
+    z-index: 20;
 }
 
 .array-delete-confirm:after {

@@ -49,8 +49,10 @@ var client_config = {
         username: process.env.DEV_USERNAME,
         password: process.env.DEV_PASSWORD,
     },
-
-    url_prefix: server_config.url_prefix
+    url_prefix: server_config.url_prefix,
+    task: {
+        tmp_dir: server_config.task.tmp_dir
+    }
 };
 
 server_config.client_config = client_config;
