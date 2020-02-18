@@ -21,6 +21,10 @@ module.exports = {
         display_partial_feedback: {
             type: "boolean",
             title: "Display partial feedback"
+        },
+        display_detailed_feedback: {
+            type: "boolean",
+            title: "Display detailed feedback"
         }
     },
     required: ["graderUrl"],
