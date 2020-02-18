@@ -30,8 +30,9 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
     onWatchedFieldChange: function () {
         this._super();
         // load itemtypes according to context, getContextParams is available from _common/modules/pemFioi/blocklyRobot_lib-1.0.0.js
-        if (typeof getContextParams !== "function" || getContextParams()[this.watched_values.sceneContext] === undefined) return;
-        var itemTypes = getContextParams()[this.watched_values.sceneContext].itemTypes;
+        if (typeof quickAlgoRobotGetGridOptions !== "function") return;
+        var itemTypes = quickAlgoRobotGetGridOptions(this.watched_values.sceneContext, 'itemTypes');
+        if(!itemTypes) return;
         //console.log(itemTypes);
         this.itemTypes = itemTypes || {};
         this.toolbar.setItemTypes(this.itemTypes);
