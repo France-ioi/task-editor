@@ -19,7 +19,7 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
 
     postBuild: function () {
         this._super();
-        this.setValue({'tiles': [[0]], 'initItems': [], 'images': []}, true);
+        this.setValue({'tiles': [[0,0,0,0],[0,0,0,0],[0,0,0,0]], 'initItems': [], 'images': []}, true);
     },
 
 
