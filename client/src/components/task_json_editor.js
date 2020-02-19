@@ -20,7 +20,7 @@ class TaskJsonEditor extends React.Component {
             startval: this.props.task.data,
             translations: this.props.task.translations,
             upload: this.editorUpload,
-            keep_oneof_values: false,
+            keep_oneof_values: true,
             task: {
                 getFileUrl: (filename) => {
                     return [

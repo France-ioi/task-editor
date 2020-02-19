@@ -3,12 +3,12 @@ module.exports = function (data) {
     return {
         groupByCategory: !!data.groupByCategory,
         generatedBlocks: {
-            robot: data.generatedBlocks.shared_value ? data.generatedBlocks.shared_value : data.generatedBlocks
+            robot: 'easy' in data.generatedBlocks ? data.generatedBlocks : data.generatedBlocks.shared
         },
         standardBlocks: {
             includeAll: !!data.standardBlocks.includeAll,
             wholeCategories: data.standardBlocks.wholeCategories || [],
-            singleBlocks: data.standardBlocks.singleBlocks.shared_value ? data.standardBlocks.singleBlocks.shared_value : data.standardBlocks.singleBlocks
+            singleBlocks: 'easy' in data.standardBlocks.singleBlocks ? data.standardBlocks.singleBlocks : data.standardBlocks.singleBlocks.shared
         }
     };
 };

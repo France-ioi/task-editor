@@ -5,13 +5,13 @@ module.exports = {
             type: 'object',
             title: 'Shared',
             properties: {
-                shared_value: {
+                shared: {
                     title: 'Shared among levels blocks',
                     type: 'sortable_list',
                     items: require('./blocks/generated.js')
                 }
             },
-            required: ['shared_value']
+            required: ['shared']
         },
         {
             type: 'object',
