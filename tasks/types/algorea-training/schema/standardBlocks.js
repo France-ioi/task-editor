@@ -2,7 +2,6 @@ module.exports = {
     type: 'object',
     title: 'Standard blocks',
     properties: {
-        required: ['includeAll', 'singleBlocks'],
         includeAll: {
             type: 'boolean',
             format: 'checkbox',
