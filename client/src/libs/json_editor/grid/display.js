@@ -4,8 +4,8 @@ var max_grid_size = 11;
 
 module.exports = function (params) {
 
+    var used_images = {};
     var cell_size = params.field_size + 1;
-
     var container = $('<div class="te-grid-display"></div>');
     $(params.parent).append(container);
 
@@ -56,6 +56,9 @@ module.exports = function (params) {
             for (var j = 0; j < tiles[i].length; j++) {
                 cells[n].empty();
                 if (b = backgrounds[tiles[i][j]]) {
+                    if(b.grid_img) {
+                        used_images[b.grid_img] = true;
+                    }
                     cells[n].append(b.clone());
                 }
                 n++;
@@ -67,6 +70,9 @@ module.exports = function (params) {
         var n, s;
         for (var i = 0; i < items.length; i++) {
             if (init_items[items[i].type] && (s = init_items[items[i].type][items[i].dir])) {
+                if(s.grid_img) {
+                    used_images[s.grid_img] = true;
+                }
                 n = width * items[i].row + items[i].col;
                 cells[n].append(s.clone());
             }
@@ -105,12 +111,17 @@ module.exports = function (params) {
 
         render: function (data) {
             if (!data) return;
+            used_images = {};
             renderBackground(data.tiles);
             renderInitItems(data.initItems);
         },
 
         destroy: function() {
             container.remove();
+        },
+
+        getUsedImages: function() {
+            return Object.keys(used_images);
         }
     };
 }

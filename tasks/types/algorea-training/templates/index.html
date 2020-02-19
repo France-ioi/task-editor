@@ -14,7 +14,8 @@
             'jquery-1.7.1', 'JSON-js', 'raphael-2.2.1', 'beaver-task-2.0', 'jschannel', 'raphaelFactory-1.0', 'delayFactory-1.0', 'simulationFactory-1.0',
             'platform-pr', 'buttonsAndMessages', 'beav-1.0', 'installationAPI.01', 'miniPlatform',
             'conceptDisplay-1.0', 'conceptViewer-1.0', 'conceptViewer_css-1.0',
-            'taskStyles-mobileFirst', 'blockly-robot-1.0'
+            'taskStyles-mobileFirst',
+            'blockly-robot-dev'
         ]);
         // set Blockly as default language when none is specified through ?language=
         // use 3 curly braces like this in html {{{.}}} in order not to escape characters
@@ -24,7 +25,6 @@
     <script class="remove" type="text/javascript">
         // general metadata conforming the PEM API Documentation for getMetaData
         var json;
-        json.assetsPath = modulesPath + '/img/robot/';
     </script>
     <script type="text/javascript" src="task.js"></script>
 </head>
@@ -34,7 +34,6 @@
     <h1 id="taskTitle"></h1>
     <img src="icon.png" style="display:none" />
     <div id="images-preload"></div>
-
     <div id="tabsContainer"></div>
     <div id="taskContent" style="text-align:left;position:relative">
         <div id="taskIntro">

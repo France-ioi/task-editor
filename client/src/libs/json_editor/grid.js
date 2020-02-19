@@ -29,11 +29,11 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
 
     onWatchedFieldChange: function () {
         this._super();
-        // load itemtypes according to context, getContextParams is available from _common/modules/pemFioi/blocklyRobot_lib-1.0.0.js
+        Sprite.setContext(this.watched_values.sceneContext);
+        // load itemtypes according to context, quickAlgoRobotGetGridOptions is available from _common/modules/pemFioi/blocklyRobot_lib-dev.js
         if (typeof quickAlgoRobotGetGridOptions !== "function") return;
         var itemTypes = quickAlgoRobotGetGridOptions(this.watched_values.sceneContext, 'itemTypes');
         if(!itemTypes) return;
-        //console.log(itemTypes);
         this.itemTypes = itemTypes || {};
         this.toolbar.setItemTypes(this.itemTypes);
         this.display.setItemTypes(this.itemTypes);
@@ -137,9 +137,8 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
         } else if (item.num) {
             this.value.tiles[row][col] = item.num;
         }
-        Sprite.reset();
         this.display.render(this.value);
-        this.value.images = Sprite.images();
+        this.value.images = this.display.getUsedImages();
         this.onChange(true);
     },
 

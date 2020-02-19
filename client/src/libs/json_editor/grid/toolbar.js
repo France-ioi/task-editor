@@ -93,7 +93,7 @@ module.exports = function (params) {
     }
 
 
-    function renderCommandItem(cmd, img) {
+    function renderCommandItem(cmd, img_url) {
         var btn = $('<div class="item-type"></div>');
         btn.click(function() {
             unselect();
@@ -102,7 +102,7 @@ module.exports = function (params) {
         });
         btn.append(
             Sprite.create({
-                img: img
+                img_url: img_url
             })
         );
         container.append(btn);
@@ -126,7 +126,7 @@ module.exports = function (params) {
                 color: '#FFF',
                 num: 1
             });
-            renderCommandItem('clear', 'delete-64.png');
+            renderCommandItem('clear', '/assets/grid/delete-64.png');
         },
 
 
