@@ -24,13 +24,6 @@ class Layout extends React.Component {
     }
 
     componentDidMount() {
-        //used for dev purpose
-        if(window.__CONFIG__.dev.task_autoload) {
-            this.props.dispatch({
-                type: 'TASK_FETCH_LOAD',
-                path: window.__CONFIG__.dev.task_autoload
-            })
-        }
 
         // Check for URL elements
         if(window.location.hash) {
@@ -56,6 +49,12 @@ class Layout extends React.Component {
                     path: decodeURIComponent(hashPath)
                 });
             }
+        } else if(window.__CONFIG__.dev.task_autoload) {
+            //used for dev purpose
+            this.props.dispatch({
+                type: 'TASK_FETCH_LOAD',
+                path: window.__CONFIG__.dev.task_autoload
+            })
         }
     }
 
