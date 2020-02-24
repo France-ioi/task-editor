@@ -5,7 +5,6 @@ module.exports = function(title) {
         properties: {
             scenes: {
                 type: 'array',
-                format: 'tabs',
                 title: 'Scenes',
                 items: {
                     type: 'grid',

@@ -43,7 +43,6 @@ module.exports = {
             required: ['easy', 'medium', 'hard']
         }
     ],
-    title: 'maxInstructions',
     generator: [
         {
             input: {

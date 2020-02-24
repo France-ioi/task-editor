@@ -5,6 +5,7 @@
     function initTask(subTask) {
         subTask.gridInfos;
         subTask.gridInfos.maxInstructions;
+        subTask.gridInfos.variables;
         subTask.gridInfos.includeBlocks;
 
         if(checkEndCondition) {

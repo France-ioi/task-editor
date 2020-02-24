@@ -10,8 +10,7 @@ module.exports = function (data) {
         'checkEndEveryTurn',
         'ignoreInvalidMoves',
         'maxIterWithoutAction',
-        'hideSaveOrLoad',
-        'variables',
+        'hideSaveOrLoad'
     ]
 
     for(var res = {}, key, i=0; i<keys.length; i++) {

@@ -3,7 +3,7 @@ module.exports = {
     description: 'Meta-data specific to subTask.gridInfos..',
     properties: {
         contextType: require('./contextType.js'),
-        maxInstructions: require('./maxInstructions.js'),
+        maxInstructions: require('./gridInfos.maxInstructions.js'),
         blocks: {
             type: 'object',
             title: 'Blocks',
@@ -129,14 +129,7 @@ module.exports = {
             format: 'checkbox',
             title: 'hideSaveOrLoad'
         },
-        variables: {
-            type: 'array',
-            description: 'Context used by the task.',
-            items: {
-                type: 'string',
-                title: 'variables'
-            }
-        }
+        variables: require('./gridInfos.variables.js')
     },
     required: ['context', 'maxInstructions', 'blocks', 'conceptViewer']
 }
