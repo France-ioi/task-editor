@@ -2,7 +2,7 @@ module.exports = {
     type: 'object',
     description: 'Meta-data specific to subTask.gridInfos..',
     properties: {
-        contextType: require('./contextType.js'),
+        contextType: require('./gridInfos.contextType.js'),
         maxInstructions: require('./gridInfos.maxInstructions.js'),
         blocks: {
             type: 'object',
@@ -13,8 +13,8 @@ module.exports = {
                     format: 'checkbox',
                     title: 'Group by category'
                 },
-                generatedBlocks: require('./generatedBlocks.js'),
-                standardBlocks: require('./standardBlocks.js')
+                generatedBlocks: require('./gridInfos.generatedBlocks.js'),
+                standardBlocks: require('./gridInfos.standardBlocks.js')
             },
             required: ['groupByCategory', 'generatedBlocks', 'standardBlocks'],
             generator: [
@@ -31,7 +31,22 @@ module.exports = {
                 }
             ]
         },
-        conceptViewer: require('./conceptViewer.js'),
+        conceptViewer: require('./gridInfos.conceptViewer.js'),
+        checkEndCondition: {
+            type: 'string',
+            description: 'methode de verification de la solution.',
+            enum: ['checkReachExit', 'checkPickedAllWithdrawables', 'checkContainersFilled', 'checkBothReachAndCollect'],
+            generator: [
+                {
+                    output: {
+                        inject: {
+                            template: 'task.js',
+                            selector: '$checkEndCondition'
+                        }
+                    }
+                }
+            ]
+        },
         showLabels: {
             type: 'boolean',
             format: 'checkbox',
@@ -91,21 +106,6 @@ module.exports = {
             },
             required: ['blocklyRobot_lib']
         },
-        checkEndCondition: {
-            type: 'string',
-            description: 'methode de verification de la solution.',
-            enum: ['checkReachExit', 'checkPickedAllWithdrawables', 'checkContainersFilled', 'checkBothReachAndCollect'],
-            generator: [
-                {
-                    output: {
-                        inject: {
-                            template: 'task.js',
-                            selector: '$checkEndCondition'
-                        }
-                    }
-                }
-            ]
-        },
         actionDelay: {
             type: 'integer',
             description: 'Nombre '
@@ -131,5 +131,5 @@ module.exports = {
         },
         variables: require('./gridInfos.variables.js')
     },
-    required: ['context', 'maxInstructions', 'blocks', 'conceptViewer']
+    required: ['context', 'maxInstructions', 'blocks', 'conceptViewer', 'checkEndCondition']
 }
