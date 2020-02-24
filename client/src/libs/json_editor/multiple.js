@@ -51,22 +51,30 @@ JSONEditor.defaults.editors.multiple = JSONEditor.AbstractEditor.extend({
     if(!this.editors[i]) {
       this.buildChildEditor(i);
     }
-    
+
     var current_value = self.getValue();
 
     self.type = i;
 
     self.register();
 
-    $each(self.editors,function(type,editor) {
-      if(!editor) return;
-      if (editor.getValue() === null) self.title_container && (self.title_container.style.borderBottom = '1px solid #e3e3e3');
-      else self.title_container && (self.title_container.style.borderBottom = 'none');
-      if(self.type === type) {
-        if(self.keep_values) editor.setValue(current_value,true);
-        editor.container.style.display = '';
+    $each(self.editors, function(type,editor) {
+      if(!editor) {
+        return;
       }
-      else editor.container.style.display = 'none';
+      if (editor.getValue() === null) {
+        self.title_container && (self.title_container.style.borderBottom = '1px solid #e3e3e3');
+      } else {
+        self.title_container && (self.title_container.style.borderBottom = 'none');
+      }
+      if(self.type === type) {
+        if(self.keep_values) {
+          editor.setValue(current_value, true);
+        }
+        editor.container.style.display = '';
+      } else {
+        editor.container.style.display = 'none';
+      }
     });
     self.refreshValue();
     self.refreshHeaderText();

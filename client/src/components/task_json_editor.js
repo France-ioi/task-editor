@@ -21,6 +21,7 @@ class TaskJsonEditor extends React.Component {
             translations: this.props.task.translations,
             upload: this.editorUpload,
             keep_oneof_values: true,
+            no_additional_properties: true,
             task: {
                 getFileUrl: (filename) => {
                     return [
