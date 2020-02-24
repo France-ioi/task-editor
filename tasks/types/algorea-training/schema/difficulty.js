@@ -10,7 +10,7 @@ module.exports = function(title) {
                 items: {
                     type: 'grid',
                     watch: {
-                        sceneContext: 'root.gridInfos.context'
+                        sceneContext: 'root.gridInfos.contextType'
                     }
                 }
             },

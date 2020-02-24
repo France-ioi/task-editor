@@ -2,7 +2,7 @@ module.exports = {
     type: 'object',
     description: 'Meta-data specific to subTask.gridInfos..',
     properties: {
-        context: require('./context.js'),
+        contextType: require('./contextType.js'),
         maxInstructions: require('./maxInstructions.js'),
         blocks: {
             type: 'object',
