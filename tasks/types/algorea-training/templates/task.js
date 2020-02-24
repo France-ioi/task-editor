@@ -1,10 +1,16 @@
 (function () {
     var subTaskData;
+    var checkEndCondition;
 
     function initTask(subTask) {
         subTask.gridInfos;
         subTask.gridInfos.maxInstructions;
         subTask.gridInfos.includeBlocks;
+
+        if(checkEndCondition) {
+            subTask.gridInfos.checkEndCondition = robotEndConditions[checkEndCondition];
+        }
+
         subTask.data = subTaskData;
 
         initBlocklySubTask(subTask);

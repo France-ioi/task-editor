@@ -84,40 +84,10 @@ module.exports = {
         AlgoreaTrainingTaskMetaData: require('./AlgoreaTrainingTaskMetaData.js'),
         PEMTaskMetaData: require('./PEMTaskMetaData.js'),
         task: require('./task.js'),
-        context: require('./context.js'),
-        conceptViewer: require('./conceptViewer.js'),
-        maxInstructions: require('./maxInstructions.js'),
-        blocks: {
-            type: 'object',
-            title: 'Blocks',
-            properties: {
-                groupByCategory: {
-                    type: 'boolean',
-                    format: 'checkbox',
-                    title: 'Group by category'
-                },
-                generatedBlocks: require('./generatedBlocks.js'),
-                standardBlocks: require('./standardBlocks.js')
-            },
-            required: ['groupByCategory', 'generatedBlocks', 'standardBlocks'],
-            generator: [
-                {
-                    input: {
-                        collector: 'collectors/subTask.gridInfos.includeBlocks.js'
-                    },
-                    output: {
-                        inject: {
-                            template: 'task.js',
-                            selector: '$subTask.gridInfos.includeBlocks'
-                        }
-                    }
-                }
-            ]
-        },
+        gridInfos: require('./gridInfos.js'),
         difficulties: require('./difficulties.js')
     },
-    required: ['title', 'icon', 'windowLanguage', 'conceptViewer', 'maxInstructions', 'AlgoreaTrainingTaskMetaData', 'PEMTaskMetaData', 'task', 'context', 'blocks', 'difficulties'],
-
+    required: ['title', 'icon', 'windowLanguage', 'AlgoreaTrainingTaskMetaData', 'PEMTaskMetaData', 'task', 'gridInfos', 'difficulties'],
     generator: [
         {
             input: {
@@ -143,7 +113,7 @@ module.exports = {
         },
         {
             input: {
-                collector: 'collectors/thresholds.js',
+                collector: 'collectors/displayHelper.threshold.js',
                 keepArray: true
             },
             output: {
