@@ -16,7 +16,7 @@ module.exports = {
         },
         {
             type: 'object',
-            title: 'Accurate',
+            title: 'Distinct',
             properties: {
                 easy: {
                     title: 'Easy',

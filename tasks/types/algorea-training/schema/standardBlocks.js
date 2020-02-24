@@ -29,7 +29,7 @@ module.exports = {
                 },
                 {
                     type: 'object',
-                    title: 'Accurate',
+                    title: 'Distinct',
                     properties: {
                         shared: {
                             title: 'Shared among levels blocks',
