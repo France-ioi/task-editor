@@ -51,12 +51,19 @@ JSONEditor.defaults.editors.multiple = JSONEditor.AbstractEditor.extend({
     if(!this.editors[i]) {
       this.buildChildEditor(i);
     }
-
     var current_value = self.getValue();
 
     self.type = i;
 
     self.register();
+
+
+    // hide child editor elements if any
+    for(var j=0; j<this.title_container.childNodes.length; j++) {
+      if(this.title_container.childNodes[j].className.indexOf('form-right-group') !== -1) {
+        this.title_container.childNodes[j].style.display = 'none';
+      }
+    }
 
     $each(self.editors, function(type,editor) {
       if(!editor) {
@@ -71,7 +78,7 @@ JSONEditor.defaults.editors.multiple = JSONEditor.AbstractEditor.extend({
         if(self.keep_values) {
           editor.setValue(current_value, true);
         }
-        editor.container.style.display = '';
+        self.showChildEditor(type);
       } else {
         editor.container.style.display = 'none';
       }
@@ -80,6 +87,45 @@ JSONEditor.defaults.editors.multiple = JSONEditor.AbstractEditor.extend({
     self.refreshHeaderText();
     self.configureCurrentEditorTranslation();
   },
+
+  showChildEditor: function(i) {
+
+      var el = this.getChildEditorElement(i);
+      if(el) {
+        this.title_container.appendChild(el);
+        el.style.display = '';
+        this.editors[i].container.style.display = 'none';
+      } else {
+        this.editors[i].container.style.display = '';
+      }
+
+  },
+
+
+  getChildEditorElement: function(i) {
+      var el;
+      if('editors' in this.editors[i]) {
+        // object
+        var subeditors = this.editors[i].editors;
+        for(var j in subeditors) {
+          if(!subeditors.hasOwnProperty(j)) {
+            continue;
+          }
+          if(subeditors[j].options.schema.display_in_parent) {
+            el = subeditors[j].input;
+            break;
+          }
+        }
+      } else {
+        // single
+        if(this.editors[i].schema.display_in_parent) {
+          el = this.editors[i].input;
+        }
+      }
+      while (el && (el = el.parentElement) && el.className.indexOf('form-right-group') === -1);
+      return el;
+  },
+
   buildChildEditor: function(i) {
     var self = this;
     var type = this.types[i];
@@ -116,7 +162,8 @@ JSONEditor.defaults.editors.multiple = JSONEditor.AbstractEditor.extend({
     self.editors[i].build();
     self.editors[i].postBuild();
 
-    if(self.editors[i].header) self.editors[i].header.style.display = 'none';
+    self.editors[i].header && (self.editors[i].header.style.display = 'none');
+    self.editors[i].description && (self.editors[i].description.style.display = 'none');
 
     self.editors[i].option = self.switcher_options[i];
 
@@ -126,6 +173,7 @@ JSONEditor.defaults.editors.multiple = JSONEditor.AbstractEditor.extend({
 
     if(i !== self.type) holder.style.display = 'none';
   },
+
   preBuild: function() {
     var self = this;
 
@@ -181,10 +229,15 @@ JSONEditor.defaults.editors.multiple = JSONEditor.AbstractEditor.extend({
     var self = this;
     var container = this.container;
 
+
     this.header = this.label = this.theme.getFormInputLabel(this.getTitle());
     this.switcher = this.theme.getSwitcher(this.display_text);
-    this.title_container = this.theme.getMultiField(this.header, this.switcher);
+    this.header.appendChild(this.switcher);
+
+    this.title_container = this.theme.getFormControl(this.header, document.createElement('div'));
+
     this.container.appendChild(this.title_container);
+
 
     this.switcher.addEventListener('change',function(e) {
       e.preventDefault();

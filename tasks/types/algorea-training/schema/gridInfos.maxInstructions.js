@@ -5,6 +5,7 @@ module.exports = {
             title: 'Shared',
             properties: {
                 shared_value: {
+                    display_in_parent: true,
                     title: 'Value',
                     type: 'integer',
                     default: 10,

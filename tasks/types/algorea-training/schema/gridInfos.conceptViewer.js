@@ -4,7 +4,8 @@ module.exports = {
         {
             title: "Boolean value",
             type: "boolean",
-            format: "checkbox"
+            format: "checkbox",
+            display_in_parent: true
         },
         {
             title: "Array value",
