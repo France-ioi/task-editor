@@ -98,6 +98,7 @@ JSONEditor.defaults.editors['sortable_list'] = JSONEditor.AbstractEditor.extend(
         this.lists.src.el
             .sortable({
                 connectWith: '#' + this.lists.dst.id,
+                placeholder: 'sortable-placeholder',
                 receive: function(e, ui) {
                     self.refreshValue();
                 }
@@ -107,6 +108,7 @@ JSONEditor.defaults.editors['sortable_list'] = JSONEditor.AbstractEditor.extend(
         this.lists.dst.el
             .sortable({
                 connectWith: '#' + this.lists.src.id,
+                placeholder: 'sortable-placeholder',
                 receive: function(e, ui) {
                     self.refreshValue();
                 },

@@ -18,3 +18,6 @@
     padding-bottom: 3px;
 }
 
+.sortable-list .sortable-placeholder {
+    background: #F2F2F2;
+}

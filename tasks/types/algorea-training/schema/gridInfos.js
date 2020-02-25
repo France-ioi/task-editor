@@ -131,5 +131,5 @@ module.exports = {
         },
         variables: require('./gridInfos.variables.js')
     },
-    required: ['context', 'maxInstructions', 'blocks', 'conceptViewer', 'checkEndCondition']
+    required: ['contextType', 'maxInstructions', 'blocks', 'conceptViewer', 'checkEndCondition']
 }
