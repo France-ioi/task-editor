@@ -1,6 +1,6 @@
 import Sprite from './sprite';
 
-var max_grid_size = 11;
+var max_grid_size = 32;
 
 module.exports = function (params) {
 
@@ -8,6 +8,7 @@ module.exports = function (params) {
     var cell_size = params.field_size + 1;
     var container = $('<div class="te-grid-display"></div>');
     $(params.parent).append(container);
+
 
     container.resizable({
         grid: [cell_size, cell_size],
@@ -24,6 +25,14 @@ module.exports = function (params) {
     var width = 1;
     var cells = [];
 
+
+    function createCellClickHandler(num) {
+        return function() {
+            params.onCellClick(num % width, ~~(num / width));
+        }
+    }
+
+
     function resize(w, h) {
         container.width(w * cell_size).height(h * cell_size);
         width = w;
@@ -32,12 +41,7 @@ module.exports = function (params) {
             var num = cells.length;
             do {
                 var cell = $('<div class="grid-cell"></div>');
-                cell.click((function () {
-                    var num = cells.length;
-                    return function () {
-                        params.onCellClick(num % width, ~~(num / width));
-                    }
-                })());
+                cell.click(createCellClickHandler(cells.length));
                 cells.push(cell);
                 container.append(cell);
             } while (size > cells.length);

@@ -2,7 +2,7 @@ import Toolbar from './grid/toolbar';
 import Display from './grid/display';
 import Sprite from './grid/sprite';
 
-var field_size = 40;
+var field_size = 20;
 
 JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
 
