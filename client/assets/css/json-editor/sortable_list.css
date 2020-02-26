@@ -21,3 +21,9 @@
 .sortable-list .sortable-placeholder {
     background: #F2F2F2;
 }
+
+
+.form-right-group .row {
+    margin: 0;
+    width: 100%;
+}

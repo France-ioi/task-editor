@@ -6,6 +6,7 @@ module.exports = {
             title: 'Shared',
             properties: {
                 shared: {
+                    display_in_parent: true,
                     title: 'Shared among levels blocks',
                     type: 'sortable_list',
                     items: require('./blocks/generated.js')

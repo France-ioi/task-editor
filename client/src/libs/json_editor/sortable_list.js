@@ -80,8 +80,9 @@ JSONEditor.defaults.editors['sortable_list'] = JSONEditor.AbstractEditor.extend(
                 </div>\
             </div>\
         ');
+        this.input = el[0];
         this.container.appendChild(
-            this.theme.getCustomControl(
+            this.theme.getFormControl(
                 this.header,
                 el[0],
                 this.description
