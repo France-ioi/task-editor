@@ -12,11 +12,6 @@ module.exports = function(title) {
                         sceneContext: 'root.gridInfos.contextType'
                     }
                 }
-            },
-            displayHelperThreshold: {
-                type: 'integer',
-                title: 'displayHelperThreshold',
-                description: 'Threshold of the displayHelper for the current difficulty'
             }
         },
         required: ['scenes']

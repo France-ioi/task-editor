@@ -85,9 +85,10 @@ module.exports = {
         PEMTaskMetaData: require('./PEMTaskMetaData.js'),
         task: require('./task.js'),
         gridInfos: require('./gridInfos.js'),
-        difficulties: require('./difficulties.js')
+        difficulties: require('./difficulties.js'),
+        displayHelper: require('./displayHelper.js')
     },
-    required: ['title', 'icon', 'windowLanguage', 'AlgoreaTrainingTaskMetaData', 'PEMTaskMetaData', 'task', 'gridInfos', 'difficulties'],
+    required: ['title', 'icon', 'windowLanguage', 'AlgoreaTrainingTaskMetaData', 'PEMTaskMetaData', 'task', 'gridInfos', 'difficulties', 'displayHelper'],
     generator: [
         {
             input: {
@@ -108,18 +109,6 @@ module.exports = {
                 inject: {
                     template: 'task.js',
                     selector: '$subTaskData'
-                }
-            }
-        },
-        {
-            input: {
-                collector: 'collectors/displayHelper.threshold.js',
-                keepArray: true
-            },
-            output: {
-                inject: {
-                    template: 'task.js',
-                    selector: '$thresholds'
                 }
             }
         },

@@ -16,10 +16,8 @@
 
         initBlocklySubTask(subTask);
 
-        var thresholds;
-        for (var i = 0; i < thresholds.length; i++) {
-            displayHelper[thresholds[i].key] = thresholds[i].value;
-        }
+        displayHelper.thresholdEasy;
+        displayHelper.thresholdMedium;
     }
 
     initWrapper(initTask, Object.keys(subTaskData), null, true);
