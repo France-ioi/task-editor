@@ -1,6 +1,6 @@
 module.exports = function (data) {
 
-    var levels = ['easy', 'medium', 'hard'];
+    var levels = ['basic', 'easy', 'medium', 'hard'];
     var res = {};
 
     for (var i = 0; i < levels.length; i++) {

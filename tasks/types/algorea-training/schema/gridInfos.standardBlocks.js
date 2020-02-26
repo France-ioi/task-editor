@@ -37,6 +37,11 @@ module.exports = {
                             type: 'sortable_list',
                             items: require('./blocks/standard.js')
                         },
+                        basic: {
+                            title: 'Basic level blocks',
+                            type: 'sortable_list',
+                            items: require('./blocks/standard.js')
+                        },
                         easy: {
                             title: 'Easy level blocks',
                             type: 'sortable_list',

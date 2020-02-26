@@ -19,6 +19,13 @@ module.exports = {
             type: 'object',
             title: 'Distinct',
             properties: {
+                basic: {
+                    title: 'Basic',
+                    type: 'integer',
+                    default: 10,
+                    minimum: 1,
+                    maximum: 99
+                },
                 easy: {
                     title: 'Easy',
                     type: 'integer',
@@ -41,7 +48,7 @@ module.exports = {
                     maximum: 99
                 }
             },
-            required: ['easy', 'medium', 'hard']
+            required: ['basic', 'easy', 'medium', 'hard']
         }
     ],
     generator: [

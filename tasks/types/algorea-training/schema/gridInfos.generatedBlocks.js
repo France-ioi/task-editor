@@ -23,6 +23,11 @@ module.exports = {
                     type: 'sortable_list',
                     items: require('./blocks/generated.js')
                 },
+                basic: {
+                    title: 'Basic level blocks',
+                    type: 'sortable_list',
+                    items: require('./blocks/generated.js')
+                },
                 easy: {
                     title: 'Easy level blocks',
                     type: 'sortable_list',
@@ -39,7 +44,7 @@ module.exports = {
                     items: require('./blocks/generated.js')
                 }
             },
-            required: ['shared', 'easy', 'medium', 'hard']
+            required: ['shared', 'basic', 'easy', 'medium', 'hard']
         }
     ]
 };

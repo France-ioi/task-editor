@@ -18,6 +18,13 @@ module.exports = {
             type: 'object',
             title: 'Distinct',
             properties: {
+                basic: {
+                    title: 'Basic level',
+                    type: 'array',
+                    items: {
+                        type: 'string'
+                    }
+                },
                 easy: {
                     title: 'Easy level',
                     type: 'array',
@@ -40,7 +47,7 @@ module.exports = {
                     }
                 }
             },
-            required: ['easy', 'medium', 'hard']
+            required: ['basic', 'easy', 'medium', 'hard']
         }
     ],
     generator: [
