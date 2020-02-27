@@ -118,7 +118,7 @@ module.exports = {
         ignoreInvalidMoves: {
             type: 'boolean',
             format: 'checkbox',
-            title: 'cignoreInvalidMoves'
+            title: 'ignoreInvalidMoves'
         },
         maxIterWithoutAction: {
             type: 'integer',
