@@ -6,10 +6,16 @@ module.exports = function (params) {
 
     var used_images = {};
     var cell_size = params.field_size + 1;
+    var backgrounds = [];
+    var init_items = {};
+    var width = 1;
+    var cells = [];
+    var mouse_pressed = false;
+
+
+    // init container
     var container = $('<div class="te-grid-display"></div>');
     $(params.parent).append(container);
-
-
     container.resizable({
         grid: [cell_size, cell_size],
         maxHeight: max_grid_size * cell_size,
@@ -17,20 +23,41 @@ module.exports = function (params) {
         resize: function(event, ui) {
             params.onResize(Math.floor(ui.size.width / cell_size) || 1, Math.floor(ui.size.height / cell_size) || 1);
         }
+    }).mouseleave(function() {
+        mouse_pressed = false;
     });
 
 
-    var backgrounds = [];
-    var init_items = {};
-    var width = 1;
-    var cells = [];
 
+
+
+    // cell events
 
     function createCellClickHandler(num) {
         return function() {
             params.onCellClick(num % width, ~~(num / width));
         }
     }
+
+    function createCellEnterHandler(num) {
+        return function() {
+            if(mouse_pressed) {
+                params.onCellClick(num % width, ~~(num / width));
+            }
+        }
+    }
+
+    function initCellEvents(cell, num) {
+        cell.click(createCellClickHandler(num));
+        cell.mousedown(function() {
+            mouse_pressed = true;
+        });
+        cell.mouseup(function() {
+            mouse_pressed = false;
+        });
+        cell.mouseenter(createCellEnterHandler(num));
+    }
+
 
 
     function resize(w, h) {
@@ -41,7 +68,7 @@ module.exports = function (params) {
             var num = cells.length;
             do {
                 var cell = $('<div class="grid-cell"></div>');
-                cell.click(createCellClickHandler(cells.length));
+                initCellEvents(cell, cells.length);
                 cells.push(cell);
                 container.append(cell);
             } while (size > cells.length);

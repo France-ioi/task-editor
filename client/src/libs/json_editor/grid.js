@@ -113,7 +113,9 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
 
     onCellClick: function (col, row) {
         var item = this.toolbar.activeItem();
-        if (item == 'clear') {
+        if(!item) {
+            return;
+        } else if (item == 'clear') {
             var initItems = this.value.initItems.filter(function(item) {
                 return item.col !== col || item.row !== row;
             });
