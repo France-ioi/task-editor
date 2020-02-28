@@ -1,37 +1,51 @@
 import Sprite from './sprite';
 
 var max_grid_size = 32;
+var cell_sizes = [20, 40];
+
 
 module.exports = function (params) {
 
     var used_images = {};
-    var cell_size = params.field_size + 1;
     var backgrounds = [];
     var init_items = {};
-    var width = 1;
     var cells = [];
-    var mouse_pressed = false;
 
 
     // init container
-    var container = $('<div class="te-grid-display"></div>');
+    var container = $('<div></div>');
     $(params.parent).append(container);
-    container.resizable({
-        grid: [cell_size, cell_size],
-        maxHeight: max_grid_size * cell_size,
-        maxWidth: max_grid_size * cell_size,
-        resize: function(event, ui) {
-            params.onResize(Math.floor(ui.size.width / cell_size) || 1, Math.floor(ui.size.height / cell_size) || 1);
-        }
-    }).mouseleave(function() {
+
+
+    // cell size
+    var cell_size;
+
+    function setCellSize(level) {
+        cell_size = cell_sizes[level] + 1;
+        container.attr('class', 'te-grid-display te-grid-display-size-' + level);
+        try {
+            container.resizable('destroy');
+        } catch(e) {}
+        container.resizable({
+            grid: [cell_size, cell_size],
+            maxHeight: max_grid_size * cell_size,
+            maxWidth: max_grid_size * cell_size,
+            resize: function(event, ui) {
+                params.onResize(Math.floor(ui.size.width / cell_size) || 1, Math.floor(ui.size.height / cell_size) || 1);
+            }
+        });
+        refreshConteinerSize();
+    }
+    setCellSize(1);
+
+
+
+    // mouse events
+    var mouse_pressed = false;
+
+    container.mouseleave(function() {
         mouse_pressed = false;
     });
-
-
-
-
-
-    // cell events
 
     function createCellClickHandler(num) {
         return function() {
@@ -60,9 +74,21 @@ module.exports = function (params) {
 
 
 
+
+    var width = null;
+    var height = null;
+    function refreshConteinerSize(new_width, new_height) {
+        if(new_width && new_height) {
+            width = new_width;
+            height = new_height;
+        }
+        if(width !== null) {
+            container.width(width * cell_size).height(height * cell_size);
+        }
+    }
+
     function resize(w, h) {
-        container.width(w * cell_size).height(h * cell_size);
-        width = w;
+        refreshConteinerSize(w, h)
         var size = w * h;
         if (size > cells.length) {
             var num = cells.length;
@@ -80,6 +106,9 @@ module.exports = function (params) {
         }
     }
 
+
+
+    // render
     function renderBackground(tiles) {
         resize(tiles[0].length, tiles.length);
         var n = 0, b;
@@ -153,6 +182,10 @@ module.exports = function (params) {
 
         getUsedImages: function() {
             return Object.keys(used_images);
+        },
+
+        setZoom: function(level) {
+            setCellSize(level);
         }
     };
 }

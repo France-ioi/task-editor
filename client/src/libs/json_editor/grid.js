@@ -2,8 +2,6 @@ import Toolbar from './grid/toolbar';
 import Display from './grid/display';
 import Sprite from './grid/sprite';
 
-var field_size = 20;
-
 JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
 
     sanitize: function (value) {
@@ -68,15 +66,17 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
         );
 
         // item types toolbar
+        var self = this;
         this.toolbar = new Toolbar({
             parent: wrapper,
-            field_size: field_size
+            setZoom: function(level) {
+                self.display.setZoom(level)
+            }
         });
 
         // display
         this.display = new Display({
             parent: wrapper,
-            field_size: field_size,
             onCellClick: this.onCellClick.bind(this),
             onResize: this.onResize.bind(this)
         });

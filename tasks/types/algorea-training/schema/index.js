@@ -35,12 +35,6 @@ module.exports = {
         }
     },
     properties: {
-        test: {
-            type: 'grid',
-            watch: {
-                sceneContext: 'root.gridInfos.contextType'
-            }
-        },
         title: {
             type: 'string',
             title: 'Title of the window',
@@ -94,7 +88,7 @@ module.exports = {
         difficulties: require('./difficulties.js'),
         displayHelper: require('./displayHelper.js')
     },
-    required: ['test', 'title', 'icon', 'windowLanguage', 'AlgoreaTrainingTaskMetaData', 'PEMTaskMetaData', 'task', 'gridInfos', 'difficulties', 'displayHelper'],
+    required: ['title', 'icon', 'windowLanguage', 'AlgoreaTrainingTaskMetaData', 'PEMTaskMetaData', 'task', 'gridInfos', 'difficulties', 'displayHelper'],
     generator: [
         {
             input: {

@@ -1,5 +1,7 @@
 import Sprite from './sprite';
 
+var field_size = 40;
+
 module.exports = function (params) {
 
     var container = $('<div class="te-grid-toolbar"></div>');
@@ -64,7 +66,7 @@ module.exports = function (params) {
 
     function renderInitItem(data, type) {
         for (var state = 0; state <= Math.max(data.nbStates / 2 - 1, 0); state++) {
-            var offset = -1 * params.field_size * 2 * state;
+            var offset = -1 * field_size * 2 * state;
             var btn = $('<div class="item-type"></div>');
             btn.click(
                 (function(btn, offset, state) {
@@ -93,6 +95,7 @@ module.exports = function (params) {
     }
 
 
+
     function renderCommandItem(cmd, img_url) {
         var btn = $('<div class="item-type"></div>');
         btn.click(function() {
@@ -105,6 +108,29 @@ module.exports = function (params) {
                 img_url: img_url
             })
         );
+        container.append(btn);
+    }
+
+
+    function renderZoomItem() {
+        var btn = $('<div class="item-type pull-right"></div>');
+        var sprites = [
+            Sprite.create({
+                img_url: '/assets/grid/zoom-in.png'
+            }).hide(),
+            Sprite.create({
+                img_url: '/assets/grid/zoom-out.png'
+            }).hide()
+        ];
+        var level = 1;
+        sprites[level].show();
+        btn.click(function() {
+            sprites[level].hide();
+            level = (level + 1) % 2;
+            sprites[level].show();
+            params.setZoom(level);
+        });
+        btn.append(sprites[0]).append(sprites[1]);
         container.append(btn);
     }
 
@@ -126,7 +152,8 @@ module.exports = function (params) {
                 color: '#FFF',
                 num: 1
             });
-            renderCommandItem('clear', '/assets/grid/delete-64.png');
+            renderCommandItem('clear', '/assets/grid/delete.png');
+            renderZoomItem();
         },
 
 

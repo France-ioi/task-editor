@@ -34,8 +34,6 @@
 }
 
 .te-grid-display .grid-cell {
-    width: 21px;
-    height: 21px;
     border-right: 1px solid #CCC;
     border-bottom: 1px solid #CCC;
     position: relative;
@@ -46,4 +44,14 @@
     position: absolute;
     left: 0;
     top: 0;
+}
+
+.te-grid-display-size-0 .grid-cell {
+    width: 21px;
+    height: 21px;
+}
+
+.te-grid-display-size-1 .grid-cell {
+    width: 41px;
+    height: 41px;
 }
