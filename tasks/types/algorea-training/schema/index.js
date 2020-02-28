@@ -2,6 +2,15 @@ module.exports = {
     title: 'Task',
     type: 'object',
     description: 'This editor allows you to edit the various aspects of a task. All the data in this editor is organized as a JSON object, whose properties represent each task part. Some properties are optional, and are hidden by default in the editor; to display them, click "Object properties" on each tree item to add these optional properties.',
+    languages: {
+        "list": {
+          "en": "English",
+          "fr": "French",
+          "fa": "فارسی"
+        },
+        "rtl": ["fa"],
+        "original": "en"
+    },
     definitions: {
         fileDescr: {
             type: 'string',
@@ -108,6 +117,10 @@ module.exports = {
         'gridInfos',
         'difficulties',
         'displayHelper'
+    ],
+    translate: [
+        'title',
+        'taskIntro'
     ],
     generator: [
         {
