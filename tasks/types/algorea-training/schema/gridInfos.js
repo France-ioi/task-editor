@@ -2,6 +2,7 @@ module.exports = {
     type: 'object',
     description: 'Meta-data specific to subTask.gridInfos..',
     properties: {
+        blocksLanguage: require('./gridInfos.blocksLanguage.js'),
         contextType: require('./gridInfos.contextType.js'),
         maxInstructions: require('./gridInfos.maxInstructions.js'),
         blocks: {
