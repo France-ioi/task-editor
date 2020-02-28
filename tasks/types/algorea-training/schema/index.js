@@ -93,24 +93,8 @@ module.exports = {
                 }
             ]
         },
-        windowLanguage: {
-            type: 'string',
-            description: 'Language for the window.',
-            enum: ['fr', 'en', 'de'],
-            generator: [
-                {
-                    output: {
-                        inject: {
-                            template: 'index.html',
-                            selector: '$stringsLanguage'
-                        }
-                    }
-                }
-            ]
-        },
         AlgoreaTrainingTaskMetaData: require('./AlgoreaTrainingTaskMetaData.js'),
         PEMTaskMetaData: require('./PEMTaskMetaData.js'),
-        task: require('./task.js'),
         gridInfos: require('./gridInfos.js'),
         difficulties: require('./difficulties.js'),
         displayHelper: require('./displayHelper.js')
@@ -119,7 +103,6 @@ module.exports = {
         'title',
         'icon',
         'taskIntro',
-        'windowLanguage',
         'AlgoreaTrainingTaskMetaData',
         'PEMTaskMetaData',
         'gridInfos',
