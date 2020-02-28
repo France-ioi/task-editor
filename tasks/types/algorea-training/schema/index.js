@@ -37,13 +37,21 @@ module.exports = {
     properties: {
         title: {
             type: 'string',
-            title: 'Title of the window',
+            title: 'Title',
             generator: [
                 {
                     output: {
                         inject: {
                             template: 'index.html',
                             selector: 'title'
+                        }
+                    }
+                },
+                {
+                    output: {
+                        inject: {
+                            template: "index.html",
+                            selector: "#taskTitle"
                         }
                     }
                 }
@@ -62,6 +70,25 @@ module.exports = {
                 {
                     output: {
                         copy: "icon.png"
+                    }
+                }
+            ]
+        },
+        taskIntro: {
+            title: "Task statement",
+            description: "Task statement, displayed to the user.",
+            type: "string",
+            format: "html",
+            options: {
+                wysiwyg: true
+            },
+            generator: [
+                {
+                    output: {
+                        inject: {
+                            template: "index.html",
+                            selector: "#taskIntro"
+                        }
                     }
                 }
             ]
@@ -88,7 +115,17 @@ module.exports = {
         difficulties: require('./difficulties.js'),
         displayHelper: require('./displayHelper.js')
     },
-    required: ['title', 'icon', 'windowLanguage', 'AlgoreaTrainingTaskMetaData', 'PEMTaskMetaData', 'task', 'gridInfos', 'difficulties', 'displayHelper'],
+    required: [
+        'title',
+        'icon',
+        'taskIntro',
+        'windowLanguage',
+        'AlgoreaTrainingTaskMetaData',
+        'PEMTaskMetaData',
+        'gridInfos',
+        'difficulties',
+        'displayHelper'
+    ],
     generator: [
         {
             input: {
