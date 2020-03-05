@@ -4,7 +4,6 @@ var tasks_config = require('../../../tasks/types/config.json');
 
 // return versions from task_data or first version from task type versions list
 function detectVersion(task_data) {
-    console.log('detectVersion', task_data)
     if('version' in task_data) {
         return task_data.version;
     }
@@ -21,7 +20,6 @@ function getFirstVersion(task_type) {
 // return last available version
 function getLatestVersion(task_type) {
     var item = tasks_config.find(item => item.type == task_type);
-    console.log('getLatestVersion', task_type, task_type)
     return item.versions[item.versions.length - 1];
 }
 
