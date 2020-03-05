@@ -56,6 +56,12 @@ export default (state = default_state, action) => {
                 translations: action.translations
             };
 
+        case 'TASK_SET_VERSION':
+            return {
+                ...state,
+                version: action.version
+            };
+
         case 'TASK_FETCH_SUCCESS':
             return {
                 ...state,
