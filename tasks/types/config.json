@@ -17,7 +17,7 @@
     {
         "type": "quiz",
         "title": "Quiz",
-        "versions": ["1"]
+        "versions": ["1", "2"]
     },
     {
         "type": "course",

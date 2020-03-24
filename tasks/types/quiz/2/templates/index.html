@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+   <head>
+        <meta charset="utf-8">
+        <title></title>
+        <script>
+            var stringsLanguage = 'en';
+            var quiz_settings;
+            var task_data_info = %%TASK_DATA_INFO%%;
+            var quiz_question_types;
+        </script>
+        <script class="remove" type="text/javascript" src="%%TASK_PATH%%/_common/modules/pemFioi/importModules-1.4-mobileFirst.js" id="import-modules"></script>
+        <script class="remove" type="text/javascript" src="%%TASK_PATH%%/_common/modules/pemFioi/quiz/loader.js"></script>
+        <script class="remove" type="text/javascript">
+            var json;
+            var modulesPath = '%%TASK_PATH%%/_common/modules/';
+            loadQuizModules();
+        </script>
+        <script class="remove" type="text/javascript" src="grader_data.js"></script>
+        <style>
+            * {
+                unicode-bidi: plaintext;
+            }
+        </style>
+    </head>
+    <body dir="%%LANG_DIR%%">
+        <div dir="auto" id="task" style="display: none">
+            <div dir="auto" class="intro"></div>
+            <div dir="auto" class="taskContent"></div>
+        </div>
+        <div dir="auto" id="solution" class="remove" style="display: none"></div>
+   </body>
+</html>

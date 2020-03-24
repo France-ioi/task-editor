@@ -1,0 +1,35 @@
+<% console.log(data); for(var i=0; i<data.length; i++) { %>
+
+    <% if(data[i].group) { %>
+        <question-group>
+    <% } %>
+
+    <%
+        for(var j=0; j<data[i].questions.length; j++) {
+            var question = data[i].questions[j];
+    %>
+        <question type="<%- question.type %>">
+            <statement><%- question.text %></statement>
+
+            <% if(question.type == 'input') { %>
+                <answer format="<%- question.format %>" validator="<%- question.validator %>"></answer>
+            <% } else if(question.type == 'fill_gaps') { %>
+                <% var words = this.helpers.shuffle(question.answers.concat(question.non_answers || [])); %>
+                <% for(var k=0; k<words.length; k++) { %>
+                    <answer><%- words[k] %></answer>
+                <% } %>
+                <div class="fill-gaps-text"><%- question.fill_gaps_text %></div>
+            <% } else { for(var k=0; k<question.answers.length; k++) { %>
+                <answer><%- question.answers[k].text %></answer>
+            <% }} %>
+
+            <% if(question.solution) { %>
+                <solution class="remove"><%- question.solution %></solution>
+            <% } %>
+        </question>
+    <% } %>
+
+    <% if(data[i].group) { %>
+        </question-group>
+    <% } %>
+<% } %>
