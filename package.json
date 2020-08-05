@@ -21,7 +21,7 @@
     "easymde": "^2.5.1",
     "ejs": "^2.6.1",
     "express": "^4.16.4",
-    "express-fileupload": "^0.4.0",
+    "express-fileupload": "^1.1.9",
     "isbinaryfile": "^4.0.0",
     "jquery": "^3.4.1",
     "jquery-ui-dist": "^1.12.1",
