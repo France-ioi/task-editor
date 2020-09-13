@@ -178,7 +178,6 @@ var api = {
                 var src = path.join(config.path, req.body.path_src);
                 var dst = path.join(config.path, req.body.path);
                 shell.cp('-rf', src + '/*', dst + '/');
-                shell.rm('-rf', src);
                 repo.addCommit(req.user, req.body.path, (err) => {
                     if(err) {
                         shell.rm('-rf', dst);
