@@ -27,12 +27,17 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
 
     onWatchedFieldChange: function () {
         this._super();
+        if (typeof quickAlgoRobotGetGridOptions !== "function") {
+            return;
+        }
         Sprite.setContext(this.watched_values.sceneContext);
-        // load itemtypes according to context, quickAlgoRobotGetGridOptions is available from _common/modules/pemFioi/blocklyRobot_lib-dev.js
-        if (typeof quickAlgoRobotGetGridOptions !== "function") return;
         var itemTypes = quickAlgoRobotGetGridOptions(this.watched_values.sceneContext, 'itemTypes');
-        if(!itemTypes) return;
-        this.itemTypes = itemTypes || {};
+        this.message_box.style.display = !itemTypes ? '' : 'none';
+        this.form_control.style.display = itemTypes ? '' : 'none';
+        if(!itemTypes) {
+            return;
+        }
+        this.itemTypes = itemTypes;
         this.toolbar.setItemTypes(this.itemTypes);
         this.display.setItemTypes(this.itemTypes);
         this.display.render(this.value);
@@ -51,19 +56,26 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
 
     build: function () {
         this.id = this.path.replace(/\./g, "-");
-        var self = this;
+
+        if (typeof quickAlgoRobotGetGridOptions !== 'function') {
+            var el = document.createElement('div');
+            el.className = 'te-grid-message te-grid-message-error';
+            el.innerHTML = 'Error: robot library not found.';
+            this.container.appendChild(el);        
+            return;
+        }        
+
         var wrapper = document.createElement('div');
         if(this.schema.description) {
             this.description = this.theme.getFormInputDescription(this.schema.description);
         }
         this.header = this.label = this.theme.getFormInputLabel(this.getTitle());
-        this.container.appendChild(
-            this.theme.getFormControl(
-                this.header,
-                wrapper,
-                this.description
-            )
+        this.form_control = this.theme.getFormControl(
+            this.header,
+            wrapper,
+            this.description
         );
+        this.container.appendChild(this.form_control);
 
         // item types toolbar
         var self = this;
@@ -80,6 +92,12 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
             onCellClick: this.onCellClick.bind(this),
             onResize: this.onResize.bind(this)
         });
+
+        // message 
+        this.message_box = document.createElement('div');
+        this.message_box.className = 'te-grid-message';
+        this.message_box.innerHTML = 'Please select the contextType for this task before using this editor</div>';
+        this.container.appendChild(this.message_box);
     },
 
 
@@ -149,8 +167,8 @@ JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
         if (value != null) {
             this.value = value;
         }
-        if (this.value != null) {
-            this.display.render(this.value);
+        if (this.value != null && this.display) {
+             this.display.render(this.value);
         }
     }
 
