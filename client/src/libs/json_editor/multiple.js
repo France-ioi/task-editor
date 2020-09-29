@@ -1,3 +1,4 @@
+import { isFunction } from 'jquery';
 import { $extend, $each, $isplainobject, $trigger, $triggerc } from './utils'
 
 // Multiple Editor (for when `type` is an array)
@@ -232,10 +233,14 @@ JSONEditor.defaults.editors.multiple = JSONEditor.AbstractEditor.extend({
 
     this.header = this.label = this.theme.getFormInputLabel(this.getTitle());
     this.switcher = this.theme.getSwitcher(this.display_text);
+
+
+    var left_group = document.createElement('div');
+    left_group.className = 'form-left-group';
     this.header.appendChild(this.switcher);
-
-    this.title_container = this.theme.getFormControl(this.header, document.createElement('div'));
-
+    left_group.appendChild(this.header);
+    this.title_container = this.theme.getMultiField(left_group);      
+    
     this.container.appendChild(this.title_container);
 
 

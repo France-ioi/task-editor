@@ -377,6 +377,7 @@ div[data-schemaid="root"][data-schemapath="root"]>.description-container {
 }
 
 .multi-type-container {
+    display: flex;
     border: 1px solid rgba(0, 0, 0, 0.05);
     border-bottom: none;
     background-color: white;

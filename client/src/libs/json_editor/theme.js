@@ -244,7 +244,7 @@ JSONEditor.defaults.themes.taskeditor = JSONEditor.AbstractTheme.extend({
     translate_separator.className = 'translate-separator';
     container.appendChild(translate_separator);
     container.appendChild(label);
-    container.appendChild(sw);
+    sw && container.appendChild(sw);
     return container;
   },
   getFormInputField: function(type, icon) {
