@@ -4,7 +4,8 @@ module.exports = {
     properties: {
         graderUrl: {
             type: "string",
-            title: "Server side grader URL"
+            title: "Server side grader URL",
+            description: "If hosting the quiz on France-ioi servers, use 'https://static-items.algorea.org/bsm/quiz'."
         },
         shuffle_questions: {
             type: "boolean",
