@@ -74,5 +74,6 @@ module.exports = {
         question_input: require('./question_types/question_input.js'),
         question_fill_gaps: require('./question_types/question_fill_gaps.js'),
         group_key: require('./group_key.js'),
+        survey: require('./survey.js')
     }
 };

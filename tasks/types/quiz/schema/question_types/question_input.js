@@ -58,6 +58,9 @@ module.exports = {
         },
         group_key: {
             $ref: "#/definitions/group_key"
+        },
+        survey: {
+            $ref: "#/definitions/survey"
         }
     }
 }
