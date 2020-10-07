@@ -1,5 +1,5 @@
 module.exports = {
-    title: "Question",
+    title: "Question multiple choice",
     type: "object",
     required: ["text", "answers"],
     id: "question_multiple",

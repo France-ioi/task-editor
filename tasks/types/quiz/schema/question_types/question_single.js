@@ -1,5 +1,5 @@
 module.exports = {
-    title: "Question",
+    title: "Question single choice",
     type: "object",
     required: ["text", "answers", "correct_answer"],
     id: "question_single",

@@ -1,5 +1,5 @@
 module.exports = {
-    title: "Question",
+    title: "Question with input",
     type: "object",
     required: ["text", "correct_answer", "format", "validator"],
     properties: {
