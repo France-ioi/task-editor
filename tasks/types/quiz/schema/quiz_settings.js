@@ -26,6 +26,14 @@ module.exports = {
         display_detailed_feedback: {
             type: "boolean",
             title: "Display detailed feedback"
+        },
+        hide_restart: {
+            type: "boolean",
+            title: "Hide \"Restart\" button"
+        },
+        display_return_to_top: {
+            type: "boolean",
+            title: "Display \"Return to the list of questions\" button"
         }
     },
     required: ["graderUrl"],
