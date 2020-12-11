@@ -1,26 +1,32 @@
 [
     {
         "type": "dev",
-        "title": "Test dev task"
+        "title": "Test dev task",
+        "versions": ["v1", "v2"]
     },
     {
         "type": "ioi",
-        "title": "IOI task"
+        "title": "IOI task",
+        "versions": ["1"]
     },
     {
         "type": "video",
-        "title": "Course with YouTube video"
+        "title": "Course with YouTube video",
+        "versions": ["1"]
     },
     {
         "type": "quiz",
-        "title": "Quiz"
+        "title": "Quiz",
+        "versions": ["1", "2"]
     },
     {
         "type": "course",
-        "title": "Course with Markdown/MathJax text"
+        "title": "Course with Markdown/MathJax text",
+        "versions": ["1"]
     },
     {
         "type": "algorea-training",
-        "title": "Algorea training task"
+        "title": "Algorea training task",
+        "versions": ["1"]
     }
 ]

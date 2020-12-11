@@ -52,10 +52,11 @@ function* create(action) {
             path: action.path,
             task_type: action.task_type
         }
-        const { schema, data, translations } = yield call(api_task.create, params);
+        const { schema, data, translations, version } = yield call(api_task.create, params);
         yield put({type: 'TASK_SET_SCHEMA', schema});
         yield put({type: 'TASK_SET_DATA', data});
         yield put({type: 'TASK_SET_TRANSLATIONS', translations});
+        yield put({type: 'TASK_SET_VERSION', version});
         yield put({type: 'TASK_FETCH_SUCCESS'});
         if(action.creating) {
             yield put({type: 'TASK_FETCH_SAVE_VIEW'});
@@ -74,10 +75,11 @@ function* load(action) {
             token,
             path: action.path
         }
-        const { data, schema, translations } = yield call(api_task.load, params);
+        const { data, schema, translations, version } = yield call(api_task.load, params);
         yield put({type: 'TASK_SET_SCHEMA', schema});
         yield put({type: 'TASK_SET_DATA', data});
         yield put({type: 'TASK_SET_TRANSLATIONS', translations});
+        yield put({type: 'TASK_SET_VERSION', version});
         yield put({type: 'TASK_FETCH_SUCCESS'});
     } catch (e) {
         yield put({type: 'TASK_FETCH_FAIL', error: e.message});
@@ -95,10 +97,11 @@ function* clone(action) {
             path: action.path,
             path_src: action.path_src
         }
-        const { data, schema, translations } = yield call(api_task.clone, params);
+        const { data, schema, translations, version } = yield call(api_task.clone, params);
         yield put({type: 'TASK_SET_SCHEMA', schema});
         yield put({type: 'TASK_SET_DATA', data});
         yield put({type: 'TASK_SET_TRANSLATIONS', translations});
+        yield put({type: 'TASK_SET_VERSION', version});
         yield put({type: 'TASK_FETCH_SUCCESS'});
     } catch (e) {
         yield put({type: 'TASK_FETCH_FAIL', error: e.message});
@@ -115,7 +118,8 @@ function* save(action) {
             token,
             path: task.path,
             data: task.data,
-            translations: task.translations
+            translations: task.translations,
+            version: task.version
         }
         const data = yield call(api_task.save, params);
         yield put({type: 'TASK_FETCH_SUCCESS'});

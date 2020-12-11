@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+        <style>
+            * {
+                unicode-bidi: plaintext;
+            }
+		</style>
+	</head>
+	<body dir="%%LANG_DIR%%">
+        <div dir="auto" class="text-single"></div>
+        <div dir="auto" class="text-multiple"></div>
+		<div id="script-wrapper">
+            <script type="text/javascript" id="script">
+                var single_text;
+
+                // must be empty because of scope condition
+                var empty_var;
+            </script>
+        </div>
+
+        <script type="text/javascript">
+            // inject nothing
+            var limits;
+        </script>
+	</body>
+</html>

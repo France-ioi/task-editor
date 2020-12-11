@@ -1,13 +1,13 @@
 var fs = require('fs');
 var path = require('path');
+var clone = require('clone');
 var modifier = require('./modifier');
-var clone = require('clone')
+var task_version = require('./task_version');
 
 module.exports = {
 
     output: (params, callback) => {
-        var src_path = path.resolve(__dirname, '../../../tasks/types/' + params.type);
-
+        var src_path = task_version.getPath(params);
         var schema = require('./schema')(src_path);
         var data = require('./data')(params.data, params.translations);
 
@@ -138,6 +138,7 @@ module.exports = {
             files.clear((new_files) => {
                 callback(null, {
                     type: params.type,
+                    version: params.version,
                     data: params.data,
                     translations: params.translations,
                     files: new_files

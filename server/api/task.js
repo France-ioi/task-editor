@@ -6,7 +6,7 @@ var repo = require('../libs/repo')
 var shell = require('shelljs')
 var tree = require('../libs/tree')
 var schema_loader = require('../libs/schema_loader')
-
+var task_version = require('../libs/task/task_version')
 
 function loadJSON(file, callback) {
     fs.readFile(
@@ -24,13 +24,13 @@ function loadJSON(file, callback) {
     )
 }
 
-function taskDataFile(task_subpath) {
+function taskDataPath(task_subpath) {
     return path.join(config.path, task_subpath, config.task.data_file);
 }
 
 
-function loadSchema(task_type, callback) {
-    var task_path = path.resolve('../tasks/types/', task_type);
+function loadSchema(task_data, callback) {
+    var task_path = task_version.getPath(task_data);
     try {
         var schema = schema_loader.load(task_path);
     } catch(e) {
@@ -44,7 +44,7 @@ function loadSchema(task_type, callback) {
 
 function saveTaskData(task_subpath, task_data, callback) {
     fs.writeFile(
-        taskDataFile(task_subpath),
+        taskDataPath(task_subpath),
         JSON.stringify(task_data, null, 2),
         callback
     );
@@ -54,6 +54,7 @@ function saveTaskData(task_subpath, task_data, callback) {
 function checkoutDependencies(user, task_subpath, task_type, callback) {
     callback();
     /*
+    //TODO: if you need this code, update next line with task version value
     var deps_file = path.resolve('../tasks/types/', task_type, 'dependencies.json');
     if (!fs.existsSync(deps_file)) {
         callback();
@@ -78,7 +79,7 @@ function checkoutDependencies(user, task_subpath, task_type, callback) {
 
 function loadTask(req, res) {
     loadJSON(
-        taskDataFile(req.body.path),
+        taskDataPath(req.body.path),
         (err, task_data) => {
             if(err) return res.status(400).send(err.message);
             checkoutDependencies(
@@ -87,11 +88,12 @@ function loadTask(req, res) {
                 task_data.type,
                 (err) => {
                     if(err) return res.status(400).send(err.message);
-                    loadSchema(task_data.type, (err, schema) => {
+                    loadSchema(task_data, (err, schema) => {
                         if(err) return res.status(400).send(err.message);
                         res.json({
                             schema,
                             data: task_data.data,
+                            version: task_version.detectVersion(task_data),
                             translations: task_data.translations
                         })
                     })
@@ -106,14 +108,15 @@ function loadTask(req, res) {
 var api = {
 
     create: (req, res) => {
-        loadSchema(req.body.task_type, (err, schema) => {
+        var task_data = {
+            type: req.body.task_type,
+            version: task_version.getLatestVersion(req.body.task_type),
+            data: null,
+            translations: null,
+            files: []
+        }
+        loadSchema(task_data, (err, schema) => {
             if(err) return res.status(400).send(err.message);
-            var task_data = {
-                type: req.body.task_type,
-                data: null,
-                translations: null,
-                files: []
-            }
             repo.checkout(req.user, req.body.path, (err) => {
                 if(err) return res.status(400).send(err.message);
                 saveTaskData(req.body.path, task_data, (err) => {
@@ -126,6 +129,7 @@ var api = {
                         tree.clear(req.user, req.body.path);
                         res.json({
                             schema,
+                            version: task_data.version,
                             data: null
                         });
                     })
@@ -145,7 +149,7 @@ var api = {
 
     save: (req, res) => {
         loadJSON(
-            taskDataFile(req.body.path),
+            taskDataPath(req.body.path),
             (err, task_data) => {
                 if(err) return res.status(400).send(err.message);
                 var params = {
@@ -153,6 +157,7 @@ var api = {
                     data: req.body.data,
                     translations: req.body.translations,
                     type: task_data.type,
+                    version: req.body.version,
                     files: task_data.files
                 }
                 generator.output(params, (err, task_data) => {
