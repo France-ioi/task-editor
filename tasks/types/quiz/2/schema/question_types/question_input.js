@@ -1,5 +1,5 @@
 module.exports = {
-    title: "Question",
+    title: "Question with input",
     type: "object",
     required: ["text", "correct_answer", "format", "validator"],
     properties: {
@@ -58,6 +58,9 @@ module.exports = {
         },
         group_key: {
             $ref: "#/definitions/group_key"
+        },
+        survey: {
+            $ref: "#/definitions/survey"
         }
     }
 }

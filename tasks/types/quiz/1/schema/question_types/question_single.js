@@ -1,5 +1,5 @@
 module.exports = {
-    title: "Question single choice",
+    title: "Question",
     type: "object",
     required: ["text", "answers", "correct_answer"],
     id: "question_single",
@@ -56,9 +56,6 @@ module.exports = {
         },
         group_key: {
             $ref: "#/definitions/group_key"
-        },
-        survey: {
-            $ref: "#/definitions/survey"
-        }        
+        }
     }
 }

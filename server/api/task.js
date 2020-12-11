@@ -35,7 +35,7 @@ function loadSchema(task_data, callback) {
         var schema = schema_loader.load(task_path);
     } catch(e) {
         return callback(
-            new Error('Error reading schema for task type: ' + task_type + '. ' + e.message)
+            new Error('Error reading schema for task type: ' + task_data.type + '. ' + e.message)
         );
     }
     callback(null, schema);

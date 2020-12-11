@@ -10,11 +10,6 @@ module.exports = function(questions) {
     var handlers = {
 
         input: function(question) {
-            if('survey' in question && question.survey) {
-                return function(v) {
-                    return v !== '';
-                }
-            }            
             switch(question.correct_answer.type) {
                 case 'value':
                     return question.correct_answer.value;
@@ -35,20 +30,10 @@ module.exports = function(questions) {
         },
 
         single: function(question) {
-            if('survey' in question && question.survey) {
-                return function(v) {
-                    return v !== null;
-                }
-            }
             return parseInt(question.correct_answer, 10);
         },
 
         multiple: function(question) {
-            if('survey' in question && question.survey) {
-                return function(v) {
-                    return v.length > 0;
-                }
-            }            
             var arr = [];
             question.answers.map(function(answer, aidx) {
                 if(answer.correct) {
