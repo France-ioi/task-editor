@@ -1,5 +1,5 @@
 import Sortable from 'sortablejs';
-import { $extend, $each, $isplainobject, $trigger, $triggerc } from './utils';
+import { $extend, $each, $isplainobject, $trigger, $triggerc } from '../utils';
 
 JSONEditor.defaults.resolvers.unshift(function(schema) {
   if(schema.type == 'array' && schema.format == 'table') {

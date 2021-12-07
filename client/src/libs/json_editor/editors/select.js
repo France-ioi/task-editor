@@ -1,4 +1,4 @@
-import { $extend, $each, $isplainobject, $trigger, $triggerc } from './utils';
+import { $extend, $each, $isplainobject, $trigger, $triggerc } from '../utils';
 
 JSONEditor.defaults.editors.select = JSONEditor.AbstractEditor.extend({
   setValue: function(value,initial) {

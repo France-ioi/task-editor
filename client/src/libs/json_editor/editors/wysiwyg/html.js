@@ -1,4 +1,4 @@
-import images_api from '../../../api/images';
+import images_api from '../../../../api/images';
 
 function createImagesUploadHandler(path) {
     return function (blobInfo, success, failure) {

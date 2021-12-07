@@ -1,5 +1,4 @@
-import { isFunction } from 'jquery';
-import { $extend, $each, $isplainobject, $trigger, $triggerc } from './utils'
+import { $extend, $each, $isplainobject, $trigger, $triggerc } from '../utils'
 
 // Multiple Editor (for when `type` is an array)
 JSONEditor.defaults.editors.multiple = JSONEditor.AbstractEditor.extend({

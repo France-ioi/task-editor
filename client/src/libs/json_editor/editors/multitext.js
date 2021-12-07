@@ -1,6 +1,6 @@
 import HTMLEditor from './wysiwyg/html'
 import MarkdownEditor from './wysiwyg/markdown'
-import converter from '../showdown_converter'
+import converter from '../../showdown_converter'
 
 window.JSONEditor.defaults.editors.multitext = JSONEditor.defaults.editors.string.extend({
 

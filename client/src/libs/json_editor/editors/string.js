@@ -1,6 +1,6 @@
 import HTMLEditor from './wysiwyg/html'
-import { $extend, $each, $isplainobject, $trigger, $triggerc } from './utils'
-import converter from '../showdown_converter'
+import { $extend, $each, $isplainobject, $trigger, $triggerc } from '../utils'
+import converter from '../../showdown_converter'
 
 JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
   register: function() {
