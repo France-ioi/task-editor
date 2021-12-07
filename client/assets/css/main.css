@@ -486,8 +486,14 @@ div[data-schematype="array"]>.header-container>h3 {
     color: #000000;
 }
 
-.control-label, .form-left-group>p.help-block {
+.control-label, 
+.form-left-group>p.help-block,
+.form-right-group>p.help-block {
     color: #787878 !important;
+}
+
+.form-right-group>p.help-block {
+    margin-top: 5px;
 }
 
 .description-container, .help-block {

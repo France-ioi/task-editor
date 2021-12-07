@@ -14,6 +14,7 @@ JSONEditor.defaults.editors.select = JSONEditor.AbstractEditor.extend({
     if(this.select2) this.select2.select2('val',this.input.value);
     this.value = sanitized;
     this.readOnlyView.innerHTML = this.value || '[None]';
+    this.refreshEnumDescription();
     this.onChange();
   },
   register: function() {
@@ -155,7 +156,6 @@ JSONEditor.defaults.editors.select = JSONEditor.AbstractEditor.extend({
     var self = this;
     if(!this.options.compact) this.header = this.label = this.theme.getFormInputLabel(this.getTitle());
     if(this.schema.description) this.description = this.theme.getFormInputDescription(this.schema.description);
-
     if(this.options.compact) this.container.className += ' compact';
 
     this.input = this.theme.getSelectInput(this.enum_options);
@@ -174,6 +174,12 @@ JSONEditor.defaults.editors.select = JSONEditor.AbstractEditor.extend({
 
     this.control = this.theme.getFormControl(this.label, this.input, this.description);
     this.container.appendChild(this.control);
+    
+    if(this.options.enum_descriptions) {
+      this.enum_description = this.theme.getFormInputDescription('');
+      this.input.parentNode.appendChild(this.enum_description);
+    }
+
     this.readOnlyView = document.createElement('div');
     this.readOnlyView.className = 'select readonly-view';
     this.control.lastChild.className += ' hide-on-translate-original';
@@ -196,9 +202,11 @@ JSONEditor.defaults.editors.select = JSONEditor.AbstractEditor.extend({
     // If valid hasn't changed
     if(new_val === this.value) return;
 
+
     // Store new value and propogate change event
     this.value = new_val;
     this.readOnlyView.innerHTML = this.value || '[None]';
+    this.refreshEnumDescription();    
     this.onChange(true);
   },
   setupSelect2: function() {
@@ -225,6 +233,7 @@ JSONEditor.defaults.editors.select = JSONEditor.AbstractEditor.extend({
     this._super();
     this.theme.afterInputReady(this.input);
     this.setupSelect2();
+    this.refreshEnumDescription();
   },
   onWatchedFieldChange: function() {
     var self = this, vars, j;
@@ -355,5 +364,11 @@ JSONEditor.defaults.editors.select = JSONEditor.AbstractEditor.extend({
     }
 
     this._super();
+  },
+  refreshEnumDescription: function() {
+    if(this.enum_options && this.options.enum_descriptions) {
+      var idx = this.enum_options.indexOf(this.value);
+      this.enum_description.innerHTML = this.options.enum_descriptions[idx] || '';
+    }    
   }
 });

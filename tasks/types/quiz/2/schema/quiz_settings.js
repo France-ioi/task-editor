@@ -41,11 +41,17 @@ module.exports = {
             enum: ["all_or_nothing", "percentage_of_correct", "proportional", "unproportional"],
             default: "all_or_nothing",
             options: {
-                enum_titles: ["All or nothing", "Percentage of correct", "Proportional", "Unproportional"]
+                enum_titles: ["All or nothing", "Percentage of correct", "Proportional", "Unproportional"],
+                enum_descriptions: [
+                    "Score is 1 if all correct answers selected and all incorrect answers unseleted, otherwise score is 0.",
+                    "Percentage of correct", 
+                    "Proportional", 
+                    "Unproportional"
+                ]
             }
         }
     },
-    required: ["graderUrl", "floating_score_calculation"],
+    required: ["graderUrl", "score_calculation_formula"],
     generator: [
         {
             output: {
