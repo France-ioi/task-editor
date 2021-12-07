@@ -34,9 +34,18 @@ module.exports = {
         display_return_to_top: {
             type: "boolean",
             title: "Display \"Return to the list of questions\" button"
+        },
+        score_calculation_formula: {
+            type: "string",
+            title: "Score calculation formula",
+            enum: ["all_or_nothing", "percentage_of_correct", "proportional", "unproportional"],
+            default: "all_or_nothing",
+            options: {
+                enum_titles: ["All or nothing", "Percentage of correct", "Proportional", "Unproportional"]
+            }
         }
     },
-    required: ["graderUrl"],
+    required: ["graderUrl", "floating_score_calculation"],
     generator: [
         {
             output: {
