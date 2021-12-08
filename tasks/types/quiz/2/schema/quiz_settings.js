@@ -40,13 +40,13 @@ module.exports = {
         },
         score_calculation_formula: {
             type: "string",
-            title: "Score calculation formula",
+            title: "Question score formula",
             enum: ["all_or_nothing", "percentage_of_correct", "proportional", "unproportional"],
             default: "all_or_nothing",
             options: {
                 enum_titles: ["All or nothing", "Percentage of correct", "Proportional", "Unproportional"],
                 enum_descriptions: [
-                    "Score is 1 if all correct answers selected and all incorrect answers unseleted, otherwise score is 0.",
+                    "Score is 1 if all correct answers are selected and all incorrect answers are unseleted, otherwise score is 0.",
                     "Percentage of correct", 
                     "Proportional", 
                     "Unproportional"

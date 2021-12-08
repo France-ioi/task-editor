@@ -34,6 +34,9 @@ class TaskJsonEditor extends React.Component {
                 getContent: this.editorGetContent,
                 setContent: this.editorSetContent,
                 path: this.props.task.path
+            },
+            values_source: {
+                'svn.path': this.props.task.path
             }
         });
         this.editor.on('change', () => {
