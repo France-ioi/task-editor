@@ -1,6 +1,6 @@
 import { $extend, $each, $isplainobject, $trigger, $triggerc } from '../utils';
 
-JSONEditor.defaults.editors.select = JSONEditor.AbstractEditor.extend({
+JSONEditor.defaults.editors.select = JSONEditor.TaskEditorAbstractEditor.extend({
   setValue: function(value,initial) {
     value = this.typecast(value||'');
 

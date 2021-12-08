@@ -1,6 +1,6 @@
 import { $extend, $each, $isplainobject, $trigger, $triggerc } from '../utils'
 
-JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
+JSONEditor.defaults.editors.object = JSONEditor.TaskEditorAbstractEditor.extend({
   getDefault: function() {
     return $extend({},this.schema["default"] || {});
   },

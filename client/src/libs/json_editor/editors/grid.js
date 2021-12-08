@@ -2,7 +2,7 @@ import Toolbar from './grid/toolbar';
 import Display from './grid/display';
 import Sprite from './grid/sprite';
 
-JSONEditor.defaults.editors.grid = JSONEditor.AbstractEditor.extend({
+JSONEditor.defaults.editors.grid = JSONEditor.TaskEditorAbstractEditor.extend({
 
     sanitize: function (value) {
         value = value + "";

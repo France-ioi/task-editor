@@ -1,6 +1,6 @@
 import Mime from 'mime-types'
 
-JSONEditor.defaults.editors.upload = JSONEditor.AbstractEditor.extend({
+JSONEditor.defaults.editors.upload = JSONEditor.TaskEditorAbstractEditor.extend({
   getNumColumns: function() {
     return 4;
   },

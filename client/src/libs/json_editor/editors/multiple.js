@@ -1,7 +1,7 @@
 import { $extend, $each, $isplainobject, $trigger, $triggerc } from '../utils'
 
 // Multiple Editor (for when `type` is an array)
-JSONEditor.defaults.editors.multiple = JSONEditor.AbstractEditor.extend({
+JSONEditor.defaults.editors.multiple = JSONEditor.TaskEditorAbstractEditor.extend({
   register: function() {
     if(this.editors) {
       for(var i=0; i<this.editors.length; i++) {

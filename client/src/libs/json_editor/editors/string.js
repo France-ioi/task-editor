@@ -2,7 +2,7 @@ import HTMLEditor from './wysiwyg/html'
 import { $extend, $each, $isplainobject, $trigger, $triggerc } from '../utils'
 import converter from '../../showdown_converter'
 
-JSONEditor.defaults.editors.string = JSONEditor.defaults.editors.string.extend({
+JSONEditor.defaults.editors.string = JSONEditor.TaskEditorAbstractEditor.extend({
   register: function() {
     this._super();
     if(!this.input) return;

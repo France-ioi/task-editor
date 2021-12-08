@@ -5,7 +5,7 @@ JSONEditor.defaults.resolvers.unshift(function(schema) {
 JSONEditor.defaults.languages.en.yes = 'Yes';
 JSONEditor.defaults.languages.en.no = 'No';
 
-JSONEditor.defaults.editors.boolean = JSONEditor.AbstractEditor.extend({
+JSONEditor.defaults.editors.boolean = JSONEditor.TaskEditorAbstractEditor.extend({
   setValue: function(value,initial) {
     this.value = !!value;
     this.input.children[0].className = this.input.children[0].className.replace(/\s*active/g, '');

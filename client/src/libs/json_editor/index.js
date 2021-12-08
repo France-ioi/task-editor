@@ -1,3 +1,6 @@
+import './editor'
+import './theme'
+
 import './editors/string'
 import './editors/multitext'
 import './editors/select'
@@ -9,6 +12,4 @@ import './editors/object'
 import './editors/multiple'
 import './editors/upload'
 import './editors/grid'
-import './editors/sortable_list';
-
-import './theme'
+import './editors/sortable_list'

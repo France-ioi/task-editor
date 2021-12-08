@@ -1,5 +1,5 @@
 // Enum Editor (used for objects and arrays with enumerated values)
-JSONEditor.defaults.editors.sortable_list = JSONEditor.AbstractEditor.extend({
+JSONEditor.defaults.editors.sortable_list = JSONEditor.TaskEditorAbstractEditor.extend({
 
 
     initItems: function() {
