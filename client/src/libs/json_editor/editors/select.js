@@ -368,7 +368,13 @@ JSONEditor.defaults.editors.select = JSONEditor.TaskEditorAbstractEditor.extend(
   refreshEnumDescription: function() {
     if(this.enum_options && this.options.enum_descriptions) {
       var idx = this.enum_options.indexOf(this.value);
-      this.enum_description.innerHTML = this.options.enum_descriptions[idx] || '';
+      if(!this.isRequired()) {
+        // skip automatically added first empty item
+        idx--;
+      }
+      var description = this.options.enum_descriptions[idx] || '';
+      this.enum_description.innerHTML = description;
+      this.enum_description.style.display = description === '' ? 'none' : '';
     }    
   }
 });
