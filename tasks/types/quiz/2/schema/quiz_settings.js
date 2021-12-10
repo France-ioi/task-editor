@@ -41,20 +41,64 @@ module.exports = {
         score_calculation_formula: {
             type: "string",
             title: "Question score formula",
-            enum: ["default", "percentage_of_correct", "balance", "disbalance"],
+            enum: ["default", "percentage_of_correct", "balance", "disbalance", "ratio"],
             default: "all_or_nothing",
             options: {
-                enum_titles: ["All or nothing", "Percentage of correct", "Balance", "Disbalance"],
+                enum_titles: ["All or nothing", "Percentage of correct", "Balance", "Disbalance", "Points gained or lost for each selected answer"],
                 enum_descriptions: [
                     "Score is 1 if all correct answers are selected and all incorrect answers are unseleted.<br>Otherwise score is 0.",
                     "Percentage of correct", 
                     "Balance", 
-                    "Disbalance"
+                    "Disbalance",
+                    "Points gained or lost for each selected answer"
                 ]
             }
+        },
+
+
+        score_calculation: {
+            title: "Answer score calculation",
+            oneOf: [
+                {
+                    type: 'object',
+                    title: 'Formula',
+                    properties: {
+                        formula: {
+                            type: "string",
+                            title: "Formula",
+                            enum: ["default", "percentage_of_correct", "balance", "disbalance"],
+                            default: "default",
+                            options: {
+                                enum_titles: ["All or nothing", "Percentage of correct", "Balance", "Disbalance"],
+                                enum_descriptions: [
+                                    "Score is 1 if all correct answers are selected and all incorrect answers are unseleted.<br>Otherwise score is 0.",
+                                    "Percentage of correct", 
+                                    "Balance", 
+                                    "Disbalance",
+                                    "Points gained or lost for each selected answer"
+                                ]
+                            }
+                        }
+                    },
+                    required: ["formula"]
+                },
+                {
+                    type: 'object',
+                    title: 'Points gained or lost for each selected answer',
+                    properties: {                    
+                        wrong_answer_penalty: {
+                            type: "number",
+                            title: "Wrong selected answer penalty ratio",
+                            minimum: 0,
+                            default: 1
+                        }
+                    },
+                    required: ["wrong_answer_penalty"]
+                }                
+            ]            
         }
     },
-    required: ["graderUrl", "score_calculation_formula"],
+    required: ["graderUrl", "score_calculation"],
     generator: [
         {
             output: {
