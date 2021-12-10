@@ -6,7 +6,10 @@ module.exports = {
             type: "string",
             description:
                 "Unique identifier for the task; we generally use the path in the SVN.",
-            title: "id"
+            title: "id",
+            options: {
+                value_source: 'svn.path'
+            }
         },
         license: {
             type: "string",

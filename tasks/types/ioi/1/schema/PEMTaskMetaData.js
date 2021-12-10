@@ -7,7 +7,10 @@ module.exports = {
             description:
                 "Unique identifier for the task; we generally use the path in the SVN.",
             title: "id",
-            minLength: "5"
+            minLength: "5",
+            options: {
+                value_source: 'svn.path'
+            }
         },
         license: {
             type: "string",
