@@ -59,11 +59,6 @@ class Layout extends React.Component {
     }
 
 
-    logout = () => {
-        this.props.dispatch({ type: 'AUTH_LOGOUT_REQUEST'});
-    }
-
-
     openTask = () => {
         this.props.dispatch({
             type: 'TASK_OPEN',
@@ -103,7 +98,7 @@ class Layout extends React.Component {
 
 
     render() {
-        const { task, auth, active_section } = this.props;
+        const { task, active_section } = this.props;
 //        const { active_section } = this.state;
 
         const sectionVisible = (name) => task.ready && active_section == name;
@@ -113,15 +108,13 @@ class Layout extends React.Component {
                 { task.loading && <Loader modal/>}
                 <ControlPanel task={task}
                     openTask={this.openTask} saveTask={this.saveTask}
-                    logout={this.logout}
                     active_section={active_section} showSection={this.showSection}
-                    username={auth.username}
                 />
                 <div className="editor-container">
                     { !task.ready && <Alert bsStyle="info">Click open to load task</Alert>}
                     { sectionVisible('json') && <TaskJsonEditor task={task} onChange={this.taskDataChange}/>}
                     { sectionVisible('svn') && <TaskSvn path={task.path}/>}
-                    { sectionVisible('import') && <TaskImporter path={task.path} token={auth.token}/>}
+                    { sectionVisible('import') && <TaskImporter path={task.path} token="TODO"/>}
                     { sectionVisible('files_manager') && <FilesManager task_path={task.path}/>}
                     { sectionVisible('view_task') && <TaskViewer task_path={task.path}/>}
                 </div>

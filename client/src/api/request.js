@@ -1,3 +1,5 @@
+import query from '../libs/query'
+
 function url(path) {
     if(path.indexOf('http') === 0) {
         return path;
@@ -17,7 +19,16 @@ function handleResponse(response) {
     }
 }
 
+
 export function jsonRequest(path, params) {
+    var post_params = Object.assign(
+        {}, 
+        params, 
+        { 
+            token: query.token, 
+            session: query.session 
+        }
+    )    
     return fetch(
         url(path),
         {
@@ -28,7 +39,7 @@ export function jsonRequest(path, params) {
             },
             credentials: 'include',
             mode: 'cors',
-            body: JSON.stringify(params)
+            body: JSON.stringify(post_params)
         }
     )
     .then(handleResponse)
@@ -46,6 +57,8 @@ export function formRequest(path, params) {
             }
         }
     }
+    body.append('session', query.session);
+    body.append('token', query.token);
 
     return fetch(
         url(path),

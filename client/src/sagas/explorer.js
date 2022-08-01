@@ -4,9 +4,7 @@ import confirmation from './confirmation'
 
 function* readDir(action) {
     try {
-        const { token } = yield select(state => state.auth)
         const params = {
-            token,
             path: action.path,
             refresh: action.refresh
         }
@@ -21,10 +19,8 @@ function* readDir(action) {
 
 function* createDir(action) {
     try {
-        const { token } = yield select(state => state.auth)
         const { path } = yield select(state => state.explorer)
         const params = {
-            token,
             dir: action.dir,
             path
         }
@@ -43,9 +39,7 @@ function* removeDir(action) {
     if(confirmed) {
         try {
             yield put({type: 'EXPLORER_FETCH_REMOVE_DIR', data });
-            const { token } = yield select(state => state.auth)
             const params = {
-                token,
                 path: action.dir
             }
             const data = yield call(api.remove, params);

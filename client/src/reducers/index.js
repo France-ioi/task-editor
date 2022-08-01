@@ -1,7 +1,6 @@
 import { combineReducers } from 'redux';
 
 import active_section from './active_section'
-import auth from './auth'
 import channel from './channel'
 import task from './task';
 import task_importer from './task_importer';
@@ -13,7 +12,6 @@ import alert_popup from './alert_popup'
 
 const reducers = combineReducers({
     active_section,
-    auth,
     channel,
     task,
     task_importer,

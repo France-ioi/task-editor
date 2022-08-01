@@ -31,7 +31,6 @@ module.exports = function(env) {
         'react-redux',
         'redux',
         'redux-saga',
-        'uuid',
         'showdown',
         './client/assets/index.js'
     ]

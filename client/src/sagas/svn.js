@@ -3,10 +3,8 @@ import api from '../api/svn'
 
 function* fetchSvn(action) {
     try {
-        const { token } = yield select(state => state.auth)
         const { path, cmd, message } = action;
         const params = {
-            token,
             path,
             cmd,
             message

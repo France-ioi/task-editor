@@ -9,17 +9,26 @@ import sagas from './sagas'
 import reducers from './reducers';
 import App from './components/app';
 
-const sagaMiddleware = createSagaMiddleware()
-const store = createStore(reducers, applyMiddleware(sagaMiddleware));
-sagaMiddleware.run(sagas)
 
-const render = (Component) => {
-    ReactDOM.render(
-        <Provider store={store}>
-            <Component />
-        </Provider>,
-        document.getElementById('reactbody')
-    );
-};
+var container_element = document.getElementById('reactbody')
+var query = require('./libs/query')
+var validation = query.validate()
 
-render(App);
+if(!validation.valid) {
+    container_element.innerHTML = validation.message
+} else {
+    const sagaMiddleware = createSagaMiddleware()
+    const store = createStore(reducers, applyMiddleware(sagaMiddleware))
+    sagaMiddleware.run(sagas)
+    
+    const render = (Component) => {
+        ReactDOM.render(
+            <Provider store={store}>
+                <Component />
+            </Provider>,
+            container_element
+        );
+    };
+    
+    render(App);
+}

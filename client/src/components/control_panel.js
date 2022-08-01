@@ -43,15 +43,6 @@ class ControlPanel extends React.Component {
                     {' '}
                     { task.ready && !task.url && task.lastUrl && <a target="_blank" href={task.lastUrl} className="btn btn-default">View last imported version</a> }
                 </Navbar.Form>
-
-                <Navbar.Form pullRight>
-                    <Button onClick={logout}>Sign out</Button>
-                </Navbar.Form>
-
-                <Navbar.Text pullRight>
-                    <Glyphicon glyph="user"/>
-                    {username}
-                </Navbar.Text>
             </Navbar>
         );
     }

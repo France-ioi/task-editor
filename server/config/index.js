@@ -4,6 +4,8 @@ var path = require('path')
 var server_config = {
     port: process.env.PORT,
 
+    repository_api_url: process.env.REPOSITORY_API_URL,
+
     task: {
         tmp_dir: 'task_content_files',
         images_dir: 'images',
@@ -15,16 +17,6 @@ var server_config = {
 
     // path to tasks dir
     path: process.env.TASKS_ROOT,
-
-    // task importer
-    // Repositories
-    repositories: {
-        "v01": {
-            type: 'svn',
-            repository: process.env.SVN_REPOSITORY
-        }
-    },
-    auth_path: 'v01/',
 
     task_importer: {
         url: process.env.TASK_IMPORTER_URL,
@@ -46,8 +38,6 @@ var server_config = {
 var client_config = {
     dev: {
         task_autoload: process.env.DEV_TASK_AUTOLOAD,
-        username: process.env.DEV_USERNAME,
-        password: process.env.DEV_PASSWORD,
     },
     url_prefix: server_config.url_prefix,
     task: {

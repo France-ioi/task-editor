@@ -45,11 +45,11 @@ function fillNode(node, path, list) {
 }
 
 
-function getNode(username, path) {
-    if(!(username in data)) {
-        data[username] = newNode()
+function getNode(session, path) {
+    if(!(session in data)) {
+        data[session] = newNode()
     }
-    var node = data[username]
+    var node = data[session]
     var is_task_subfolder = node.data.flags.is_task_subfolder;
     if(path != '') {
         var steps = path.split('/')
@@ -75,12 +75,12 @@ function getNode(username, path) {
 module.exports = {
 
 
-    readDir: (user, path, callback) => {
-        var node = getNode(user.username, path)
+    readDir: (auth, path, callback) => {
+        var node = getNode(auth.session, path)
         if(node.loaded) {
             return callback(null, node.data)
         }
-        repo.list(user, path, (err, list) => {
+        repo.list(auth, path, (err, list) => {
             if(err) return callback(err)
             fillNode(node, path, list)
             callback(null, node.data)
@@ -88,8 +88,8 @@ module.exports = {
     },
 
 
-    clear: (user, path) => {
-        var node = getNode(user.username, path)
+    clear: (auth, path) => {
+        var node = getNode(auth.session, path)
         initNode(node)
     }
 

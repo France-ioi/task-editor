@@ -46,9 +46,7 @@ function* open(action) {
 
 function* create(action) {
     try {
-        const { token } = yield select(state => state.auth)
         const params = {
-            token,
             path: action.path,
             task_type: action.task_type
         }
@@ -70,9 +68,7 @@ function* create(action) {
 
 function* load(action) {
     try {
-        const { token } = yield select(state => state.auth)
         const params = {
-            token,
             path: action.path
         }
         const { data, schema, translations, version } = yield call(api_task.load, params);
@@ -90,10 +86,8 @@ function* load(action) {
 
 function* clone(action) {
     try {
-        const { token } = yield select(state => state.auth)
         const task = yield select(state => state.task)
         const params = {
-            token,
             path: action.path,
             path_src: action.path_src
         }
@@ -112,10 +106,8 @@ function* clone(action) {
 
 function* save(action) {
     try {
-        const { token } = yield select(state => state.auth)
         const task = yield select(state => state.task)
         const params = {
-            token,
             path: task.path,
             data: task.data,
             translations: task.translations,
@@ -132,10 +124,8 @@ function* save(action) {
 
 function* saveView(action) {
     try {
-        const { token } = yield select(state => state.auth)
         const task = yield select(state => state.task)
         const params = {
-            token,
             path: task.path,
             data: task.data,
             translations: task.translations
@@ -172,9 +162,7 @@ function* gotUrl(action) {
 
 function* importerGetUrl(action) {
     try {
-        const { token } = yield select(state => state.auth)
         const params = {
-            token,
             path: action.path
         }
         const { url } = yield call(api_importer.getUrl, params);

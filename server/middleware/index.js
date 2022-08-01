@@ -1,4 +1,3 @@
-var user = require('../libs/user')
 var url = require('url');
 
 function validatePathParams(body) {
@@ -19,17 +18,25 @@ function validatePathParams(body) {
 }
 
 
+function getAuth(req) {
+    function find(src) {
+        if('session' in src && 'token' in src) {
+            return {
+                session: src.session,
+                token: src.token
+            }
+        }
+    }
+    return find(req.body) || find(req.query)
+}
+
+
 module.exports = function(app) {
 
     app.use((req, res, next) => {
-        if('token' in req.body) {
-            var pathname = url.parse(req.url).pathname;
-            if(pathname != '/api/auth/logout') {
-                req.user = user.get(req.body.token)
-                if(!req.user) {
-                    return res.status(400).send('Auth expired')
-                }
-            }
+        req.auth = getAuth(req)
+        if(!req.auth) {
+            return res.status(400).send('session and token params required')   
         }
         if(!validatePathParams(req.body)) {
             return res.status(400).send('Wrong filename')

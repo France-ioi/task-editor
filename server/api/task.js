@@ -83,7 +83,7 @@ function loadTask(req, res) {
         (err, task_data) => {
             if(err) return res.status(400).send(err.message);
             checkoutDependencies(
-                req.user,
+                req.auth,
                 req.body.path,
                 task_data.type,
                 (err) => {
@@ -117,16 +117,16 @@ var api = {
         }
         loadSchema(task_data, (err, schema) => {
             if(err) return res.status(400).send(err.message);
-            repo.checkout(req.user, req.body.path, (err) => {
+            repo.checkout(req.auth, req.body.path, (err) => {
                 if(err) return res.status(400).send(err.message);
                 saveTaskData(req.body.path, task_data, (err) => {
                     if(err) return res.status(400).send(err.message);
-                    repo.addCommit(req.user, req.body.path, (err) => {
+                    repo.addCommit(req.auth, req.body.path, (err) => {
                         if(err) {
                             shell.rm('-rf', path.join(config.path, req.body.path));
                             return res.status(400).send(err.message);
                         }
-                        tree.clear(req.user, req.body.path);
+                        tree.clear(req.auth, req.body.path);
                         res.json({
                             schema,
                             version: task_data.version,
@@ -140,7 +140,7 @@ var api = {
 
 
     load: (req, res) => {
-        repo.checkout(req.user, req.body.path, (err) => {
+        repo.checkout(req.auth, req.body.path, (err) => {
             if(err) return res.status(400).send(err.message);
             loadTask(req, res)
         })
@@ -164,7 +164,7 @@ var api = {
                     if(err) return res.status(400).send(err.message);
                     saveTaskData(req.body.path, task_data, (err) =>  {
                         if(err) return res.status(400).send(err.message);
-                        repo.addCommit(req.user, req.body.path, (err) => {
+                        repo.addCommit(req.auth, req.body.path, (err) => {
                             if(err) return res.status(400).send(err.message);
                             res.json({});
                         })
@@ -176,19 +176,19 @@ var api = {
 
 
     clone: (req, res) => {
-        repo.checkout(req.user, req.body.path_src, (err) => {
+        repo.checkout(req.auth, req.body.path_src, (err) => {
             if(err) return res.status(400).send(err.message);
-            repo.checkout(req.user, req.body.path, (err) => {
+            repo.checkout(req.auth, req.body.path, (err) => {
                 if(err) return res.status(400).send(err.message);
                 var src = path.join(config.path, req.body.path_src);
                 var dst = path.join(config.path, req.body.path);
                 shell.cp('-rf', src + '/*', dst + '/');
-                repo.addCommit(req.user, req.body.path, (err) => {
+                repo.addCommit(req.auth, req.body.path, (err) => {
                     if(err) {
                         shell.rm('-rf', dst);
                         return res.status(400).send(err.message);
                     }
-                    tree.clear(req.user, req.body.path);
+                    tree.clear(req.auth, req.body.path);
                     loadTask(req, res);
                 })
             })

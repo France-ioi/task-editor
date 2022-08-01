@@ -1,118 +1,258 @@
-var path = require('path')
+var fs = require('fs')
+var fetch = require('node-fetch')
 var url = require('url')
-
+var npath = require('path')
+var https = require('https')
 var config = require('../config')
-var user = require('./user')
-var svn = require('./svn')
-var git = require('./git')
 
 
-function checkLimitUsers(credentials, subConfig) {
-    return !subConfig.limit_users || subConfig.limit_users.includes(credentials.username);
-}
-
-
-var defaultHandler = {
-    list: (repoConfig, credentials, path, callback) => {
-        var accessible = [];
-        for(var prefix in config.repositories) {
-            subConfig = config.repositories[prefix];
-            if(checkLimitUsers(credentials, subConfig)) {
-                accessible.push(prefix + '/');
-            }
-        }
-        callback(null, accessible);
-    },
-    update: (repoConfig, credentials, path, callback) => { callback(); }
-};
-
-
-function makeBalancer(funcName, pathIdx) {
-    return function() {
-        console.log(funcName);
-        var credentials = pathIdx > 0 ? arguments[pathIdx-1] : null;
-        var origPath = arguments[pathIdx];
-        var args = [];
-
-        var prefix = origPath.split('/')[0];
-        var subPath = origPath.split('/').slice(1).join('/');
-
-        if(config.repositories[prefix]) {
-            var subConfig = config.repositories[prefix];
-            subConfig.path = path.resolve(config.path, prefix + '/');
-            var destHandler = subConfig.type == 'git' ? git : svn;
-        } else {
-            var subConfig = {path: config.path};
-            var destHandler = defaultHandler;
-        }
-
-        if(credentials && !checkLimitUsers(credentials, subConfig)) {
-            console.log('Unauthorized user for action ' + funcName + ' on path `' + origPath + '`');
-            throw 'Unauthorized user for action ' + funcName + ' on path `' + origPath + '`';
-        }
-
-        args.push(subConfig);
-        for(var i = 0; i < arguments.length; i++) {
-            args.push(i == pathIdx ? subPath : arguments[i]);
-        }
-
-        if(!destHandler[funcName]) {
-            console.log('Balancer error with path `' + origPath + '`');
-            throw 'Balancer error with path `' + origPath + '`';
-        }
-        return destHandler[funcName].apply(destHandler, args);
-    };
-}
-
-
-function getImporterUrl(credentials, path) {
-    var params = Object.assign({
-         path: path,
-         token: user.findToken(credentials),
-         display: 'frame',
-         autostart: 1
-    }, config.task_importer_params);
-    var q = [];
-    for(var k in params) {
-        if(params.hasOwnProperty(k)) {
-            q.push(k + '=' + encodeURIComponent(params[k]));
+function makeFetch(auth, method, path) {
+    var api_url = url.resolve(config.repository_api_url, auth.session + '/' + path)
+    var opts = {
+        method,
+        headers: {
+            'Authorization': 'Bearer ' + auth.token
         }
     }
-    return config.task_importer.url + '?' + q.join('&');
-};
+    return fetch(api_url, opts)
+}
+
+
+function getJSON(auth, path, callback) {
+    makeFetch(auth, 'GET', path)
+        .then(res => res.json())
+        .then(res => callback(null, res))
+        .catch(function (err) {
+            callback(err)
+        })
+}
+
+
+function sendRequest(auth, method, path, callback) {
+    makeFetch(auth, 'GET', path)
+        .then(res => callback(null, res))
+        .catch(function (err) {
+            callback(err)
+        })
+}
+
+
+function makePath(prefix, path) {
+    return path == '' ? prefix : prefix + '/' + path
+}
+
+
+
+function downloadFile(auth, relative_path, callback) {
+    var opts = {
+        headers: {
+            'Authorization': 'Bearer ' + auth.token
+        }
+    };
+    var api_url = url.resolve(
+        config.repository_api_url, 
+        npath.join(auth.session, 'file', relative_path)
+    )
+    var dst = npath.join(config.path, relative_path)
+    var dst_path = npath.dirname(dst)
+    fs.mkdirSync(dst_path, { recursive: true })
+    var file = fs.createWriteStream(dst)
+
+    https.get(api_url, opts, function(response) {
+        response.pipe(file)
+        file.on('finish', function() {
+            file.close(callback)
+        })
+    }).on('error', function(err) {
+        fs.unlink(dst)
+        callback(err)
+    })
+  }
+
+
+// list is relative paths
+function downloadFiles(auth, path, list, callback) {
+    var downloadNext = function() {
+        if(list.length == 0) {
+            return callback()
+        }
+        var file = list.pop()
+        downloadFile(
+            auth, 
+            npath.join(path, file), 
+            function(err) {
+                if(err) {
+                    return callback(err)
+                }
+                downloadNext()
+            }
+        )
+    }
+    downloadNext()
+}
+
+
+
+function readDir(dir) {
+    var res = [];
+    var list = fs.readdirSync(dir)
+    list.forEach(function(file) {
+        file = dir + '/' + file
+        var stat = fs.statSync(file)
+        if(stat && stat.isDirectory()) { 
+            res = res.concat(readDir(file))
+        } else { 
+            res.push(file)
+        }
+    });
+    return res
+}
+
+
+function readDirRecursively(path) {
+    return readDir(path).map(file => npath.relative(path, file))
+}
+
+
+
+function uploadFile(auth, relative_path, callback) {
+    var opts = {
+        headers: {
+            'Authorization': 'Bearer ' + auth.token,
+            'Content-Type': 'application/octet-stream'
+        }
+    };
+    var api_url = url.resolve(
+        config.repository_api_url, 
+        npath.join(auth.session, 'file', relative_path)
+    )
+    var src = npath.join(config.path, relative_path)
+
+
+    var req = https.request(api_url, opts, function(res) {
+        res.on('end', function () {
+            callback()
+        })
+    }).on('error', callback)
+    fs.createReadStream(src, { encoding: 'binary' }).pipe(req)    
+}
+
+
+
+function uploadFiles(auth, path, list, callback) {
+    var uploadNext = function() {
+        if(list.length == 0) {
+            return callback()
+        }
+        var file = list.pop()
+        uploadFile(
+            auth, 
+            npath.join(path, file), 
+            function(err) {
+                if(err) {
+                    return callback(err)
+                }
+                uploadNext()
+            }
+        )
+    }
+    uploadNext()
+}
+
 
 
 var repo = {
 
-    auth: (credentials, callback) => {
-        repo.list(credentials, config.auth_path, callback);
+    list: (auth, path, callback) => {
+        getJSON(auth, makePath('list', path), (err, data) => {
+            if(err) return callback(err)
+            var list = []
+            if(Array.isArray(data)) {
+                for(var i=0; i<data.length; i++) {
+                    var info = data[i].replace(/^\/*/, '').split('/')
+                    var file_name = info.pop()
+                    if(file_name == '' && info.length) {
+                        // dir
+                        file_name = info.pop() + '/'
+                    }
+                    var file_path = info.join('/')
+                    if(file_path == path) {
+                        list.push(file_name)
+                    }
+                }
+            }
+            callback(null, list)
+        })
     },
 
-    getReverseTaskPath: (taskPath) => {
-        // Get a repository relative path to a task
-        // (used for generating path to _common)
-        var subPath = path.relative(config.path, taskPath);
-        var prefix = subPath.split('/')[0];
-        if(config.repositories[prefix]) {
-            return path.relative(taskPath, path.resolve(config.path, prefix + '/'));
-        } else {
-            return path.relative(taskPath, config.path);
+
+    checkout: (auth, path, callback) => {
+        sendRequest(auth, 'GET', makePath('list', path), (err, data) => {
+            if(err) return callback(err)
+            if(Array.isArray(data)) {
+                var list = []
+                for(var i=0; i<data.length; i++) {
+                    var file = data[i].replace(/^\/*/, '')
+                    if(file.indexOf(path) === 0) {
+                        list.push(file)
+                    }
+                }
+                downloadFiles(auth, path, list)
+            }
+        })
+    },
+
+
+
+    addCommit: (auth, path, callback) => {
+        var task_path = npath.join(config.path, path)
+        var files = readDirRecursively(task_path)
+        uploadFiles(auth, task_path, files, callback)
+    },
+
+
+    remove: (auth, path, callback) => {
+        fs.rmSync(npath.join(config.path, path))
+        sendRequest(auth, 'DELETE', 'file/' + path, callback)
+    },
+
+
+    removeDir: (auth, path, callback) => {
+        fs.rmdirSync(npath.join(config.path, path), {
+            recursive: true
+        })
+        sendRequest(auth, 'DELETE', 'file/' + path, callback)
+    },
+
+
+    createDir: (auth, path, callback) => {
+        var tmp = 'file/' + path + '/tmp.file';
+        // current api version don't provide create folder method
+        sendRequest(auth, 'PUT', tmp, (err, data) => {
+            if(err) {
+                return callback(err);
+            }
+            sendRequest(auth, 'DELETE', tmp, callback)
+        });
+    },
+
+
+    getImporterUrl: (auth, path) => {
+        var params = Object.assign({
+            type: 'svn',
+            path: path,
+            token: auth.token,
+            display: 'frame',
+            autostart: 1
+        }, config.task_importer_params);
+        var q = [];
+        for(var k in params) {
+            if(params.hasOwnProperty(k)) {
+                q.push(k + '=' + encodeURIComponent(params[k]));
+            }
         }
-    },
-
-    getImporterUrl: makeBalancer('getImporterUrl', 1),
-    list: makeBalancer('list', 1),
-    checkout: makeBalancer('checkout', 1),
-    update: makeBalancer('update', 1),
-    add: makeBalancer('add', 1),
-    commit: makeBalancer('commit', 1),
-    addCommit: makeBalancer('addCommit', 1),
-    revert: makeBalancer('revert', 1),
-    cleanup: makeBalancer('cleanup', 1),
-    remove: makeBalancer('remove', 0),
-    removeDir: makeBalancer('removeDir', 1),
-    createDir: makeBalancer('createDir', 1)
-
+        return cfg_task_importer.url + '?' + q.join('&');
+    }
 }
 
 module.exports = repo

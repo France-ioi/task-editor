@@ -6,9 +6,9 @@ var config = require('../config')
 
 function readDir(req, res) {
     if(req.body.refresh) {
-        tree.clear(req.user, req.body.path)
+        tree.clear(req.auth, req.body.path)
     }
-    tree.readDir(req.user, req.body.path, (err, data) => {
+    tree.readDir(req.auth, req.body.path, (err, data) => {
         if(err) return res.status(400).send(err.message)
         res.json(data)
     })
@@ -18,10 +18,10 @@ function readDir(req, res) {
 
 function createDir(req, res) {
     var rel_dir = path.join(req.body.path, req.body.dir)
-    repo.createDir(req.user, rel_dir, (err) => {
+    repo.createDir(req.auth, rel_dir, (err) => {
         if(err) return res.status(400).send(err.message);
-        tree.clear(req.user, req.body.path)
-        tree.readDir(req.user, req.body.path, (err, data) => {
+        tree.clear(req.auth, req.body.path)
+        tree.readDir(req.auth, req.body.path, (err, data) => {
             if(err) return res.status(400).send(err.message)
             res.json(data)
         })
@@ -31,14 +31,14 @@ function createDir(req, res) {
 
 
 function remove(req, res) {
-    repo.removeDir(req.user, req.body.path, (err) => {
+    repo.removeDir(req.auth, req.body.path, (err) => {
         if(err) return res.status(400).send(err.message)
         var parent_dir = req.body.path.split('/')
         parent_dir.pop()
         parent_dir = parent_dir.join('/')
         shell.rm('-rf', path.join(config.path, req.body.path))
-        tree.clear(req.user, parent_dir)
-        tree.readDir(req.user, parent_dir, (err, data) => {
+        tree.clear(req.auth, parent_dir)
+        tree.readDir(req.auth, parent_dir, (err, data) => {
             if(err) return res.status(400).send(err.message)
             res.json(data)
         })
