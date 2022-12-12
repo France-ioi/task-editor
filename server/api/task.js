@@ -158,7 +158,8 @@ var api = {
                     translations: req.body.translations,
                     type: task_data.type,
                     version: req.body.version,
-                    files: task_data.files
+                    files: task_data.files,
+                    depth: req.auth.depth
                 }
                 generator.output(params, (err, task_data) => {
                     if(err) return res.status(400).send(err.message);

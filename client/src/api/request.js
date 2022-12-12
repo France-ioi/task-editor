@@ -26,7 +26,8 @@ export function jsonRequest(path, params) {
         params, 
         { 
             token: query.token, 
-            session: query.session 
+            session: query.session,
+            depth: query.depth
         }
     )    
     return fetch(

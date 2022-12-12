@@ -9,8 +9,7 @@ module.exports = function(params, data_info) {
         values['%%' + key + '%%'] = value
     }
 
-    // TODO :: use depth
-    addValue('TASK_PATH', '..')
+    addValue('TASK_PATH', params.depth > 0 ? '../'.repeat(params.depth - 1) + '..' : '.');
     addValue('TASK_DATA_INFO', JSON.stringify(data_info))
     addValue('LANG_DIR', 'ltr')
 
@@ -19,7 +18,7 @@ module.exports = function(params, data_info) {
             return content.replace(
                 /%%\w+%%/g,
                 (key) => {
-                    return values[key] || key
+                    return typeof values[key] != 'undefined' ? values[key] : key;
                 }
             )
         },
