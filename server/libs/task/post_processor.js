@@ -9,7 +9,8 @@ module.exports = function(params, data_info) {
         values['%%' + key + '%%'] = value
     }
 
-    addValue('TASK_PATH', path.relative(config.path, params.path))
+    // TODO :: use depth
+    addValue('TASK_PATH', '..')
     addValue('TASK_DATA_INFO', JSON.stringify(data_info))
     addValue('LANG_DIR', 'ltr')
 
