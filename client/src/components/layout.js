@@ -24,38 +24,10 @@ class Layout extends React.Component {
     }
 
     componentDidMount() {
-
-        // Check for URL elements
-        if(window.location.hash) {
-            var hashSplit = window.location.hash.split('/');
-            var hashCmd = hashSplit.shift();
-            var hashPath = hashSplit.join('/');
-            if(hashCmd == '#create' && hashPath) {
-                // Create a new task
-                this.props.dispatch({
-                    type: 'TASK_OPEN',
-                    path: decodeURIComponent(hashPath),
-                    creating: true,
-                    controls: {
-                        load_task: true, // TODO :: yes or no?
-                        create_task: true,
-                        create_dir: true,
-                        remove_dir: true
-                    }
-                });
-            } else if(hashCmd == '#edit' && hashPath) {
-                this.props.dispatch({
-                    type: 'TASK_FETCH_LOAD',
-                    path: decodeURIComponent(hashPath)
-                });
-            }
-        } else if(window.__CONFIG__.dev.task_autoload) {
-            //used for dev purpose
-            this.props.dispatch({
-                type: 'TASK_FETCH_LOAD',
-                path: window.__CONFIG__.dev.task_autoload
-            })
-        }
+        this.props.dispatch({
+            type: 'TASK_FETCH_LOAD',
+            path: ''
+        });
     }
 
 
@@ -106,12 +78,12 @@ class Layout extends React.Component {
         return (
             <div>
                 { task.loading && <Loader modal/>}
-                <ControlPanel task={task}
+                {/* <ControlPanel task={task}
                     openTask={this.openTask} saveTask={this.saveTask}
                     active_section={active_section} showSection={this.showSection}
-                />
+                /> */}
                 <div className="editor-container">
-                    { !task.ready && <Alert bsStyle="info">Click open to load task</Alert>}
+                    {!task.ready && <Alert bsStyle="info">Loading...</Alert>}
                     { sectionVisible('json') && <TaskJsonEditor task={task} onChange={this.taskDataChange}/>}
                     { sectionVisible('svn') && <TaskSvn path={task.path}/>}
                     { sectionVisible('import') && <TaskImporter path={task.path} token="TODO"/>}

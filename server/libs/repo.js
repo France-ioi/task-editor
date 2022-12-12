@@ -38,7 +38,7 @@ function sendRequest(auth, method, path, callback) {
 
 
 function makePath(prefix, path) {
-    return path == '' ? prefix : prefix + '/' + path
+    return path ? prefix + '/' + path : prefix;
 }
 
 
@@ -53,7 +53,7 @@ function downloadFile(auth, relative_path, callback) {
         config.repository_api_url, 
         npath.join(auth.session, 'file', relative_path)
     )
-    var dst = npath.join(config.path, relative_path)
+    var dst = npath.join(config.path, auth.session, relative_path)
     var dst_path = npath.dirname(dst)
     fs.mkdirSync(dst_path, { recursive: true })
     var file = fs.createWriteStream(dst)
@@ -79,7 +79,7 @@ function downloadFiles(auth, path, list, callback) {
         var file = list.pop()
         downloadFile(
             auth, 
-            npath.join(path, file), 
+            file,
             function(err) {
                 if(err) {
                     return callback(err)
@@ -120,26 +120,34 @@ function uploadFile(auth, relative_path, callback) {
         headers: {
             'Authorization': 'Bearer ' + auth.token,
             'Content-Type': 'application/octet-stream'
-        }
+        },
+        method: 'PUT'
     };
     var api_url = url.resolve(
         config.repository_api_url, 
         npath.join(auth.session, 'file', relative_path)
     )
-    var src = npath.join(config.path, relative_path)
-
+    var src = npath.join(config.path, auth.session, relative_path)
 
     var req = https.request(api_url, opts, function(res) {
+        var body = '';
+        res.on('data', function (chunk) {
+            body += chunk;
+        })
         res.on('end', function () {
             callback()
         })
     }).on('error', callback)
-    fs.createReadStream(src, { encoding: 'binary' }).pipe(req)    
+    var rs = fs.createReadStream(src, { encoding: 'binary' });
+    rs.on('end', function () {
+        req.end();
+    });
+    rs.pipe(req);
 }
 
 
 
-function uploadFiles(auth, path, list, callback) {
+function uploadFiles(auth, list, callback) {
     var uploadNext = function() {
         if(list.length == 0) {
             return callback()
@@ -147,7 +155,7 @@ function uploadFiles(auth, path, list, callback) {
         var file = list.pop()
         uploadFile(
             auth, 
-            npath.join(path, file), 
+            file, 
             function(err) {
                 if(err) {
                     return callback(err)
@@ -187,27 +195,27 @@ var repo = {
 
 
     checkout: (auth, path, callback) => {
-        sendRequest(auth, 'GET', makePath('list', path), (err, data) => {
+        getJSON(auth, makePath('list'), (err, data) => {
             if(err) return callback(err)
             if(Array.isArray(data)) {
                 var list = []
                 for(var i=0; i<data.length; i++) {
-                    var file = data[i].replace(/^\/*/, '')
-                    if(file.indexOf(path) === 0) {
-                        list.push(file)
-                    }
+                    var file = data[i].replace(/^\/*/, '');
+                    list.push(file);
                 }
-                downloadFiles(auth, path, list)
+                downloadFiles(auth, path, list, callback)
+            } else {
+                callback();
             }
         })
     },
 
 
 
-    addCommit: (auth, path, callback) => {
+    saveFilesBack: (auth, path, callback) => {
         var task_path = npath.join(config.path, path)
         var files = readDirRecursively(task_path)
-        uploadFiles(auth, task_path, files, callback)
+        uploadFiles(auth, files, callback)
     },
 
 

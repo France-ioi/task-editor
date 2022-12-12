@@ -8,7 +8,6 @@ module.exports = function(env) {
         'jquery',
         'jquery-ui-dist/jquery-ui.js',
         'babel-polyfill',
-        'body-parser',
         'json-editor',
         'tinymce',
         './node_modules/tinymce/plugins/textcolor/plugin.js',

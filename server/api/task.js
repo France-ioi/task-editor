@@ -79,12 +79,12 @@ function checkoutDependencies(user, task_subpath, task_type, callback) {
 
 function loadTask(req, res) {
     loadJSON(
-        taskDataPath(req.body.path),
+        taskDataPath(req.auth.session),
         (err, task_data) => {
             if(err) return res.status(400).send(err.message);
             checkoutDependencies(
                 req.auth,
-                req.body.path,
+                req.auth.session,
                 task_data.type,
                 (err) => {
                     if(err) return res.status(400).send(err.message);
@@ -121,7 +121,7 @@ var api = {
                 if(err) return res.status(400).send(err.message);
                 saveTaskData(req.body.path, task_data, (err) => {
                     if(err) return res.status(400).send(err.message);
-                    repo.addCommit(req.auth, req.body.path, (err) => {
+                    repo.saveFilesBack(req.auth, req.body.path, (err) => {
                         if(err) {
                             shell.rm('-rf', path.join(config.path, req.body.path));
                             return res.status(400).send(err.message);
@@ -140,7 +140,7 @@ var api = {
 
 
     load: (req, res) => {
-        repo.checkout(req.auth, req.body.path, (err) => {
+        repo.checkout(req.auth, req.auth.session, (err) => {
             if(err) return res.status(400).send(err.message);
             loadTask(req, res)
         })
@@ -149,11 +149,11 @@ var api = {
 
     save: (req, res) => {
         loadJSON(
-            taskDataPath(req.body.path),
+            taskDataPath(req.auth.session),
             (err, task_data) => {
                 if(err) return res.status(400).send(err.message);
                 var params = {
-                    path: path.join(config.path, req.body.path),
+                    path: path.join(config.path, req.auth.session),
                     data: req.body.data,
                     translations: req.body.translations,
                     type: task_data.type,
@@ -162,10 +162,10 @@ var api = {
                 }
                 generator.output(params, (err, task_data) => {
                     if(err) return res.status(400).send(err.message);
-                    saveTaskData(req.body.path, task_data, (err) =>  {
+                    saveTaskData(req.auth.session, task_data, (err) => {
                         if(err) return res.status(400).send(err.message);
-                        repo.addCommit(req.auth, req.body.path, (err) => {
-                            if(err) return res.status(400).send(err.message);
+                        repo.saveFilesBack(req.auth, req.auth.session, (err) => {
+                            if (err) return res.status(400).send(err.message);
                             res.json({});
                         })
                     })
@@ -183,7 +183,7 @@ var api = {
                 var src = path.join(config.path, req.body.path_src);
                 var dst = path.join(config.path, req.body.path);
                 shell.cp('-rf', src + '/*', dst + '/');
-                repo.addCommit(req.auth, req.body.path, (err) => {
+                repo.saveFilesBack(req.auth, req.body.path, (err) => {
                     if(err) {
                         shell.rm('-rf', dst);
                         return res.status(400).send(err.message);

@@ -143,6 +143,10 @@ function* saveView(action) {
 function* fetchSuccess() {
     const path = yield select(state => state.task.path);
     window.location.hash = '#edit/' + encodeURIComponent(path);
+    const channel = yield select(state => state.channel);
+    if (channel) {
+        channel.notify({ method: 'saved' });
+    }
 }
 
 

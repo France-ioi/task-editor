@@ -3,22 +3,26 @@ var path = require('path');
 var clone = require('clone');
 var modifier = require('./modifier');
 var task_version = require('./task_version');
+var config = require('../../config')
 
 module.exports = {
 
     output: (params, callback) => {
+        var task_path = path.relative(config.path, params.path);
+        task_path = params.path;
+
         var src_path = task_version.getPath(params);
         var schema = require('./schema')(src_path);
         var data = require('./data')(params.data, params.translations);
 
         var post_processor = require('./post_processor')(params, data.info());
         var tpl_path = path.join(src_path, 'templates');
-        var templates = require('./templates')(params.path, tpl_path, post_processor);
+        var templates = require('./templates')(task_path, tpl_path, post_processor);
         var collector = require('./collector')(src_path);
         var renderer = require('./renderer')(tpl_path);
-        var downloader = require('./downloader')(params.path);
+        var downloader = require('./downloader')(task_path);
 
-        var files = require('./files')(params.path, params.files);
+        var files = require('./files')(task_path, params.files);
 
         function generate(data_path, input, output, value, data_fn, idx) {
             if(typeof value == 'undefined') {

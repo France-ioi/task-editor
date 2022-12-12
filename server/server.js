@@ -12,8 +12,7 @@ app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 
 
-var bodyParser = require('body-parser')
-app.use(bodyParser.json());
+app.use(express.json());
 var fileUpload = require('express-fileupload');
 app.use(fileUpload());
 require('./middleware')(app);

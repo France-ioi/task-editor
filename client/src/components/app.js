@@ -19,13 +19,19 @@ class App extends React.Component {
             scope: 'editor'
         });
         var that = this;
-        channel.bind('delete', function(ctx, params) {
+        /* channel.bind('delete', function(ctx, params) {
             if(!that.props.task.path) { return; }
             that.props.dispatch({
                 type: 'EXPLORER_REMOVE_DIR',
                 dir: that.props.task.path
             });
-        });
+        }); */
+
+        channel.bind('save', function (ctx, params) {
+            console.log('save')
+            that.props.dispatch({ type: 'TASK_FETCH_SAVE' })
+            return true;
+        })
         channel.bind('getHeight', function(ctx, params) {
             return document.getElementById('reactbody').offsetHeight;
         });

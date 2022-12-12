@@ -1,4 +1,5 @@
 var url = require('url');
+const server_config = require('../config');
 
 function validatePathParams(body) {
     var params = [
@@ -23,11 +24,16 @@ function getAuth(req) {
         if('session' in src && 'token' in src) {
             return {
                 session: src.session,
-                token: src.token
+                token: src.token,
+                depth: src.depth
             }
         }
     }
-    return find(req.body) || find(req.query)
+    var auth = find(req.body) || find(req.query);
+    if (auth && auth.session && auth.session.indexOf('../') !== -1) {
+        return null;
+    }
+    return auth;
 }
 
 
@@ -36,7 +42,7 @@ module.exports = function(app) {
     app.use((req, res, next) => {
         req.auth = getAuth(req)
         if(!req.auth) {
-            return res.status(400).send('session and token params required')   
+            return res.status(400).send('Incorret session and token params')
         }
         if(!validatePathParams(req.body)) {
             return res.status(400).send('Wrong filename')
