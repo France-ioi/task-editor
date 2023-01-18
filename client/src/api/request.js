@@ -4,7 +4,7 @@ function url(path) {
     if(path.indexOf('http') === 0) {
         return path;
     }
-    return '/api/' + path;
+    return 'api/' + path;
 }
 
 function handleResponse(response) {

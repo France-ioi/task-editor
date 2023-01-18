@@ -116,10 +116,10 @@ module.exports = function (params) {
         var btn = $('<div class="item-type pull-right"></div>');
         var sprites = [
             Sprite.create({
-                img_url: '/assets/grid/zoom-in.png'
+                img_url: 'assets/grid/zoom-in.png'
             }).hide(),
             Sprite.create({
-                img_url: '/assets/grid/zoom-out.png'
+                img_url: 'assets/grid/zoom-out.png'
             }).hide()
         ];
         var level = 1;
@@ -152,7 +152,7 @@ module.exports = function (params) {
                 color: '#FFF',
                 num: 1
             });
-            renderCommandItem('clear', '/assets/grid/delete.png');
+            renderCommandItem('clear', 'assets/grid/delete.png');
             renderZoomItem();
         },
 
