@@ -159,6 +159,7 @@ var api = {
                     type: task_data.type,
                     version: req.body.version,
                     files: task_data.files,
+                    session: req.auth.session,
                     depth: req.auth.depth
                 }
                 generator.output(params, (err, task_data) => {

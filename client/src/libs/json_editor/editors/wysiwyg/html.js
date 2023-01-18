@@ -1,4 +1,10 @@
+
 import images_api from '../../../../api/images';
+import query from '../../../../libs/query';
+
+function imgLocationToURL(location) {
+    return window.__CONFIG__.url_prefix + '/' + query.session + '/' + location;
+}
 
 function createImagesUploadHandler(path) {
     return function (blobInfo, success, failure) {
@@ -6,7 +12,7 @@ function createImagesUploadHandler(path) {
         data.append('file', blobInfo.blob(), blobInfo.filename());
         data.append('path', path);
         images_api.upload(data)
-            .then(res => success(res.location))
+            .then(res => success(imgLocationToURL(res.location)))
             .catch(err => failure(err.message))
     }
 }
@@ -14,7 +20,7 @@ function createImagesUploadHandler(path) {
 function createImagesListHandler(path) {
     return function (success, failure) {
         images_api.search({ path })
-            .then(res => success(res))
+            .then(res => success(res.map(img => ({ title: img.title, value: imgLocationToURL(img.value) }))))
             .catch(err => failure(err.message))
     }
 }
@@ -83,8 +89,9 @@ module.exports = function(params) {
         images_upload_handler: createImagesUploadHandler(params.path),
         images_reuse_filename: true,
         image_list: createImagesListHandler(params.path),
-        document_base_url: window.__CONFIG__.url_prefix + '/' + params.path + '/',
-        relative_urls: true
+        document_base_url: window.__CONFIG__.url_prefix + '/' + query.session + '/',
+        relative_urls: false,
+        remove_script_host: true
     })
 
     return {

@@ -48,7 +48,7 @@ module.exports = {
             return res.status(400).send('File not uploaded');
         }
         req.files.file.mv(
-            imageFilePath(req.body.path, req.files.file.name),
+            imageFilePath(req.auth.session, req.files.file.name),
             (err) => {
                 if(err) return res.status(400).send(err.message);
                 res.json({
@@ -63,7 +63,7 @@ module.exports = {
 
     search: (req, res) => {
         res.json(
-            searchImages(req.body.path)
+            searchImages(req.auth.session)
         );
     }
 

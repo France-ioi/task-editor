@@ -20,7 +20,10 @@ module.exports = function(params, data_info) {
                 (key) => {
                     return typeof values[key] != 'undefined' ? values[key] : key;
                 }
-            )
+            ).replace(
+                path.join(config.url_prefix, params.session) + '/',
+                ''
+            );
         },
         setDirectionality: function(direction) {
             addValue('LANG_DIR', direction)
