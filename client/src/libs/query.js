@@ -1,6 +1,7 @@
 var params = new URLSearchParams(window.location.search)
 var token = params.get('token')
 var session = params.get('session')
+var create = params.get('create') || false
 
 
 
@@ -28,5 +29,6 @@ function validate() {
 module.exports = {
     token,
     session,
+    create,
     validate
 }

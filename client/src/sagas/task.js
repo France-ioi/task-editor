@@ -132,7 +132,7 @@ function* saveView(action) {
         }
         yield call(api_task.save, params);
         yield put({type: 'TASK_FETCH_SUCCESS'});
-        yield put({type: 'LAYOUT_CHANGE_SECTION', active_section: 'import'});
+        yield put({ type: 'LAYOUT_CHANGE_SECTION', active_section: 'json' });
     } catch (e) {
         yield put({type: 'TASK_FETCH_FAIL', error: e.message});
         yield put({type: 'ALERT_SHOW', message: e.message });
@@ -142,7 +142,6 @@ function* saveView(action) {
 
 function* fetchSuccess() {
     const path = yield select(state => state.task.path);
-    window.location.hash = '#edit/' + encodeURIComponent(path);
     const channel = yield select(state => state.channel);
     if (channel) {
         channel.notify({ method: 'saved' });

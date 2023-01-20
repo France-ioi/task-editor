@@ -24,8 +24,8 @@ function loadJSON(file, callback) {
     )
 }
 
-function taskDataPath(task_subpath) {
-    return path.join(config.path, task_subpath, config.task.data_file);
+function taskDataPath(session) {
+    return path.join(config.path, session, config.task.data_file);
 }
 
 
@@ -42,9 +42,9 @@ function loadSchema(task_data, callback) {
 }
 
 
-function saveTaskData(task_subpath, task_data, callback) {
+function saveTaskData(session, task_data, callback) {
     fs.writeFile(
-        taskDataPath(task_subpath),
+        taskDataPath(session),
         JSON.stringify(task_data, null, 2),
         callback
     );
@@ -116,23 +116,24 @@ var api = {
             files: []
         }
         loadSchema(task_data, (err, schema) => {
-            if(err) return res.status(400).send(err.message);
-            repo.checkout(req.auth, req.body.path, (err) => {
-                if(err) return res.status(400).send(err.message);
-                saveTaskData(req.body.path, task_data, (err) => {
-                    if(err) return res.status(400).send(err.message);
-                    repo.saveFilesBack(req.auth, req.body.path, (err) => {
-                        if(err) {
-                            shell.rm('-rf', path.join(config.path, req.body.path));
-                            return res.status(400).send(err.message);
-                        }
-                        tree.clear(req.auth, req.body.path);
-                        res.json({
-                            schema,
-                            version: task_data.version,
-                            data: null
-                        });
-                    })
+            if (err) return res.status(400).send(err.message);
+            var task_path = path.join(config.path, req.auth.session);
+            if (!fs.existsSync(task_path)) {
+                fs.mkdirSync(task_path);
+            }
+            saveTaskData(req.auth.session, task_data, (err) => {
+                if (err) return res.status(400).send(err.message);
+                repo.saveFilesBack(req.auth, req.auth.session, (err) => {
+                    if (err) {
+                        shell.rm('-rf', path.join(config.path, req.body.path));
+                        return res.status(400).send(err.message);
+                    }
+                    tree.clear(req.auth, req.body.path);
+                    res.json({
+                        schema,
+                        version: task_data.version,
+                        data: null
+                    });
                 })
             })
         })
@@ -155,12 +156,12 @@ var api = {
                 var params = {
                     path: path.join(config.path, req.auth.session),
                     data: req.body.data,
-                    translations: req.body.translations,
+                    translations: req.body.translations || task_data.translations,
                     type: task_data.type,
-                    version: req.body.version,
+                    version: req.body.version || task_data.version,
                     files: task_data.files,
                     session: req.auth.session,
-                    depth: req.auth.depth
+                    depth: req.auth.depth || 0
                 }
                 generator.output(params, (err, task_data) => {
                     if(err) return res.status(400).send(err.message);

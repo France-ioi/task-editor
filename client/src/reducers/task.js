@@ -23,6 +23,13 @@ export default (state = default_state, action) => {
                 url: null
             };
 
+        case 'TASK_FETCH_CREATE_START':
+            return {
+                ...state,
+                loading: false,
+                ready: true
+            }
+
         case 'TASK_FETCH_SAVE':
         case 'TASK_FETCH_SAVE_VIEW':
             return {

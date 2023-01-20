@@ -4,7 +4,7 @@ var tasks_config = require('../../../tasks/types/config.json');
 
 // return versions from task_data or first version from task type versions list
 function detectVersion(task_data) {
-    if('version' in task_data) {
+    if ('version' in task_data && task_data.version) {
         return task_data.version;
     }
     return getFirstVersion(task_data.type);

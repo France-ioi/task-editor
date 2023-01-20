@@ -6,6 +6,7 @@ import ControlPanel from './control_panel';
 import Explorer from './explorer';
 import Loader from './ui/loader';
 
+import TaskCreate from './task_create';
 import TaskJsonEditor from './task_json_editor';
 import TaskSvn from './task_svn';
 import TaskImporter from './task_importer';
@@ -13,6 +14,8 @@ import FilesManager from './files_manager';
 import TaskViewer from './task_viewer';
 import Confirmation from './confirmation';
 import AlertPopup from './alert_popup';
+
+import query from '../libs/query';
 
 class Layout extends React.Component {
 
@@ -24,12 +27,27 @@ class Layout extends React.Component {
     }
 
     componentDidMount() {
-        this.props.dispatch({
-            type: 'TASK_FETCH_LOAD',
-            path: ''
-        });
+        if (query.create) {
+            this.props.dispatch({
+                type: 'TASK_FETCH_CREATE_START'
+            });
+        } else {
+            this.props.dispatch({
+                type: 'TASK_FETCH_LOAD',
+                path: ''
+            });
+        }
     }
 
+
+    createTask = (task_type) => {
+        this.props.dispatch({
+            type: 'TASK_FETCH_CREATE',
+            creating: true,
+            path: '/',
+            task_type
+        });
+    }
 
     openTask = () => {
         this.props.dispatch({
@@ -71,7 +89,6 @@ class Layout extends React.Component {
 
     render() {
         const { task, active_section } = this.props;
-//        const { active_section } = this.state;
 
         const sectionVisible = (name) => task.ready && active_section == name;
 
@@ -84,11 +101,11 @@ class Layout extends React.Component {
                 /> */}
                 <div className="editor-container">
                     {!task.ready && <Alert bsStyle="info">Loading...</Alert>}
-                    { sectionVisible('json') && <TaskJsonEditor task={task} onChange={this.taskDataChange}/>}
-                    { sectionVisible('svn') && <TaskSvn path={task.path}/>}
-                    { sectionVisible('import') && <TaskImporter path={task.path} token="TODO"/>}
-                    { sectionVisible('files_manager') && <FilesManager task_path={task.path}/>}
-                    { sectionVisible('view_task') && <TaskViewer task_path={task.path}/>}
+                    {sectionVisible('create') && <TaskCreate createTask={this.createTask} />}
+                    {sectionVisible('json') && <TaskJsonEditor task={task} onChange={this.taskDataChange} />}
+                    {sectionVisible('svn') && <TaskSvn path={task.path} />}
+                    {sectionVisible('files_manager') && <FilesManager task_path={task.path} />}
+                    {sectionVisible('view_task') && <TaskViewer task_path={task.path} />}
                 </div>
                 <Explorer task_path={this.props.task.path}/>
                 <Confirmation/>

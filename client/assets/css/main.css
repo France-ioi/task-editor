@@ -163,6 +163,9 @@ body, html, #reactbody {
     border: 0;
 }
 
+.task-create button {
+    margin: 8px;
+}
 .loader-modal {
     position: fixed;
     z-index: 2000;

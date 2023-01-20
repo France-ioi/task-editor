@@ -114,7 +114,7 @@ module.exports = {
         try {
             var languages = [null].concat(schema.getTranslations());
             languages.forEach(language => {
-                if(!(language === null || language in params.translations)) {
+                if (!(language === null || (params.translations && language in params.translations))) {
                     return;
                 }
                 data.translate(language);

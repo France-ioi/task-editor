@@ -71,7 +71,8 @@ module.exports = function(env) {
         },
         watchOptions: {
             ignored: [
-                /node_modules/
+                /node_modules/,
+                /task-editor-tasks/
             ],
         },
         output: {
