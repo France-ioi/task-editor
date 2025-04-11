@@ -1,4 +1,7 @@
 JSONEditor.defaults.editors.integer = JSONEditor.defaults.editors.number.extend({
+  getDefault: function() {
+    return this.schema["default"] || undefined;
+  },
   sanitize: function(value) {
     value = value + "";
     return value.replace(/[^0-9\-]/g,'');

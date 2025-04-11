@@ -2,6 +2,7 @@ import { call, put, takeEvery, select } from 'redux-saga/effects'
 import api_task from '../api/task'
 import api_importer from '../api/task_importer'
 import { explorer } from './explorer'
+import confirmation from "./confirmation";
 
 function* open(action) {
     var { path, controls, path_dst } = action
@@ -129,6 +130,28 @@ function* save(action) {
     }
 }
 
+function* saveRecursivelyDir(action) {
+    const title = "Save recursively the tasks in the dir '" + action.dir + "'?";
+    const confirmed = yield call(confirmation, title);
+    if (!confirmed) {
+        return;
+    }
+
+    try {
+        yield put({type: 'TASK_FETCH_RECURSIVELY_DIR'});
+        const { token } = yield select(state => state.auth)
+        const params = {
+            token,
+            path: action.dir
+        }
+        yield call(api_task.saveRecursivelyDir, params);
+        yield put({type: 'EXPLORER_HIDE'});
+    } catch (e) {
+        yield put({type: 'EXPLORER_FETCH_FAIL', error: e.message});
+        yield put({type: 'ALERT_SHOW', message: e.message });
+    }
+}
+
 
 function* saveView(action) {
     try {
@@ -189,6 +212,7 @@ export default function* () {
     yield takeEvery('TASK_OPEN', open);
     yield takeEvery('TASK_FETCH_LOAD', load);
     yield takeEvery('TASK_FETCH_SAVE', save);
+    yield takeEvery('TASK_SAVE_RECURSIVELY_DIR', saveRecursivelyDir);
     yield takeEvery('TASK_FETCH_CLONE', clone);
     yield takeEvery('TASK_FETCH_SAVE_VIEW', saveView);
     yield takeEvery('TASK_FETCH_CREATE', create);

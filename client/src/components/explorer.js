@@ -79,6 +79,12 @@ class Explorer extends React.Component {
         this.props.dispatch({type: 'EXPLORER_REMOVE_DIR', dir: this.props.path });
     }
 
+    saveRecursively = () => {
+        this.props.dispatch({
+            type: 'TASK_SAVE_RECURSIVELY_DIR',
+            dir: this.props.path,
+        });
+    }
 
     loadTask = () => {
         this.props.dispatch({
@@ -158,6 +164,7 @@ class Explorer extends React.Component {
                     <Modal.Footer>
                         <ButtonToolbar className="pull-left">
                             <Button onClick={this.navRefresh}>Refresh</Button>
+                            <Button onClick={this.saveRecursively}>Save recursively</Button>
                             { !is_home && controls.remove_dir && !is_current_task &&
                                 <Button bsStyle="danger" onClick={this.removeDir}>
                                     { flags.is_task ? 'Delete task' : 'Delete dir' }
