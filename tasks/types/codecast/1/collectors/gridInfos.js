@@ -1,6 +1,7 @@
 module.exports = function (data) {
-    console.log('collect', data);
-    return {
-        test: true,
+    var defaults = {
+        context: 'printer',
     };
+
+    return Object.assign(defaults, data);
 };

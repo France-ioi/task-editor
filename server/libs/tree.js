@@ -30,7 +30,8 @@ function newNode() {
 
 function fillNode(node, path, list) {
     node.loaded = true
-    node.data.path = path
+    node.data.path = path;
+    node.data.list = [];
     list.map(item => {
         var is_dir = item.indexOf('/') !== -1
         var name = item.replace(/\//g, '')
@@ -76,7 +77,7 @@ function getNode(username, path) {
 module.exports = {
 
 
-    readDir: (user, path, callback) => {
+    readDir: (user, path) => {
         return new Promise((resolve, reject) => {
             var node = getNode(user.username, path)
             if(node.loaded) {

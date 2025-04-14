@@ -103,7 +103,7 @@ function loadTask(req, res) {
     )
 }
 
-
+var mutexLocked = false;
 
 var api = {
 
@@ -175,37 +175,45 @@ var api = {
     },
 
     saveRecursivelyDir: (req, res) => {
+        // Prevent two calls to execute at the same time, to avoid that they both modify files
+        // at the same time, and it creates conflicts
+        if (mutexLocked) {
+            return;
+        }
+
+        mutexLocked = true;
         tree.readDirRecursive(req.user, req.body.path)
             .then(dirs => {
-                var promises = dirs.map(dir => {
-                    return new Promise((resolve, reject) => {
-                        loadJSON(
-                            taskDataPath(dir),
-                            (err, task_data) => {
-                                if (err) reject(err);
-                                var params = {
-                                    path: path.join(config.path, dir),
-                                    data: task_data.data,
-                                    translations: task_data.translations,
-                                    type: task_data.type,
-                                    version: task_data.version,
-                                    files: task_data.files
-                                };
-                                //console.log(dir);
-                                generator.output(params, (err, task_data) => {
-                                    if (err) reject(err);
-                                    console.log(task_data);
-                                    saveTaskData(dir, task_data, (err) => {
-                                        if (err) reject(err);
-                                        resolve();
+                var p = Promise.resolve();
+                for (let dir of dirs) {
+                    p = p.then(() => {
+                        return new Promise((resolve, reject) => {
+                            loadJSON(
+                                taskDataPath(dir),
+                                (err, task_data) => {
+                                    if (err) return reject(err);
+                                    var params = {
+                                        path: path.join(config.path, dir),
+                                        data: task_data.data,
+                                        translations: task_data.translations,
+                                        type: task_data.type,
+                                        version: task_data.version,
+                                        files: task_data.files
+                                    };
+                                    generator.output(params, (err, task_data) => {
+                                        if (err) return reject(err);
+                                        saveTaskData(dir, task_data, (err) => {
+                                            if (err) return reject(err);
+                                            resolve();
+                                        })
                                     })
-                                })
-                            }
-                        )
+                                }
+                            )
+                        })
                     })
-                })
+                }
 
-                return Promise.all(promises)
+                return p
                     .then(() => {
                         repo.addCommit(req.user, req.body.path, (err) => {
                             if (err) return res.status(400).send(err.message);
@@ -214,8 +222,12 @@ var api = {
                     })
             })
             .catch(err => {
+                console.error(err);
                 return res.status(400).send(err.message);
             })
+            .finally(() => {
+                mutexLocked = false;
+            });
     },
 
 
