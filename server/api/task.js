@@ -28,6 +28,10 @@ function taskDataPath(task_subpath) {
     return path.join(config.path, task_subpath, config.task.data_file);
 }
 
+function taskFilePath(task_subpath, file) {
+    return path.join(config.path, task_subpath, file);
+}
+
 
 function loadSchema(task_data, callback) {
     var task_path = task_version.getPath(task_data);
@@ -76,6 +80,85 @@ function checkoutDependencies(user, task_subpath, task_type, callback) {
     */
 }
 
+function extractSchemaFilesPropertyPaths(schema, propertyPath) {
+    var schemaFiles = [];
+    if ('url' === schema.format) {
+        schemaFiles.push(propertyPath);
+    }
+    if (!schema.properties) {
+        return schemaFiles;
+    }
+
+    for (let [property, data] of Object.entries(schema.properties)) {
+        var newPropertyPath = [...propertyPath, property];
+        schemaFiles = [
+            ...schemaFiles,
+            ...extractSchemaFilesPropertyPaths(data, newPropertyPath),
+        ];
+
+        if (data.items) {
+            schemaFiles = [
+                ...schemaFiles,
+                ...extractSchemaFilesPropertyPaths(data.items, newPropertyPath),
+            ];
+        }
+    }
+
+    return schemaFiles;
+}
+
+function extractTaskDataProperty(task_data, propertyPath) {
+    if (0 === propertyPath.length) {
+        return task_data;
+    }
+    if (!(propertyPath[0] in task_data)) {
+        return null;
+    }
+
+    return extractTaskDataProperty(task_data[propertyPath[0]], propertyPath.slice(1));
+}
+
+function setTaskDataProperty(task_data, propertyPath, value) {
+    if (!(propertyPath[0] in task_data)) {
+        return;
+    }
+
+    if (1 === propertyPath.length) {
+        task_data[propertyPath[0]] = value;
+        return;
+    }
+
+    return setTaskDataProperty(task_data[propertyPath[0]], propertyPath.slice(1), value);
+}
+
+function backwardCompatibilityFixPaths(task, schema, taskPath) {
+    let files = task.files;
+    let filesPropertyPaths = extractSchemaFilesPropertyPaths(schema, []);
+    for (let filePropertyPath of filesPropertyPaths) {
+        let taskDataValue = extractTaskDataProperty(task.data, filePropertyPath);
+        if (null === taskDataValue) {
+            continue;
+        }
+
+        // Find best fitting value in task.files
+        let correspondingFile = files.find(file => file.startsWith('task_content_files/') && file.endsWith(taskDataValue) && fs.existsSync(taskFilePath(taskPath, file)));
+        if (undefined === correspondingFile) {
+            taskDataValue = taskDataValue.split('/').slice(-1);
+            correspondingFile = files.find(file => file.startsWith('task_content_files/') && file.endsWith(taskDataValue) && fs.existsSync(taskFilePath(taskPath, file)));
+            if (undefined === correspondingFile) {
+                continue;
+            }
+        }
+
+        let correspondingFileName = correspondingFile.split('/')[1];
+        if (taskDataValue !== correspondingFileName) {
+            setTaskDataProperty(task.data, filePropertyPath, correspondingFileName);
+        }
+    }
+
+    return task.data;
+}
+
 
 function loadTask(req, res) {
     loadJSON(
@@ -92,7 +175,7 @@ function loadTask(req, res) {
                         if(err) return res.status(400).send(err.message);
                         res.json({
                             schema,
-                            data: task_data.data,
+                            data: backwardCompatibilityFixPaths(task_data, schema, req.body.path),
                             version: task_version.detectVersion(task_data),
                             translations: task_data.translations
                         })
