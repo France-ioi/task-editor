@@ -295,6 +295,9 @@ JSONEditor.defaults.editors.upload = JSONEditor.TaskEditorAbstractEditor.extend(
   },
   setValue: function(val) {
     if(this.value !== val) {
+      if (null === val) {
+        val = '';
+      }
       this.value = val;
       this.input.value = this.value;
       if (val === '') this.file_view.className += ' no-file';
