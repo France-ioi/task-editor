@@ -9,41 +9,59 @@ module.exports = {
     },
 
     fileDescr: {
-        type: "string",
-        format: "url",
-        options: {
-            upload: true,
-            editor: true
-        },
-        generator: [
+        oneOf: [
             {
-                output: {
-                    copy: "tests/gen/[name][ext]"
-                }
-            },
-            {
-                input: {
-                    object: {
-                        name: {
-                            input: { value: "[short_name][ext]" },
-                            output: { replace: true }
+                title: "File",
+                type: "string",
+                format: "url",
+                options: {
+                    upload: true,
+                    editor: true
+                },
+                generator: [
+                    {
+                        output: {
+                            copy: "tests/gen/[name][ext]"
+                        }
+                    },
+                    {
+                        input: {
+                            object: {
+                                name: {
+                                    input: {value: "[short_name][ext]"},
+                                    output: {replace: true}
+                                },
+                                path: {
+                                    input: {
+                                        value: "$TASK_PATH/tests/gen/[name][ext]"
+                                    },
+                                    output: {replace: true}
+                                }
+                            }
                         },
-                        path: {
-                            input: {
-                                value: "$TASK_PATH/tests/gen/[name][ext]"
-                            },
-                            output: { replace: true }
+                        output: {
+                            replace: true
                         }
                     }
+                ],
+            },
+            {
+                title: "Path of a file",
+                type: "object",
+                properties: {
+                    name: {
+                        type: "string",
+                        description: "File name"
+                    },
+                    path: {
+                        type: "string",
+                        description: "File path"
+                    },
                 },
-                output: {
-                    replace: true
-                }
-            }
+                required: ["name"]
+            },
         ],
-        required: ["name"]
     },
-
     compilationDescr: {
         type: "object",
         description: "Description of the files required to compile a program.",

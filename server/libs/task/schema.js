@@ -1,6 +1,38 @@
-var path = require('path')
-var util = require('util')
 var schema_loader = require('../schema_loader.js')
+
+function validateSchema(data, schema) {
+    if (schema.type === 'object') {
+        if (!(data instanceof Object)) {
+            return false;
+        }
+        for (let key in schema.properties) {
+            if (!(key in data)) {
+                return false;
+            }
+            if (!validateSchema(data[key], schema.properties[key])) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    if (schema.type === 'array') {
+        if (!Array.isArray(data)) {
+            return false;
+        }
+
+        for (let i = 0; i < data.length; i++) {
+            if (!validateSchema(data[i], schema.items)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    return typeof data === schema.type;
+}
 
 module.exports = function(src_path) {
 
@@ -62,7 +94,7 @@ module.exports = function(src_path) {
     }
 
 
-    function processNode(node, data_path, scope, callback) {
+    function processNode(node, data_path, scope, data, callback) {
         var node_scope = Object.assign({}, scope)
         if (node.generator) {
             for(var i=0, rule; rule=node.generator[i]; i++) {
@@ -90,10 +122,46 @@ module.exports = function(src_path) {
                     node.items,
                     data_path,
                     node_scope,
+                    data,
                     callback
                 )
                 return;
             }
+        }
+        if ('oneOf' in node) {
+            // Determine which type is the oneOf based on data
+            var inherentDataValue = null;
+            try {
+                inherentDataValue = data.get(data_path);
+            } catch (e) {
+                // If the inherent data does not exist
+                return;
+            }
+
+            if (Array.isArray(inherentDataValue)) {
+                inherentDataValue = inherentDataValue[0];
+            }
+            if (!inherentDataValue) {
+                return;
+            }
+            if (inherentDataValue.path && inherentDataValue.value) {
+                inherentDataValue = inherentDataValue.value;
+            }
+
+            for (var oneOfTypeIndex = 0; oneOfTypeIndex < node.oneOf.length; oneOfTypeIndex++) {
+                var oneOfType = node.oneOf[oneOfTypeIndex];
+                if (validateSchema(inherentDataValue, oneOfType)) {
+                    processNode(
+                        oneOfType,
+                        data_path,
+                        node_scope,
+                        data,
+                        callback
+                    );
+                    return;
+                }
+            }
+
         }
         if(subNodes) {
             for(var key in subNodes) {
@@ -104,6 +172,7 @@ module.exports = function(src_path) {
                     subNodes[key],
                     subnode_data_path,
                     node_scope,
+                    data,
                     callback
                 )
             }
@@ -112,8 +181,8 @@ module.exports = function(src_path) {
 
 
     return {
-        walk: function(language, callback) {
-            processNode(tree, [], { language }, callback)
+        walk: function(language, data, callback) {
+            processNode(tree, [], { language }, data, callback)
         },
         getTranslations: function() {
             if (tree.languages) {

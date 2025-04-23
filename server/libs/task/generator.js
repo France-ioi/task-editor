@@ -110,13 +110,13 @@ module.exports = {
         try {
             var languages = [null].concat(schema.getTranslations());
             languages.forEach(language => {
-                if(!(language === null || language in params.translations)) {
+                if(!(language === null || (params.translations && language in params.translations))) {
                     return;
                 }
                 data.translate(language);
                 post_processor.setDirectionality(schema.isRTL(language) ? 'rtl' : 'ltr');
                 var generators = [];
-                schema.walk(language, (data_path, input, output) => {
+                schema.walk(language, data, (data_path, input, output) => {
                     if(input && ('step' in input)) {
                         // Generate later
                         // TODO :: support multiple steps

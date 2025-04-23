@@ -304,7 +304,12 @@ JSONEditor.defaults.editors.upload = JSONEditor.TaskEditorAbstractEditor.extend(
       else {
         this.file_view.className = this.file_view.className.replace(/\s*no-file/g, '');
       }
-      var file_name = this.input.value.substr(this.options.path.length + 1);
+      var file_name = this.input.value;
+      if (file_name.startsWith(this.options.path)) {
+        file_name = file_name.substr(this.options.path.length + 1);
+      } else if (file_name) {
+        file_name = file_name.split('.').slice(-2).join('.');
+      }
       var lang_prefix = this.getLanguage() + '.';
       var original_prefix = this.getOriginalLanguage() + '.';
       if (file_name.startsWith(lang_prefix)) file_name = file_name.substr(lang_prefix.length);

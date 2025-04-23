@@ -80,8 +80,14 @@ function checkoutDependencies(user, task_subpath, task_type, callback) {
     */
 }
 
-function extractSchemaFilesPropertyPaths(schema, propertyPath) {
+function extractSchemaFilesPropertyPaths(schema, propertyPath, definitions) {
     var schemaFiles = [];
+    if (schema.$ref) {
+        schema = definitions[schema.$ref.split('/').pop()];
+    }
+    if (!schema) {
+        return [];
+    }
     if ('url' === schema.format) {
         schemaFiles.push(propertyPath);
     }
@@ -93,13 +99,13 @@ function extractSchemaFilesPropertyPaths(schema, propertyPath) {
         var newPropertyPath = [...propertyPath, property];
         schemaFiles = [
             ...schemaFiles,
-            ...extractSchemaFilesPropertyPaths(data, newPropertyPath),
+            ...extractSchemaFilesPropertyPaths(data, newPropertyPath, definitions),
         ];
 
         if (data.items) {
             schemaFiles = [
                 ...schemaFiles,
-                ...extractSchemaFilesPropertyPaths(data.items, newPropertyPath),
+                ...extractSchemaFilesPropertyPaths(data.items, newPropertyPath, definitions),
             ];
         }
     }
@@ -107,15 +113,26 @@ function extractSchemaFilesPropertyPaths(schema, propertyPath) {
     return schemaFiles;
 }
 
-function extractTaskDataProperty(task_data, propertyPath) {
-    if (0 === propertyPath.length) {
-        return task_data;
+function foreachTaskDataProperty(task_data, propertyPath, callback, realPropertyPath = []) {
+    if (!task_data) {
+        return;
     }
-    if (!(propertyPath[0] in task_data)) {
-        return null;
+    if (Array.isArray(task_data)) {
+       for (var [elementId, element] of task_data.entries()) {
+           foreachTaskDataProperty(element, propertyPath, callback, [...realPropertyPath, elementId]);
+       }
+       return;
     }
 
-    return extractTaskDataProperty(task_data[propertyPath[0]], propertyPath.slice(1));
+    if (0 === propertyPath.length) {
+        callback(task_data, realPropertyPath);
+        return;
+    }
+    if (!(propertyPath[0] in task_data)) {
+        return;
+    }
+
+    foreachTaskDataProperty(task_data[propertyPath[0]], propertyPath.slice(1), callback, [...realPropertyPath, propertyPath[0]]);
 }
 
 function setTaskDataProperty(task_data, propertyPath, value) {
@@ -133,27 +150,31 @@ function setTaskDataProperty(task_data, propertyPath, value) {
 
 function backwardCompatibilityFixPaths(task, schema, taskPath) {
     let files = task.files;
-    let filesPropertyPaths = extractSchemaFilesPropertyPaths(schema, []);
+    let filesPropertyPaths = extractSchemaFilesPropertyPaths(schema, [], schema.definitions);
     for (let filePropertyPath of filesPropertyPaths) {
-        let taskDataValue = extractTaskDataProperty(task.data, filePropertyPath);
-        if (null === taskDataValue) {
-            continue;
-        }
-
-        // Find best fitting value in task.files
-        let correspondingFile = files.find(file => file.startsWith('task_content_files/') && file.endsWith(taskDataValue) && fs.existsSync(taskFilePath(taskPath, file)));
-        if (undefined === correspondingFile) {
-            taskDataValue = taskDataValue.split('/').slice(-1);
-            correspondingFile = files.find(file => file.startsWith('task_content_files/') && file.endsWith(taskDataValue) && fs.existsSync(taskFilePath(taskPath, file)));
-            if (undefined === correspondingFile) {
-                continue;
+        foreachTaskDataProperty(task.data, filePropertyPath, (taskDataValue, propertyPath) =>  {
+            if (null === taskDataValue) {
+                return;
             }
-        }
+            if ('string' !== typeof taskDataValue && taskDataValue.name) {
+                taskDataValue = taskDataValue.name;
+            }
 
-        let correspondingFileName = correspondingFile.split('/')[1];
-        if (taskDataValue !== correspondingFileName) {
-            setTaskDataProperty(task.data, filePropertyPath, correspondingFileName);
-        }
+            // Find best fitting value in task.files
+            let correspondingFile = files.find(file => file.startsWith('task_content_files/') && file.endsWith(taskDataValue) && fs.existsSync(taskFilePath(taskPath, file)));
+            if (undefined === correspondingFile) {
+                taskDataValue = taskDataValue.split('/').pop();
+                correspondingFile = files.find(file => file.startsWith('task_content_files/') && file.endsWith(taskDataValue) && fs.existsSync(taskFilePath(taskPath, file)));
+                if (undefined === correspondingFile) {
+                    return;
+                }
+            }
+
+            let correspondingFileName = correspondingFile.split('/')[1];
+            if (taskDataValue !== correspondingFileName) {
+                setTaskDataProperty(task.data, propertyPath, correspondingFileName);
+            }
+        });
     }
 
     return task.data;
@@ -175,6 +196,7 @@ function loadTask(req, res) {
                         if(err) return res.status(400).send(err.message);
                         res.json({
                             schema,
+                            // data: task_data.data,
                             data: backwardCompatibilityFixPaths(task_data, schema, req.body.path),
                             version: task_version.detectVersion(task_data),
                             translations: task_data.translations
@@ -275,21 +297,24 @@ var api = {
                                 taskDataPath(dir),
                                 (err, task_data) => {
                                     if (err) return reject(err);
-                                    var params = {
-                                        path: path.join(config.path, dir),
-                                        data: task_data.data,
-                                        translations: task_data.translations,
-                                        type: task_data.type,
-                                        version: task_data.version,
-                                        files: task_data.files
-                                    };
-                                    generator.output(params, (err, task_data) => {
+                                    loadSchema(task_data, (err, schema) => {
                                         if (err) return reject(err);
-                                        saveTaskData(dir, task_data, (err) => {
+                                        var params = {
+                                            path: path.join(config.path, dir),
+                                            data: backwardCompatibilityFixPaths(task_data, schema, dir),
+                                            translations: task_data.translations,
+                                            type: task_data.type,
+                                            version: task_version.detectVersion(task_data),
+                                            files: task_data.files
+                                        };
+                                        generator.output(params, (err, task_data) => {
                                             if (err) return reject(err);
-                                            resolve();
+                                            saveTaskData(dir, task_data, (err) => {
+                                                if (err) return reject(err);
+                                                resolve();
+                                            })
                                         })
-                                    })
+                                    });
                                 }
                             )
                         })
