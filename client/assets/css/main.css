@@ -1267,7 +1267,6 @@ input[type="file"].file-input {
 
 .no-border>div>.header-container {
     height: 0;
-    overflow: hidden;
     padding: 0;
 }
 

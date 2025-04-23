@@ -8,10 +8,13 @@ function readDir(req, res) {
     if(req.body.refresh) {
         tree.clear(req.user, req.body.path)
     }
-    tree.readDir(req.user, req.body.path, (err, data) => {
-        if(err) return res.status(400).send(err.message)
-        res.json(data)
-    })
+    tree.readDir(req.user, req.body.path)
+        .then(data => {
+            res.json(data)
+        })
+        .catch(err => {
+            return res.status(400).send(err.message)
+        });
 }
 
 
@@ -21,10 +24,13 @@ function createDir(req, res) {
     repo.createDir(req.user, rel_dir, (err) => {
         if(err) return res.status(400).send(err.message);
         tree.clear(req.user, req.body.path)
-        tree.readDir(req.user, req.body.path, (err, data) => {
-            if(err) return res.status(400).send(err.message)
-            res.json(data)
-        })
+        tree.readDir(req.user, req.body.path)
+            .then(data => {
+                res.json(data)
+            })
+            .catch(err => {
+                return res.status(400).send(err.message)
+            });
     })
 }
 
@@ -38,10 +44,13 @@ function remove(req, res) {
         parent_dir = parent_dir.join('/')
         shell.rm('-rf', path.join(config.path, req.body.path))
         tree.clear(req.user, parent_dir)
-        tree.readDir(req.user, parent_dir, (err, data) => {
-            if(err) return res.status(400).send(err.message)
-            res.json(data)
-        })
+        tree.readDir(req.user, parent_dir)
+            .then(data => {
+                res.json(data)
+            })
+            .catch(err => {
+                return res.status(400).send(err.message)
+            });
     })
 }
 

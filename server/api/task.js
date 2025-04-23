@@ -28,6 +28,10 @@ function taskDataPath(task_subpath) {
     return path.join(config.path, task_subpath, config.task.data_file);
 }
 
+function taskFilePath(task_subpath, file) {
+    return path.join(config.path, task_subpath, file);
+}
+
 
 function loadSchema(task_data, callback) {
     var task_path = task_version.getPath(task_data);
@@ -76,6 +80,106 @@ function checkoutDependencies(user, task_subpath, task_type, callback) {
     */
 }
 
+function extractSchemaFilesPropertyPaths(schema, propertyPath, definitions) {
+    var schemaFiles = [];
+    if (schema.$ref) {
+        schema = definitions[schema.$ref.split('/').pop()];
+    }
+    if (!schema) {
+        return [];
+    }
+    if ('url' === schema.format) {
+        schemaFiles.push(propertyPath);
+    }
+    if (!schema.properties) {
+        return schemaFiles;
+    }
+
+    for (let [property, data] of Object.entries(schema.properties)) {
+        var newPropertyPath = [...propertyPath, property];
+        schemaFiles = [
+            ...schemaFiles,
+            ...extractSchemaFilesPropertyPaths(data, newPropertyPath, definitions),
+        ];
+
+        if (data.items) {
+            schemaFiles = [
+                ...schemaFiles,
+                ...extractSchemaFilesPropertyPaths(data.items, newPropertyPath, definitions),
+            ];
+        }
+    }
+
+    return schemaFiles;
+}
+
+function foreachTaskDataProperty(task_data, propertyPath, callback, realPropertyPath = []) {
+    if (!task_data) {
+        return;
+    }
+    if (Array.isArray(task_data)) {
+       for (var [elementId, element] of task_data.entries()) {
+           foreachTaskDataProperty(element, propertyPath, callback, [...realPropertyPath, elementId]);
+       }
+       return;
+    }
+
+    if (0 === propertyPath.length) {
+        callback(task_data, realPropertyPath);
+        return;
+    }
+    if (!(propertyPath[0] in task_data)) {
+        return;
+    }
+
+    foreachTaskDataProperty(task_data[propertyPath[0]], propertyPath.slice(1), callback, [...realPropertyPath, propertyPath[0]]);
+}
+
+function setTaskDataProperty(task_data, propertyPath, value) {
+    if (!(propertyPath[0] in task_data)) {
+        return;
+    }
+
+    if (1 === propertyPath.length) {
+        task_data[propertyPath[0]] = value;
+        return;
+    }
+
+    return setTaskDataProperty(task_data[propertyPath[0]], propertyPath.slice(1), value);
+}
+
+function backwardCompatibilityFixPaths(task, schema, taskPath) {
+    let files = task.files;
+    let filesPropertyPaths = extractSchemaFilesPropertyPaths(schema, [], schema.definitions);
+    for (let filePropertyPath of filesPropertyPaths) {
+        foreachTaskDataProperty(task.data, filePropertyPath, (taskDataValue, propertyPath) =>  {
+            if (null === taskDataValue) {
+                return;
+            }
+            if ('string' !== typeof taskDataValue && taskDataValue.name) {
+                taskDataValue = taskDataValue.name;
+            }
+
+            // Find best fitting value in task.files
+            let correspondingFile = files.find(file => file.startsWith('task_content_files/') && file.endsWith(taskDataValue) && fs.existsSync(taskFilePath(taskPath, file)));
+            if (undefined === correspondingFile) {
+                taskDataValue = taskDataValue.split('/').pop();
+                correspondingFile = files.find(file => file.startsWith('task_content_files/') && file.endsWith(taskDataValue) && fs.existsSync(taskFilePath(taskPath, file)));
+                if (undefined === correspondingFile) {
+                    return;
+                }
+            }
+
+            let correspondingFileName = correspondingFile.split('/')[1];
+            if (taskDataValue !== correspondingFileName) {
+                setTaskDataProperty(task.data, propertyPath, correspondingFileName);
+            }
+        });
+    }
+
+    return task.data;
+}
+
 
 function loadTask(req, res) {
     loadJSON(
@@ -92,7 +196,8 @@ function loadTask(req, res) {
                         if(err) return res.status(400).send(err.message);
                         res.json({
                             schema,
-                            data: task_data.data,
+                            // data: task_data.data,
+                            data: backwardCompatibilityFixPaths(task_data, schema, req.body.path),
                             version: task_version.detectVersion(task_data),
                             translations: task_data.translations
                         })
@@ -103,7 +208,7 @@ function loadTask(req, res) {
     )
 }
 
-
+var mutexLocked = false;
 
 var api = {
 
@@ -172,6 +277,65 @@ var api = {
                 })
             }
         )
+    },
+
+    saveRecursivelyDir: (req, res) => {
+        // Prevent two calls to execute at the same time, to avoid that they both modify files
+        // at the same time, and it creates conflicts
+        if (mutexLocked) {
+            return;
+        }
+
+        mutexLocked = true;
+        tree.readDirRecursive(req.user, req.body.path)
+            .then(dirs => {
+                var p = Promise.resolve();
+                for (let dir of dirs) {
+                    p = p.then(() => {
+                        return new Promise((resolve, reject) => {
+                            loadJSON(
+                                taskDataPath(dir),
+                                (err, task_data) => {
+                                    if (err) return reject(err);
+                                    loadSchema(task_data, (err, schema) => {
+                                        if (err) return reject(err);
+                                        var params = {
+                                            path: path.join(config.path, dir),
+                                            data: backwardCompatibilityFixPaths(task_data, schema, dir),
+                                            translations: task_data.translations,
+                                            type: task_data.type,
+                                            version: task_version.detectVersion(task_data),
+                                            files: task_data.files
+                                        };
+                                        generator.output(params, (err, task_data) => {
+                                            if (err) return reject(err);
+                                            saveTaskData(dir, task_data, (err) => {
+                                                if (err) return reject(err);
+                                                resolve();
+                                            })
+                                        })
+                                    });
+                                }
+                            )
+                        })
+                    })
+                }
+
+                return p
+                    .then(() => {
+                        repo.addCommit(req.user, req.body.path, (err) => {
+                            if (err) return res.status(400).send(err.message);
+                            res.json({});
+                        });
+                    })
+            })
+            .catch(err => {
+                console.error(err);
+                return res.status(400).send(err.message);
+            })
+            .finally(() => {
+                mutexLocked = false;
+            });
     },
 
 

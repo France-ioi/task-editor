@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script type="text/javascript">
+window.stringsLanguage = 'en-US';
+var modulesPath ='%%TASK_PATH%%/_common/modules';
+		</script>
+		<script class="remove" type="text/javascript" src="%%TASK_PATH%%/_common/modules/pemFioi/importModules-1.4-mobileFirst.js" id="import-modules"></script>
+		<script type="text/javascript" class="remove">
+// general metadata conforming the PEM API Documentation for getMetaData
+var PEMTaskMetaData;
+// Metadata specific to the FranceIOI tasks
+var FIOITaskMetaData;
+
+importModules([
+	'jquery-1.7.1', 'JSON-js', 'raphael-2.2.1', 'codecast-7.5', 'jschannel', 'raphaelFactory-1.0', 'delayFactory-1.0',
+	'simulationFactory-1.0', 'platform-pr', 'beav-1.0', 'installationAPI.01', 'miniPlatform', 'conceptDisplay-1.0', 'conceptViewer-1.0',
+	'conceptViewer_css-1.0', 'taskStyles-mobileFirst'
+]);
+		</script>
+		<script id="animation">
+			var GridInfos;
+
+			window.taskData = {
+				gridInfos: GridInfos,
+			};
+		</script>
+	</head>
+	<body dir="%%LANG_DIR%%" id="app">
+		<div id="react-container"></div>
+		<div dir="auto" id="task">
+			<div id="taskIntro">
+				<div id="taskInstructions"></div>
+				<div dir="auto" class="hints">
+					<div class="hint"></div>
+				</div>
+			</div>
+
+			<div dir="auto" id="solution" style="display: none">
+			</div>
+		</div>
+	</body>
+</html>

@@ -1,5 +1,6 @@
 var repo = require('./repo')
 var config = require('../config')
+var path = require("path");
 
 var data = {}
 
@@ -29,7 +30,8 @@ function newNode() {
 
 function fillNode(node, path, list) {
     node.loaded = true
-    node.data.path = path
+    node.data.path = path;
+    node.data.list = [];
     list.map(item => {
         var is_dir = item.indexOf('/') !== -1
         var name = item.replace(/\//g, '')
@@ -75,16 +77,37 @@ function getNode(username, path) {
 module.exports = {
 
 
-    readDir: (user, path, callback) => {
-        var node = getNode(user.username, path)
-        if(node.loaded) {
-            return callback(null, node.data)
+    readDir: (user, path) => {
+        return new Promise((resolve, reject) => {
+            var node = getNode(user.username, path)
+            if(node.loaded) {
+                return resolve(node.data)
+            }
+            repo.list(user, path, (err, list) => {
+                if(err) return reject(err)
+                fillNode(node, path, list)
+                resolve(node.data)
+            })
+        });
+    },
+
+    readDirRecursive: async (user, dir) => {
+        var list = await module.exports.readDir(user, dir);
+        if (list.flags.is_task) {
+            return [dir];
         }
-        repo.list(user, path, (err, list) => {
-            if(err) return callback(err)
-            fillNode(node, path, list)
-            callback(null, node.data)
-        })
+
+        var dirList = [];
+        for (var subDir of list.list) {
+            if (subDir.is_dir) {
+                var results = await module.exports.readDirRecursive(user, path.join(dir, subDir.name));
+                for (var newDir of results) {
+                    dirList.push(newDir);
+                }
+            }
+        }
+
+        return dirList;
     },
 
 

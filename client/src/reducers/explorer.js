@@ -54,6 +54,7 @@ export default (state = default_state, action) => {
         case 'EXPLORER_FETCH_READ_DIR':
         case 'EXPLORER_FETCH_CREATE_DIR':
         case 'EXPLORER_FETCH_REMOVE_DIR':
+        case 'TASK_FETCH_RECURSIVELY_DIR':
             return {
                 ...state,
                 list: null,

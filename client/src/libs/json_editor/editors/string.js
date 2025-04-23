@@ -3,6 +3,9 @@ import { $extend, $each, $isplainobject, $trigger, $triggerc } from '../utils'
 import converter from '../../showdown_converter'
 
 JSONEditor.defaults.editors.string = JSONEditor.TaskEditorAbstractEditor.extend({
+  getDefault: function() {
+    return this.schema["default"] || undefined;
+  },
   register: function() {
     this._super();
     if(!this.input) return;
